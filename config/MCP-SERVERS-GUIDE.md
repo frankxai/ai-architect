@@ -1,14 +1,130 @@
 # MCP Servers Guide for AI Architects
 
-## Recommended MCP Server Stack
+## Official Oracle MCP Servers (Recommended)
 
-This guide covers the essential MCP servers for an AI Architect workflow, focusing on infrastructure management, documentation, and enterprise integration.
+Oracle provides **20 official MCP servers** at [github.com/oracle/mcp](https://github.com/oracle/mcp). Use these for production workloads.
 
-## Tier 1: Essential Servers
+### Available Oracle MCP Servers
 
-### 1. GitHub MCP Server
-**Purpose:** Repository management, code search, PR workflows
+| Server | Purpose |
+|--------|---------|
+| `oci-compute-mcp-server` | Compute instance management |
+| `oci-networking-mcp-server` | VCN, subnets, security lists |
+| `oci-object-storage-mcp-server` | Object storage operations |
+| `oci-database-mcp-server` | Database management |
+| `oci-identity-mcp-server` | IAM, policies, compartments |
+| `oci-monitoring-mcp-server` | Metrics and alarms |
+| `oci-logging-mcp-server` | Log management |
+| `oci-cloud-guard-mcp-server` | Security monitoring |
+| `oci-pricing-mcp-server` | Pricing and cost info |
+| `oci-usage-mcp-server` | Usage and cost reports |
+| `oci-registry-mcp-server` | Container registry |
+| `oci-faaas-mcp-server` | Functions (serverless) |
+| `oci-network-load-balancer-mcp-server` | Load balancer management |
+| `oci-resource-search-mcp-server` | Resource discovery |
+| `oci-migration-mcp-server` | Migration tools |
+| `oci-compute-instance-agent-mcp-server` | Instance agent operations |
+| `oci-api-mcp-server` | Generic OCI API access |
+| `mysql-mcp-server` | MySQL HeatWave |
+| `dbtools-mcp-server` | Database tools |
+| `oracle-db-doc-mcp-server` | Database documentation |
 
+### Installation
+
+```bash
+# Clone Oracle's official MCP repository
+git clone https://github.com/oracle/mcp.git
+cd mcp
+
+# Install uv package manager (if not installed)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Build all servers
+make build
+
+# Or run individual server
+uvx --from src/oci-compute-mcp-server oci-compute-mcp-server
+```
+
+### Configuration
+
+Add to `~/.claude/settings.json`:
+
+```json
+{
+  "mcpServers": {
+    "oci-compute": {
+      "command": "uvx",
+      "args": ["--from", "git+https://github.com/oracle/mcp#subdirectory=src/oci-compute-mcp-server", "oci-compute-mcp-server"]
+    },
+    "oci-database": {
+      "command": "uvx",
+      "args": ["--from", "git+https://github.com/oracle/mcp#subdirectory=src/oci-database-mcp-server", "oci-database-mcp-server"]
+    },
+    "oci-networking": {
+      "command": "uvx",
+      "args": ["--from", "git+https://github.com/oracle/mcp#subdirectory=src/oci-networking-mcp-server", "oci-networking-mcp-server"]
+    },
+    "oci-object-storage": {
+      "command": "uvx",
+      "args": ["--from", "git+https://github.com/oracle/mcp#subdirectory=src/oci-object-storage-mcp-server", "oci-object-storage-mcp-server"]
+    },
+    "oci-identity": {
+      "command": "uvx",
+      "args": ["--from", "git+https://github.com/oracle/mcp#subdirectory=src/oci-identity-mcp-server", "oci-identity-mcp-server"]
+    },
+    "oci-monitoring": {
+      "command": "uvx",
+      "args": ["--from", "git+https://github.com/oracle/mcp#subdirectory=src/oci-monitoring-mcp-server", "oci-monitoring-mcp-server"]
+    }
+  }
+}
+```
+
+---
+
+## Community OCI MCP Server
+
+The [karthiksuku/oci-mcp](https://github.com/karthiksuku/oci-mcp) provides a consolidated OCI server:
+
+### Features
+- List/inspect Compute instances
+- Instance actions (START, STOP, RESET)
+- Autonomous Databases listing
+- Object Storage buckets
+- Security assessments
+- Cost summaries (experimental)
+
+### Installation
+
+```bash
+git clone https://github.com/karthiksuku/oci-mcp.git
+cd oci-mcp
+chmod +x install.sh
+./install.sh
+```
+
+### Configuration
+
+```json
+{
+  "mcpServers": {
+    "oci": {
+      "command": "python",
+      "args": ["/path/to/oci-mcp/oci_mcp_server.py"],
+      "env": {
+        "OCI_CONFIG_FILE": "~/.oci/config"
+      }
+    }
+  }
+}
+```
+
+---
+
+## Other Essential MCP Servers
+
+### GitHub (Official Anthropic)
 ```json
 {
   "github": {
@@ -21,36 +137,7 @@ This guide covers the essential MCP servers for an AI Architect workflow, focusi
 }
 ```
 
-**Use Cases:**
-- Search codebases for architecture patterns
-- Create/review PRs for IaC changes
-- Manage issues for architecture decisions
-- Access GitHub Actions for CI/CD
-
-### 2. PostgreSQL/Database MCP Server
-**Purpose:** Database access for architecture metadata
-
-```json
-{
-  "postgres": {
-    "command": "npx",
-    "args": ["-y", "@modelcontextprotocol/server-postgres"],
-    "env": {
-      "DATABASE_URL": "postgresql://user:pass@host:5432/db"
-    }
-  }
-}
-```
-
-**Use Cases:**
-- Query model registry
-- Access cost tracking data
-- Retrieve deployment history
-- Architecture decision records
-
-### 3. Filesystem MCP Server
-**Purpose:** Local file access for Terraform, configs
-
+### Filesystem (Official Anthropic)
 ```json
 {
   "filesystem": {
@@ -60,449 +147,125 @@ This guide covers the essential MCP servers for an AI Architect workflow, focusi
 }
 ```
 
-**Use Cases:**
-- Read/write Terraform files
-- Access architecture documents
-- Manage configuration files
-- Generate reports
-
-## Tier 2: Cloud Infrastructure Servers
-
-### 4. OCI MCP Server (Custom)
-**Purpose:** Oracle Cloud Infrastructure management
-
+### PostgreSQL (Official Anthropic)
 ```json
 {
-  "oci": {
-    "command": "python",
-    "args": ["-m", "oci_mcp_server"],
+  "postgres": {
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-postgres"],
     "env": {
-      "OCI_CONFIG_FILE": "~/.oci/config",
-      "OCI_CONFIG_PROFILE": "DEFAULT"
+      "DATABASE_URL": "${POSTGRES_URL}"
     }
   }
 }
 ```
 
-**Capabilities to Build:**
-- List/manage compute instances
-- GenAI cluster management
-- Object storage operations
-- Networking configuration
-- Cost reporting
-
-### 5. Terraform MCP Server (Custom)
-**Purpose:** Infrastructure as Code operations
-
-```json
-{
-  "terraform": {
-    "command": "python",
-    "args": ["-m", "terraform_mcp_server"],
-    "env": {
-      "TF_WORKSPACE_DIR": "/path/to/terraform"
-    }
-  }
-}
-```
-
-**Capabilities:**
-- terraform plan (preview changes)
-- terraform apply (with confirmation)
-- State inspection
-- Module management
-- Cost estimation
-
-## Tier 3: Documentation & Knowledge
-
-### 6. Notion MCP Server
-**Purpose:** Architecture documentation management
-
+### Notion
 ```json
 {
   "notion": {
     "command": "npx",
-    "args": ["-y", "@modelcontextprotocol/server-notion"],
+    "args": ["-y", "@notionhq/notion-mcp-server"],
     "env": {
-      "NOTION_API_KEY": "${NOTION_TOKEN}"
+      "OPENAPI_MCP_HEADERS": "{\"Authorization\": \"Bearer ${NOTION_TOKEN}\"}"
     }
   }
 }
 ```
 
-**Use Cases:**
-- Access architecture decision records
-- Update project documentation
-- Query knowledge bases
-- Manage runbooks
+---
 
-### 7. Confluence MCP Server (Custom)
-**Purpose:** Enterprise documentation
+## Oracle Database MCP (SQLcl)
 
-```json
-{
-  "confluence": {
-    "command": "python",
-    "args": ["-m", "confluence_mcp_server"],
-    "env": {
-      "CONFLUENCE_URL": "https://company.atlassian.net",
-      "CONFLUENCE_TOKEN": "${CONFLUENCE_TOKEN}"
-    }
-  }
-}
+Oracle has integrated MCP directly into SQLcl for database access:
+
+### Blog Posts
+- [Introducing MCP Server for Oracle Database](https://blogs.oracle.com/database/introducing-mcp-server-for-oracle-database)
+- [Oracle Autonomous AI Database MCP Server](https://blogs.oracle.com/machinelearning/announcing-the-oracle-autonomous-ai-database-mcp-server)
+
+### Installation
+```bash
+# SQLcl includes MCP support
+# Download from oracle.com/sqlcl
 ```
 
-## Tier 4: Monitoring & Operations
+---
 
-### 8. Datadog/Grafana MCP Server (Custom)
-**Purpose:** Monitoring and observability
+## Recommended AI Architect Stack
 
-```json
-{
-  "monitoring": {
-    "command": "python",
-    "args": ["-m", "monitoring_mcp_server"],
-    "env": {
-      "DATADOG_API_KEY": "${DD_API_KEY}",
-      "GRAFANA_URL": "https://grafana.company.com"
-    }
-  }
-}
-```
-
-**Capabilities:**
-- Query metrics
-- Create dashboards
-- Set up alerts
-- Incident management
-
-### 9. Linear/Jira MCP Server
-**Purpose:** Project and issue tracking
-
-```json
-{
-  "linear": {
-    "command": "npx",
-    "args": ["-y", "@modelcontextprotocol/server-linear"],
-    "env": {
-      "LINEAR_API_KEY": "${LINEAR_TOKEN}"
-    }
-  }
-}
-```
-
-## Complete Configuration
-
-### Claude Desktop Config
+### Core OCI Operations
 ```json
 {
   "mcpServers": {
-    "github": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-github"],
-      "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
-      }
-    },
-    "filesystem": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-filesystem",
-        "/mnt/c/Users/Frank/claude-ai-architect",
-        "/mnt/c/Users/Frank/terraform-projects"
-      ]
-    },
-    "postgres": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-postgres"],
-      "env": {
-        "DATABASE_URL": "${POSTGRES_URL}"
-      }
-    },
-    "puppeteer": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-puppeteer"]
-    },
-    "memory": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-memory"]
-    }
+    "oci-compute": { "...": "compute management" },
+    "oci-networking": { "...": "network operations" },
+    "oci-database": { "...": "database management" },
+    "oci-object-storage": { "...": "storage operations" },
+    "oci-identity": { "...": "IAM and policies" },
+    "oci-monitoring": { "...": "metrics and alerts" },
+    "oci-pricing": { "...": "cost estimation" }
   }
 }
 ```
 
-### Claude Code Config
+### Development & Docs
 ```json
 {
   "mcpServers": {
-    "github": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-github"],
-      "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
-      }
-    },
-    "notion": {
-      "command": "npx",
-      "args": ["-y", "@notionhq/notion-mcp-server"],
-      "env": {
-        "OPENAPI_MCP_HEADERS": "{\"Authorization\": \"Bearer ${NOTION_TOKEN}\", \"Notion-Version\": \"2022-06-28\"}"
-      }
-    }
+    "github": { "...": "repo management" },
+    "filesystem": { "...": "local file access" },
+    "notion": { "...": "documentation" }
   }
 }
 ```
 
-## Custom MCP Server: OCI Infrastructure
+---
 
-### Server Implementation
-```python
-# oci_mcp_server/__main__.py
-from mcp import Server
-import oci
+## Custom MCP Servers in This Repo
 
-server = Server("oci-infrastructure")
-config = oci.config.from_file()
+This repository includes example custom MCP servers in `mcp-servers/`:
 
-# Compute Client
-compute_client = oci.core.ComputeClient(config)
+- `oci-infrastructure/` - Example OCI operations (use official Oracle servers instead)
+- `terraform-ops/` - Terraform plan/state operations
 
-# GenAI Client
-genai_client = oci.generative_ai.GenerativeAiClient(config)
+These are provided as learning examples. For production, use:
+- Oracle's official OCI MCP servers
+- Community-maintained Terraform MCP servers
 
-@server.tool()
-async def list_gpu_instances(compartment_id: str) -> list:
-    """List all GPU instances in a compartment."""
-    instances = compute_client.list_instances(compartment_id).data
-    gpu_instances = [i for i in instances if "GPU" in i.shape]
-    return [
-        {
-            "id": i.id,
-            "name": i.display_name,
-            "shape": i.shape,
-            "state": i.lifecycle_state
-        }
-        for i in gpu_instances
-    ]
+---
 
-@server.tool()
-async def list_genai_clusters(compartment_id: str) -> list:
-    """List Dedicated AI Clusters."""
-    clusters = genai_client.list_dedicated_ai_clusters(compartment_id).data
-    return [
-        {
-            "id": c.id,
-            "name": c.display_name,
-            "type": c.type,
-            "units": c.unit_count,
-            "state": c.lifecycle_state
-        }
-        for c in clusters
-    ]
-
-@server.tool()
-async def get_genai_endpoints(cluster_id: str) -> list:
-    """List endpoints on a GenAI cluster."""
-    endpoints = genai_client.list_endpoints(
-        dedicated_ai_cluster_id=cluster_id
-    ).data
-    return [
-        {
-            "id": e.id,
-            "name": e.display_name,
-            "model": e.model_id,
-            "state": e.lifecycle_state
-        }
-        for e in endpoints
-    ]
-
-@server.resource("oci://costs")
-async def get_cost_summary() -> dict:
-    """Get OCI cost summary for AI services."""
-    # Implementation using OCI Cost Analysis API
-    pass
-
-if __name__ == "__main__":
-    server.run()
-```
-
-## Custom MCP Server: Terraform Operations
-
-### Server Implementation
-```python
-# terraform_mcp_server/__main__.py
-from mcp import Server
-import subprocess
-import json
-import os
-
-server = Server("terraform")
-
-@server.tool()
-async def terraform_plan(workspace_dir: str) -> dict:
-    """Run terraform plan and return summary."""
-    result = subprocess.run(
-        ["terraform", "plan", "-json", "-no-color"],
-        cwd=workspace_dir,
-        capture_output=True,
-        text=True
-    )
-
-    # Parse plan output
-    changes = {"add": 0, "change": 0, "destroy": 0}
-    for line in result.stdout.split('\n'):
-        if line:
-            data = json.loads(line)
-            if data.get("type") == "planned_change":
-                action = data["change"]["action"]
-                if action == "create":
-                    changes["add"] += 1
-                elif action == "update":
-                    changes["change"] += 1
-                elif action == "delete":
-                    changes["destroy"] += 1
-
-    return {
-        "success": result.returncode == 0,
-        "changes": changes,
-        "output": result.stdout if result.returncode == 0 else result.stderr
-    }
-
-@server.tool()
-async def terraform_state_list(workspace_dir: str) -> list:
-    """List resources in Terraform state."""
-    result = subprocess.run(
-        ["terraform", "state", "list"],
-        cwd=workspace_dir,
-        capture_output=True,
-        text=True
-    )
-    return result.stdout.strip().split('\n')
-
-@server.tool()
-async def terraform_output(workspace_dir: str) -> dict:
-    """Get Terraform outputs."""
-    result = subprocess.run(
-        ["terraform", "output", "-json"],
-        cwd=workspace_dir,
-        capture_output=True,
-        text=True
-    )
-    return json.loads(result.stdout)
-
-@server.resource("terraform://modules")
-async def list_modules(workspace_dir: str) -> list:
-    """List available Terraform modules."""
-    modules_dir = os.path.join(workspace_dir, "modules")
-    if os.path.exists(modules_dir):
-        return os.listdir(modules_dir)
-    return []
-
-if __name__ == "__main__":
-    server.run()
-```
-
-## Best Practices
-
-### Security
-```yaml
-DO:
-  - Store credentials in environment variables
-  - Use scoped API tokens (minimal permissions)
-  - Rotate credentials regularly
-  - Audit MCP server access logs
-
-DON'T:
-  - Hardcode credentials in config
-  - Use admin tokens for read-only tasks
-  - Share credentials across environments
-  - Expose MCP servers to public networks
-```
-
-### Performance
-```yaml
-Caching:
-  - Cache frequent API responses
-  - Use TTL appropriate for data freshness
-  - Implement stale-while-revalidate
-
-Batching:
-  - Combine related API calls
-  - Use bulk endpoints when available
-  - Paginate large result sets
-
-Rate Limiting:
-  - Respect API rate limits
-  - Implement exponential backoff
-  - Queue requests during limits
-```
-
-### Reliability
-```yaml
-Error Handling:
-  - Return clear error messages
-  - Implement retries with backoff
-  - Handle partial failures gracefully
-
-Logging:
-  - Log all tool invocations
-  - Include request/response metadata
-  - Track latency and errors
-
-Health Checks:
-  - Implement health endpoints
-  - Monitor server availability
-  - Alert on failures
-```
-
-## Recommended GitHub Repositories
-
-### Official MCP Servers
-- [modelcontextprotocol/servers](https://github.com/modelcontextprotocol/servers) - Official MCP servers
-
-### Community Servers
-- [awesome-mcp-servers](https://github.com/wong2/awesome-mcp-servers) - Curated list
-- [mcp-server-registry](https://github.com/mcp-community/registry) - Community registry
-
-### AI Agent Frameworks
-- [anthropics/anthropic-cookbook](https://github.com/anthropics/anthropic-cookbook) - Claude examples
-- [langchain-ai/langchain](https://github.com/langchain-ai/langchain) - LangChain framework
-- [run-llama/llama_index](https://github.com/run-llama/llama_index) - LlamaIndex
-- [microsoft/autogen](https://github.com/microsoft/autogen) - AutoGen framework
-- [crewAIInc/crewAI](https://github.com/crewAIInc/crewAI) - CrewAI
-
-### Infrastructure Tools
-- [hashicorp/terraform](https://github.com/hashicorp/terraform) - Infrastructure as Code
-- [oracle/oci-python-sdk](https://github.com/oracle/oci-python-sdk) - OCI SDK
-- [oracle/terraform-provider-oci](https://github.com/oracle/terraform-provider-oci) - OCI Terraform
-
-## Installation Commands
+## Quick Start
 
 ```bash
-# Install official MCP servers
-npm install -g @modelcontextprotocol/server-github
-npm install -g @modelcontextprotocol/server-filesystem
-npm install -g @modelcontextprotocol/server-postgres
-npm install -g @modelcontextprotocol/server-puppeteer
-npm install -g @modelcontextprotocol/server-memory
+# 1. Install official OCI MCP servers
+git clone https://github.com/oracle/mcp.git ~/oracle-mcp
 
-# Install community servers
-npm install -g @notionhq/notion-mcp-server
+# 2. Install uv
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# For custom Python servers
-pip install mcp oci anthropic
-```
+# 3. Configure OCI CLI
+oci setup config
 
-## Testing MCP Servers
+# 4. Add to Claude settings (see configuration above)
 
-```bash
-# Test with Claude Code debug mode
+# 5. Test with Claude
 claude --mcp-debug
-
-# Check server status
-/mcp-status
-
-# List available tools
-# (invoke through Claude conversation)
 ```
+
+---
+
+## Resources
+
+### Official
+- [Oracle MCP Repository](https://github.com/oracle/mcp) - 20 official servers
+- [Anthropic MCP Servers](https://github.com/modelcontextprotocol/servers) - Core servers
+- [MCP Protocol Spec](https://modelcontextprotocol.io/) - Protocol documentation
+
+### Community
+- [oci-mcp](https://github.com/karthiksuku/oci-mcp) - Consolidated OCI server
+- [awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers) - Curated list
+
+### Oracle Blogs
+- [Getting Started with MCP](https://blogs.oracle.com/ateam/post/getting-started-with-model-context-protocol-concepts-and-code-part-1)
+- [Hosting MCP Servers on OCI Data Science](https://blogs.oracle.com/ai-and-datascience/hosting-mcp-servers-on-oci-data-science)
+- [OCI Identity Domain MCP Server](https://www.ateam-oracle.com/oci-identity-domain-mcp-server)
