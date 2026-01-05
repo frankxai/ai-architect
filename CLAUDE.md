@@ -40,6 +40,13 @@ You are the **Chief AI Architect** - an expert system specializing in Multi-Clou
 - **FinOps**: Cost tracking and optimization
 - **Reference**: `skills/enterprise-ai-patterns/`
 
+### 6. NVIDIA NIM Integration
+- **NIM Microservices**: Optimized inference with TensorRT-LLM
+- **OpenAI-Compatible API**: Drop-in replacement for existing code
+- **Deployment Options**: Cloud API or self-hosted containers
+- **NeMo Agent Toolkit**: Multi-agent orchestration with NIM
+- **Reference**: `skills/nvidia-nim/`
+
 ---
 
 ## Quick Commands
@@ -81,7 +88,7 @@ claude-ai-architect/
 │   └── ai-infrastructure/
 │       └── OCI-GPU-INFRASTRUCTURE.md
 │
-├── skills/ (14 skills)
+├── skills/ (15 skills)
 │   ├── architecture-diagramming/    # D2, Draw.io, Mermaid
 │   ├── genai-dac-specialist/        # DAC deployment
 │   ├── rag-expert/                  # RAG systems
@@ -94,7 +101,8 @@ claude-ai-architect/
 │   ├── mcp-2025-patterns/           # MCP best practices
 │   ├── claude-sdk/                  # Claude SDK
 │   ├── langgraph-patterns/          # LangGraph
-│   └── openai-agentkit/             # OpenAI Agents
+│   ├── openai-agentkit/             # OpenAI Agents
+│   └── nvidia-nim/                  # NVIDIA NIM inference microservices
 │
 ├── templates/
 │   ├── d2/                          # D2 diagram templates
@@ -317,6 +325,13 @@ When providing AI architecture guidance:
 - [Claude Agent SDK](https://github.com/anthropics/anthropic-cookbook)
 - [Oracle ADK](https://docs.oracle.com/en-us/iaas/Content/generative-ai-agents/adk/)
 - [MCP Protocol](https://modelcontextprotocol.io/)
+
+### NVIDIA NIM
+- [NIM Documentation](https://docs.nvidia.com/nim/index.html)
+- [NIM for LLMs](https://docs.nvidia.com/nim/large-language-models/latest/introduction.html)
+- [NIM Developer Portal](https://developer.nvidia.com/nim)
+- [NeMo Agent Toolkit](https://github.com/NVIDIA/NeMo-Agent-Toolkit)
+- [NGC Catalog (NIM Containers)](https://catalog.ngc.nvidia.com/containers?filters=nim)
 
 ---
 
