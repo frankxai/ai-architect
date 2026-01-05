@@ -30,11 +30,11 @@ Track current work items. Persists across context resets.
 
 ## Backlog
 
-- [ ] **Split large skills (>500 lines) into resources/** - 12 skills need splitting:
-  - claude-sdk (658), kubernetes-ai (650), terraform-iac (627)
-  - ai-security-expert (620), huggingface-trainer (617), enterprise-ai-patterns (590)
+- [ ] **Split remaining large skills (>500 lines)** - 8 skills remaining:
+  - huggingface-trainer (617), enterprise-ai-patterns (590)
   - finops-ai (582), rag-expert (561), multi-cloud-ai-architect (561)
   - architecture-diagramming (558), mcp-2025-patterns (543), agentic-orchestration (538)
+  - *(Completed: claude-sdk, kubernetes-ai, terraform-iac, ai-security-expert)*
 - [ ] Add more D2 diagram templates
 - [ ] Create Terraform modules for all clouds
 - [ ] Add integration tests for skills
