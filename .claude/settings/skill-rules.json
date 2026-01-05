@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Skill auto-activation rules for AI Architect Command Center",
+  "rules": [
+    {
+      "skill": "oci-services-expert",
+      "triggers": {
+        "keywords": ["OCI", "Oracle Cloud", "compartment", "tenancy", "OCID"],
+        "filePatterns": ["**/oci*.tf", "**/oracle*.py"],
+        "intentPatterns": ["deploy.*OCI", "oracle.*infrastructure"]
+      }
+    },
+    {
+      "skill": "genai-dac-specialist",
+      "triggers": {
+        "keywords": ["DAC", "Dedicated AI Cluster", "GenAI cluster", "fine-tuning OCI"],
+        "intentPatterns": ["deploy.*genai", "create.*cluster", "fine-tune.*OCI"]
+      }
+    },
+    {
+      "skill": "aws-ai-services",
+      "triggers": {
+        "keywords": ["Bedrock", "SageMaker", "AWS AI", "Lambda AI"],
+        "filePatterns": ["**/aws*.tf", "**/bedrock*.py"],
+        "intentPatterns": ["deploy.*AWS", "bedrock.*model"]
+      }
+    },
+    {
+      "skill": "azure-ai-services",
+      "triggers": {
+        "keywords": ["Azure OpenAI", "Azure AI", "Cognitive Services", "PTU"],
+        "filePatterns": ["**/azure*.tf", "**/azure*.bicep"],
+        "intentPatterns": ["deploy.*Azure", "azure.*openai"]
+      }
+    },
+    {
+      "skill": "nvidia-nim",
+      "triggers": {
+        "keywords": ["NIM", "NVIDIA NIM", "TensorRT", "NeMo", "Triton"],
+        "intentPatterns": ["deploy.*NIM", "nvidia.*inference"]
+      }
+    },
+    {
+      "skill": "huggingface-trainer",
+      "triggers": {
+        "keywords": ["fine-tune", "SFT", "DPO", "GRPO", "LoRA", "PEFT", "TRL"],
+        "filePatterns": ["**/train*.py", "**/finetune*.py"],
+        "intentPatterns": ["train.*model", "fine-tune", "adapt.*model"]
+      }
+    },
+    {
+      "skill": "terraform-iac",
+      "triggers": {
+        "keywords": ["Terraform", "infrastructure as code", "IaC", "tfvars"],
+        "filePatterns": ["**/*.tf", "**/terraform/**"],
+        "intentPatterns": ["provision.*infrastructure", "terraform.*deploy"]
+      }
+    },
+    {
+      "skill": "kubernetes-ai",
+      "triggers": {
+        "keywords": ["Kubernetes", "K8s", "Helm", "GPU scheduling", "vLLM deploy"],
+        "filePatterns": ["**/k8s/**", "**/*.yaml", "**/helm/**"],
+        "intentPatterns": ["deploy.*kubernetes", "scale.*pods"]
+      }
+    },
+    {
+      "skill": "ai-security-expert",
+      "triggers": {
+        "keywords": ["prompt injection", "guardrails", "OWASP", "PII", "LLM security"],
+        "intentPatterns": ["secure.*AI", "protect.*prompt", "implement.*guardrails"]
+      }
+    },
+    {
+      "skill": "finops-ai",
+      "triggers": {
+        "keywords": ["cost optimization", "FinOps", "pricing", "budget", "cost per token"],
+        "intentPatterns": ["optimize.*cost", "reduce.*spending", "estimate.*pricing"]
+      }
+    },
+    {
+      "skill": "rag-expert",
+      "triggers": {
+        "keywords": ["RAG", "retrieval", "knowledge base", "vector search", "embeddings"],
+        "intentPatterns": ["build.*RAG", "create.*knowledge base", "implement.*retrieval"]
+      }
+    },
+    {
+      "skill": "architecture-diagramming",
+      "triggers": {
+        "keywords": ["D2", "diagram", "architecture diagram", "Mermaid", "draw.io"],
+        "filePatterns": ["**/*.d2", "**/diagrams/**"],
+        "intentPatterns": ["draw.*architecture", "create.*diagram", "visualize.*system"]
+      }
+    },
+    {
+      "skill": "mcp-architecture",
+      "triggers": {
+        "keywords": ["MCP", "Model Context Protocol", "MCP server", "tools integration"],
+        "intentPatterns": ["build.*MCP", "create.*MCP server", "integrate.*tools"]
+      }
+    },
+    {
+      "skill": "multi-cloud-ai-architect",
+      "triggers": {
+        "keywords": ["multi-cloud", "hybrid cloud", "cross-cloud", "cloud agnostic"],
+        "intentPatterns": ["design.*multi-cloud", "route.*providers", "failover.*cloud"]
+      }
+    }
+  ]
+}
