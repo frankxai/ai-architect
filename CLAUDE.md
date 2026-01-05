@@ -47,6 +47,30 @@ You are the **Chief AI Architect** - an expert system specializing in Multi-Clou
 - **NeMo Agent Toolkit**: Multi-agent orchestration with NIM
 - **Reference**: `skills/nvidia-nim/`
 
+### 7. AI Security & Compliance
+- **OWASP LLM Top 10**: Prompt injection, data leakage, DoS defense
+- **Guardrails**: NeMo Guardrails, Guardrails AI patterns
+- **PII Protection**: Detection, redaction, compliance
+- **Reference**: `skills/ai-security-expert/`
+
+### 8. Multi-Cloud AI Services
+- **AWS**: Bedrock, SageMaker, Kendra, Comprehend
+- **Azure**: Azure OpenAI, AI Search, Azure ML
+- **Infrastructure**: Terraform modules, Kubernetes/Helm
+- **Reference**: `skills/aws-ai-services/`, `skills/azure-ai-services/`
+
+### 9. Model Training & Fine-Tuning
+- **HuggingFace TRL**: SFT, DPO, GRPO training methods
+- **PEFT/LoRA**: Parameter-efficient fine-tuning
+- **GPU Optimization**: Right-sizing, cost estimation
+- **Reference**: `skills/huggingface-trainer/`
+
+### 10. FinOps for AI
+- **Cost Optimization**: Model selection, caching, batching
+- **Commitment Strategies**: Reserved capacity, PTU, DAC
+- **Multi-Cloud Arbitrage**: Route to cheapest provider
+- **Reference**: `skills/finops-ai/`
+
 ---
 
 ## Quick Commands
@@ -88,7 +112,7 @@ claude-ai-architect/
 │   └── ai-infrastructure/
 │       └── OCI-GPU-INFRASTRUCTURE.md
 │
-├── skills/ (15 skills)
+├── skills/ (22 skills)
 │   ├── architecture-diagramming/    # D2, Draw.io, Mermaid
 │   ├── genai-dac-specialist/        # DAC deployment
 │   ├── rag-expert/                  # RAG systems
@@ -102,7 +126,15 @@ claude-ai-architect/
 │   ├── claude-sdk/                  # Claude SDK
 │   ├── langgraph-patterns/          # LangGraph
 │   ├── openai-agentkit/             # OpenAI Agents
-│   └── nvidia-nim/                  # NVIDIA NIM inference microservices
+│   ├── nvidia-nim/                  # NVIDIA NIM inference microservices
+│   ├── ai-security-expert/          # OWASP LLM Top 10, guardrails
+│   ├── multi-cloud-ai-architect/    # AWS, Azure, GCP, OCI patterns
+│   ├── huggingface-trainer/         # TRL, SFT, DPO, LoRA fine-tuning
+│   ├── aws-ai-services/             # Bedrock, SageMaker
+│   ├── azure-ai-services/           # Azure OpenAI, AI Search
+│   ├── terraform-iac/               # Multi-cloud IaC modules
+│   ├── kubernetes-ai/               # GPU scheduling, model serving
+│   └── finops-ai/                   # Cost optimization, FinOps
 │
 ├── templates/
 │   ├── d2/                          # D2 diagram templates
