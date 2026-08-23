@@ -1,6 +1,11 @@
 #!/usr/bin/env node
 // Gate: economics honesty checks for docs/architecture (gate.economics).
-// Usage: node scripts/check-roi.mjs [path/to/docs/architecture]
+// Usage: node scripts/check-roi.mjs [path/to/docs/architecture | path/to/prices.json]
+//
+// The argument may name either a docs/architecture-shaped directory (the
+// usual case: prices.json and 04-roi.md live inside it) or a prices.json
+// file directly (a bare price table with no accompanying 04-roi.md, e.g.
+// the plugin's own reference table at prices/prices.json).
 //
 // - Every row in prices.json has source_url and retrieved_at, and
 //   retrieved_at is within the last 90 days.
@@ -9,25 +14,40 @@
 //   "baseline" or "source" (case-insensitive) — a percentage with no stated
 //   baseline or source is an invented number.
 //
-// Prints a gate table. Exits 1 on any FAIL. Exits 0 with SKIPPED if the
-// target directory or prices.json does not exist yet.
+// Prints a gate table. Exits 1 on any FAIL.
+// Exits 0 with SKIPPED only when no argument was given and the default
+// docs/architecture directory (or its prices.json) does not exist yet — an
+// explicit target that does not resolve is a FAIL, not a SKIP.
 
 import { readFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
 
-const dirArg = process.argv[2] || path.join('docs', 'architecture');
-const targetDir = path.resolve(process.cwd(), dirArg);
-const pricesPath = path.join(targetDir, 'prices.json');
+const rawArg = process.argv[2];
+const explicit = rawArg !== undefined;
+const dirArg = rawArg || path.join('docs', 'architecture');
+
+const resolvedArg = path.resolve(process.cwd(), dirArg);
+const pointsAtPricesFile = path.basename(resolvedArg).toLowerCase() === 'prices.json';
+const targetDir = pointsAtPricesFile ? path.dirname(resolvedArg) : resolvedArg;
+const pricesPath = pointsAtPricesFile ? resolvedArg : path.join(targetDir, 'prices.json');
 const roiPath = path.join(targetDir, '04-roi.md');
+// A direct prices.json target is not required to carry a sibling 04-roi.md
+// (it may be a bare price table); a directory target must have one, per the
+// artifact contract.
+const roiRequired = !pointsAtPricesFile;
 
 const rows = [];
-function check(name, ok, detail) {
-  rows.push({ name, status: ok ? 'PASS' : 'FAIL', detail: detail || '' });
+function check(name, ok, detail, status) {
+  rows.push({ name, status: status || (ok ? 'PASS' : 'FAIL'), detail: detail || '' });
 }
 
 if (!existsSync(targetDir) || !existsSync(pricesPath)) {
-  console.log(`SKIPPED roi: ${path.relative(process.cwd(), targetDir) || dirArg} or prices.json not found`);
-  process.exit(0);
+  if (!explicit) {
+    console.log(`SKIPPED roi: ${path.relative(process.cwd(), targetDir) || dirArg} or prices.json not found`);
+    process.exit(0);
+  }
+  console.log(`FAIL roi: explicit target ${path.relative(process.cwd(), pricesPath)} not found`);
+  process.exit(1);
 }
 
 const IRR_PATTERN = /\bIRR\b/;
@@ -88,8 +108,10 @@ if (existsSync(roiPath)) {
       ? `${percentLines.length} percent line(s) checked`
       : `${bad.length} line(s) missing "baseline"/"source": ${bad.map((b) => `L${b.idx + 1}`).join(', ')}`
   );
-} else {
+} else if (roiRequired) {
   check('04-roi.md: exists', false, 'file missing');
+} else {
+  check('04-roi.md: exists', true, 'not present — optional for a direct prices.json target', 'SKIP');
 }
 
 const nameWidth = Math.max(...rows.map((r) => r.name.length), 20);
@@ -101,6 +123,7 @@ for (const r of rows) {
 }
 console.log('-'.repeat(nameWidth + 60));
 const failCount = rows.filter((r) => r.status === 'FAIL').length;
-console.log(`${rows.length} checks, ${rows.length - failCount} pass, ${failCount} fail`);
+const skipCount = rows.filter((r) => r.status === 'SKIP').length;
+console.log(`${rows.length} checks, ${rows.length - failCount - skipCount} pass, ${failCount} fail, ${skipCount} skip`);
 
 process.exit(failCount > 0 ? 1 : 0);

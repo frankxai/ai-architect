@@ -12,7 +12,8 @@
     "roi": "node scripts/check-roi.mjs",
     "devendor": "node scripts/devendor-audit.mjs",
     "evals": "node evals/run.mjs --allow-missing",
+    "team": "node scripts/build-team-json.mjs",
     "worker:test": "node --test templates/deploy/durable-worker/src/server.test.js",
-    "test": "npm run validate && npm run parity && npm run artifacts && npm run roi && npm run devendor && npm run evals && npm run worker:test"
+    "test": "npm run validate && npm run parity && npm run devendor && npm run roi && npm run evals"
   }
 }

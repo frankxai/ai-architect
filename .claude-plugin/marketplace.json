@@ -4,6 +4,7 @@
     "name": "Frank Riemer",
     "url": "https://www.frankx.ai"
   },
+  "description": "Frank Riemer's engineering plugins: the AI Architect team that turns a coding agent into a gated architecture lifecycle.",
   "plugins": [
     {
       "name": "ai-architect",
