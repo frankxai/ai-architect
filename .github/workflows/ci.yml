@@ -10,6 +10,10 @@ on:
       - '.github/workflows/ci.yml'
       - 'package.json'
   pull_request:
+    # ready_for_review matters: the job below skips drafts, and without this
+    # type the check never re-runs when a draft is marked ready — it just
+    # stays "skipped" and the PR looks checked when nothing ran.
+    types: [opened, synchronize, reopened, ready_for_review]
     paths:
       - '**/*.mjs'
       - '**/*.json'
