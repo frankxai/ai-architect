@@ -1,0 +1,32 @@
+{
+  "schema": "ai-architect.prices.v1",
+  "rows": [
+    {
+      "item": "{{priced component, as a capability noun}}",
+      "unit": "per 1M input tokens",
+      "unit_price": 0.0,
+      "currency": "USD",
+      "source_url": "{{public vendor pricing page fetched during this run}}",
+      "retrieved_at": "{{YYYY-MM-DD}}",
+      "notes": "{{tier, region, commitment, or minimum the page qualified}}"
+    },
+    {
+      "item": "{{priced component, as a capability noun}}",
+      "unit": "per 1M output tokens",
+      "unit_price": 0.0,
+      "currency": "USD",
+      "source_url": "{{public vendor pricing page fetched during this run}}",
+      "retrieved_at": "{{YYYY-MM-DD}}",
+      "notes": ""
+    },
+    {
+      "item": "{{durable runtime, vector store, object store, or egress}}",
+      "unit": "{{per hour, per GB, per 1k operations}}",
+      "unit_price": 0.0,
+      "currency": "USD",
+      "source_url": "{{public vendor pricing page fetched during this run}}",
+      "retrieved_at": "{{YYYY-MM-DD}}",
+      "notes": ""
+    }
+  ]
+}
