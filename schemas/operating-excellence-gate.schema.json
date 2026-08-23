@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://starlight.local/schemas/operating-excellence-gate.schema.json",
+  "title": "Operating Excellence Gate",
+  "type": "object",
+  "required": [
+    "id",
+    "name",
+    "type",
+    "source",
+    "status",
+    "trust_level",
+    "apps",
+    "profile_kind",
+    "gate_category",
+    "pass_criteria",
+    "evidence_sources",
+    "last_reviewed"
+  ],
+  "properties": {
+    "profile_kind": { "const": "operating_excellence_gate" },
+    "gate_category": { "type": "string" },
+    "pass_criteria": { "type": "array", "items": { "type": "string" } },
+    "evidence_sources": { "type": "array", "items": { "type": "string" } },
+    "severity_if_failed": { "type": "string" }
+  },
+  "additionalProperties": true
+}

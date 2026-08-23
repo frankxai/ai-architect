@@ -1,0 +1,262 @@
+{
+  "id": "team.ai-architect",
+  "name": "AI Architect Team",
+  "type": "plugin",
+  "source": "internal_custom",
+  "provider": "FrankX",
+  "status": "active",
+  "owner": "frank",
+  "trust_level": "high",
+  "apps": {
+    "claude_code": "supported",
+    "codex": "supported",
+    "cursor": "supported",
+    "gemini_cli": "supported"
+  },
+  "last_reviewed": "2026-08-22",
+  "profile_kind": "agent_team",
+  "mission": "Turn a stated goal into a reviewable architecture for a system that calls a language model, by running nine gated stages inside the customer's own repository and leaving an evidence-backed artifact set under docs/architecture/ that an independent verifier can re-derive from scratch.",
+  "roles": [
+    {
+      "role": "Principal Architect",
+      "primary_agent": "agent.principal-architect",
+      "responsibilities": [
+        "Settle the four irreversible decisions: model call seam, orchestration shape, trust boundary, long-run home",
+        "Record a verdict of MADE or OPEN for each decision with an evidence pointer, and a dated deferral cost for every OPEN one",
+        "Name an owner for each of the seven planes: experience, observability, evaluation, orchestration, tools, context, model",
+        "Write one ADR per decision that changed state during the run",
+        "Create and maintain architecture.json as the run's resumable state file"
+      ],
+      "allowed_tools": ["Read", "Grep", "Glob", "Write", "Edit", "Bash", "Skill"],
+      "write_scope": [
+        "docs/architecture/SYSTEM.md",
+        "docs/architecture/adr/*.md",
+        "docs/architecture/architecture.json"
+      ],
+      "stop_conditions": [
+        "A decision would be recorded MADE without an evidence pointer of the form path:Lnn or a fenced command with its observed output",
+        "gate.discovery has not passed, so the inputs to the decisions are unverified",
+        "The run would need to edit application source code",
+        "A target file already exists, so the proposed variant is written beside it instead"
+      ],
+      "expected_outputs": [
+        "docs/architecture/SYSTEM.md",
+        "docs/architecture/adr/ADR-0001-<slug>.md",
+        "docs/architecture/architecture.json"
+      ],
+      "handoff_to": ["Economics Analyst"]
+    },
+    {
+      "role": "Discovery Analyst",
+      "primary_agent": "agent.discovery-analyst",
+      "responsibilities": [
+        "Write a one-sentence outcome, named non-goals, and a falsifiable kill criterion",
+        "Work the discovery question bank and record an answer for at least one question in every section",
+        "Mark anything not established as [unknown] and never as [assumed]"
+      ],
+      "allowed_tools": ["Read", "Grep", "Glob", "Write", "Bash", "Skill"],
+      "write_scope": [
+        "docs/architecture/00-frame.md",
+        "docs/architecture/01-discovery.md"
+      ],
+      "stop_conditions": [
+        "An answer would be recorded that the customer did not state and the repository does not show",
+        "The kill criterion cannot be falsified by any observation",
+        "A target file already exists, so the proposed variant is written beside it instead"
+      ],
+      "expected_outputs": [
+        "docs/architecture/00-frame.md",
+        "docs/architecture/01-discovery.md"
+      ],
+      "handoff_to": ["Experience Designer"]
+    },
+    {
+      "role": "Experience Designer",
+      "primary_agent": "agent.experience-designer",
+      "responsibilities": [
+        "Write the user flows, each with a happy path, a failure branch, and a named human step",
+        "Write the experience blueprint as a Stage | Human | AI/Agents | Systems table covering every stage in the flows"
+      ],
+      "allowed_tools": ["Read", "Grep", "Glob", "Write", "Bash", "Skill"],
+      "write_scope": [
+        "docs/architecture/02-user-flows.md",
+        "docs/architecture/03-experience-blueprint.md"
+      ],
+      "stop_conditions": [
+        "A flow has no failure branch or no human step",
+        "A stage appears in the flows but not in the blueprint table",
+        "A target file already exists, so the proposed variant is written beside it instead"
+      ],
+      "expected_outputs": [
+        "docs/architecture/02-user-flows.md",
+        "docs/architecture/03-experience-blueprint.md"
+      ],
+      "handoff_to": ["Principal Architect"]
+    },
+    {
+      "role": "Economics Analyst",
+      "primary_agent": "agent.economics-analyst",
+      "responsibilities": [
+        "Record every price as a row in prices.json with a source_url and a retrieved_at date",
+        "Build the cost model from those rows only, and show the arithmetic",
+        "State a sensitivity band on the three drivers that move the total most"
+      ],
+      "allowed_tools": ["Read", "Grep", "Glob", "Write", "Bash", "WebFetch", "Skill"],
+      "write_scope": [
+        "docs/architecture/04-roi.md",
+        "docs/architecture/prices.json"
+      ],
+      "stop_conditions": [
+        "A price cannot be traced to a public vendor page that was fetched during this run",
+        "A price row's retrieved_at is more than 90 days old",
+        "A figure would be written that is neither a fetched price nor arithmetic over fetched prices",
+        "A target file already exists, so the proposed variant is written beside it instead"
+      ],
+      "expected_outputs": [
+        "docs/architecture/04-roi.md",
+        "docs/architecture/prices.json"
+      ],
+      "handoff_to": ["Trust Reviewer"]
+    },
+    {
+      "role": "Trust Reviewer",
+      "primary_agent": "agent.trust-reviewer",
+      "responsibilities": [
+        "Trace one retrieved document from retriever to context window and point at the line where it becomes labelled data",
+        "Assign every input and tool a trust tier: T0 private local, T1 scoped project, T2 external tools, T3 untrusted content",
+        "List every irreversible tool and name the human step that gates it"
+      ],
+      "allowed_tools": ["Read", "Grep", "Glob", "Write", "Bash", "Skill"],
+      "write_scope": ["docs/architecture/05-trust-boundary.md"],
+      "stop_conditions": [
+        "The line where retrieved text becomes labelled data cannot be located, so the finding is recorded as ABSENT rather than guessed",
+        "An irreversible tool has no human gate, which is recorded as a finding and not repaired by editing code",
+        "A target file already exists, so the proposed variant is written beside it instead"
+      ],
+      "expected_outputs": ["docs/architecture/05-trust-boundary.md"],
+      "handoff_to": ["Eval Engineer"]
+    },
+    {
+      "role": "Eval Engineer",
+      "primary_agent": "agent.eval-engineer",
+      "responsibilities": [
+        "Write at least ten eval cases as JSON lines, including at least one refusal case and at least one injection case",
+        "Write the grading rubric",
+        "Run the harness and record the observed output as evidence, including that the injection case fails closed"
+      ],
+      "allowed_tools": ["Read", "Grep", "Glob", "Write", "Bash", "Skill"],
+      "write_scope": ["docs/architecture/06-evals/*"],
+      "stop_conditions": [
+        "Fewer than ten cases, or no refusal case, or no injection case",
+        "The harness has not been run in this session, so no observed output exists to cite",
+        "The injection case passes, meaning the system followed retrieved text as instruction",
+        "A target file already exists, so the proposed variant is written beside it instead"
+      ],
+      "expected_outputs": [
+        "docs/architecture/06-evals/cases.jsonl",
+        "docs/architecture/06-evals/rubric.md"
+      ],
+      "handoff_to": ["Delivery Engineer"]
+    },
+    {
+      "role": "Delivery Engineer",
+      "primary_agent": "agent.delivery-engineer",
+      "responsibilities": [
+        "Write WORKFLOW.md with the machine-parsable stage table that the /architect router reads to pick the next stage",
+        "Write SOP.md with model routing, write scopes, stop conditions, human gates, and escalation",
+        "Write the runbook, and dry-run every command in it so the exit status is observed rather than assumed"
+      ],
+      "allowed_tools": ["Read", "Grep", "Glob", "Write", "Edit", "Bash", "Skill"],
+      "write_scope": [
+        "docs/architecture/WORKFLOW.md",
+        "docs/architecture/SOP.md",
+        "docs/architecture/07-runbook.md"
+      ],
+      "stop_conditions": [
+        "A runbook command has not been dry-run in this session",
+        "A runbook command dry-runs to a non-zero exit status and the runbook still presents it as working",
+        "A step has no named rollback or no named owner",
+        "A target file already exists, so the proposed variant is written beside it instead"
+      ],
+      "expected_outputs": [
+        "docs/architecture/WORKFLOW.md",
+        "docs/architecture/SOP.md",
+        "docs/architecture/07-runbook.md"
+      ],
+      "handoff_to": ["Independent Verifier"]
+    },
+    {
+      "role": "Independent Verifier",
+      "primary_agent": "agent.independent-verifier",
+      "responsibilities": [
+        "Re-derive every evidence pointer in a fresh context, without reading any other agent's reasoning",
+        "Re-run every fenced command and compare the observed output against the recorded output",
+        "Write a dated receipt and a review, and never edit the artifacts under review"
+      ],
+      "allowed_tools": ["Read", "Grep", "Glob", "Bash", "Skill"],
+      "write_scope": [
+        "docs/architecture/receipts/*.md",
+        "docs/architecture/review.md"
+      ],
+      "stop_conditions": [
+        "A fix would be applied to a file under review rather than recorded as a failed gate",
+        "An evidence pointer resolves to a line that does not contain what was claimed, which is recorded as FAIL and not repaired",
+        "A gate would be recorded PASS on the strength of another agent's assertion rather than a re-derivation"
+      ],
+      "expected_outputs": [
+        "docs/architecture/receipts/<YYYY-MM-DD>-verify.md",
+        "docs/architecture/review.md"
+      ],
+      "handoff_to": []
+    }
+  ],
+  "handoff_protocol": [
+    "Each agent ends with a handoff block naming the stage id, the artifacts written, the gate id, the gate status, the evidence pointers, and the next role",
+    "Evidence pointers are either path/to/file.ts:L42 or a fenced command together with its observed output",
+    "No agent writes application source code; the artifact set under docs/architecture/ is the only output",
+    "An existing file is never overwritten; the agent writes <name>.proposed.md beside it and says so in the handoff",
+    "Every generated markdown file ends with the line: Generated by AI Architect · https://www.frankx.ai/ai-architect",
+    "Implementation roles and the verification role stay independent; the Independent Verifier reads artifacts and re-derives evidence, and never edits what it reviews",
+    "architecture.json is the resumable state file; the /architect router records each stage's gate result into it, and only the Principal Architect authors its decisions, planes, and artifacts sections"
+  ],
+  "portable_contract": {
+    "contract_id": "starlight.team_profile.v2",
+    "schema_id": "https://starlight.local/schemas/starlight-team-profile.v2.schema.json",
+    "profile_id": "team.ai-architect",
+    "projection": {
+      "kind": "sanitized_projection",
+      "source_ref": "repo:frankxai/ai-architect/team/ai-architect-team.json",
+      "content_hash": null,
+      "owner_ref": "owner.frankx",
+      "lifecycle": "active",
+      "version": "0.1.0",
+      "last_reviewed": "2026-08-22"
+    },
+    "interfaces": {
+      "role_scope_refs": [
+        "agent.principal-architect",
+        "agent.discovery-analyst",
+        "agent.experience-designer",
+        "agent.economics-analyst",
+        "agent.trust-reviewer",
+        "agent.eval-engineer",
+        "agent.delivery-engineer",
+        "agent.independent-verifier"
+      ],
+      "gate_refs": [
+        "gate.frame",
+        "gate.discovery",
+        "gate.flow",
+        "gate.decisions",
+        "gate.economics",
+        "gate.trust",
+        "gate.evals",
+        "gate.operate",
+        "gate.verify"
+      ],
+      "verifier_ref": "agent.independent-verifier",
+      "independent_verifier": true,
+      "routing_refs": ["workflow.adlc-architecture-lifecycle"]
+    }
+  }
+}

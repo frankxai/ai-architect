@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://starlight.local/schemas/agent-team.schema.json",
+  "title": "Agent Team",
+  "type": "object",
+  "required": [
+    "id",
+    "name",
+    "type",
+    "source",
+    "status",
+    "trust_level",
+    "apps",
+    "profile_kind",
+    "mission",
+    "roles",
+    "handoff_protocol",
+    "last_reviewed"
+  ],
+  "properties": {
+    "profile_kind": { "const": "agent_team" },
+    "mission": { "type": "string" },
+    "roles": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["role", "primary_agent", "responsibilities", "handoff_to"],
+        "properties": {
+          "role": { "type": "string", "minLength": 1 },
+          "primary_agent": { "type": "string", "pattern": "^agent\\." },
+          "responsibilities": { "type": "array", "items": { "type": "string" } },
+          "allowed_tools": { "type": "array", "items": { "type": "string" } },
+          "write_scope": { "type": "array", "items": { "type": "string" } },
+          "stop_conditions": { "type": "array", "items": { "type": "string" } },
+          "expected_outputs": { "type": "array", "items": { "type": "string" } },
+          "handoff_to": { "type": "array", "items": { "type": "string" } }
+        },
+        "additionalProperties": true
+      }
+    },
+    "handoff_protocol": { "type": "array", "items": { "type": "string" } },
+    "portable_contract": {
+      "description": "Registry binding to the canonical starlight.team_profile.v2 contract. The canonical payload remains in its owner control plane.",
+      "allOf": [
+        { "$ref": "portable-profile-reference.schema.json" },
+        {
+          "properties": {
+            "contract_id": { "const": "starlight.team_profile.v2" },
+            "schema_id": { "const": "https://starlight.local/schemas/starlight-team-profile.v2.schema.json" }
+          }
+        }
+      ]
+    }
+  },
+  "additionalProperties": true
+}

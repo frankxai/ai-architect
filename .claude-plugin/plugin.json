@@ -1,0 +1,20 @@
+{
+  "name": "ai-architect",
+  "version": "0.1.0",
+  "description": "A gated AI-architecture lifecycle for Claude Code: /architect runs a nine-stage agent team that writes an evidence-backed artifact set into your repo at docs/architecture/. Runs on your keys, no hosted service.",
+  "author": {
+    "name": "Frank Riemer",
+    "url": "https://www.frankx.ai"
+  },
+  "homepage": "https://www.frankx.ai/ai-architect",
+  "repository": "https://github.com/frankxai/ai-architect",
+  "license": "MIT",
+  "keywords": [
+    "ai-architecture",
+    "agent-team",
+    "claude-code",
+    "adlc",
+    "architecture-review",
+    "gated-lifecycle"
+  ]
+}

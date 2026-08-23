@@ -1,0 +1,176 @@
+{
+  "schema": "ai-architect.prices.v1",
+  "rows": [
+    {
+      "item": "Claude Sonnet 5 — input tokens",
+      "unit": "per 1M input tokens",
+      "unit_price": 2.0,
+      "currency": "USD",
+      "source_url": "https://platform.claude.com/docs/en/about-claude/pricing",
+      "retrieved_at": "2026-08-22",
+      "notes": "Standard first-party API pricing, global routing, no prompt caching."
+    },
+    {
+      "item": "Claude Sonnet 5 — output tokens",
+      "unit": "per 1M output tokens",
+      "unit_price": 10.0,
+      "currency": "USD",
+      "source_url": "https://platform.claude.com/docs/en/about-claude/pricing",
+      "retrieved_at": "2026-08-22",
+      "notes": "Standard first-party API pricing, global routing."
+    },
+    {
+      "item": "Claude Opus 5 — input tokens",
+      "unit": "per 1M input tokens",
+      "unit_price": 5.0,
+      "currency": "USD",
+      "source_url": "https://platform.claude.com/docs/en/about-claude/pricing",
+      "retrieved_at": "2026-08-22",
+      "notes": "Standard first-party API pricing, global routing, no fast mode."
+    },
+    {
+      "item": "Claude Opus 5 — output tokens",
+      "unit": "per 1M output tokens",
+      "unit_price": 25.0,
+      "currency": "USD",
+      "source_url": "https://platform.claude.com/docs/en/about-claude/pricing",
+      "retrieved_at": "2026-08-22",
+      "notes": "Standard first-party API pricing, global routing."
+    },
+    {
+      "item": "Claude Haiku 4.5 — input tokens",
+      "unit": "per 1M input tokens",
+      "unit_price": 1.0,
+      "currency": "USD",
+      "source_url": "https://platform.claude.com/docs/en/about-claude/pricing",
+      "retrieved_at": "2026-08-22",
+      "notes": "Standard first-party API pricing, global routing."
+    },
+    {
+      "item": "Claude Haiku 4.5 — output tokens",
+      "unit": "per 1M output tokens",
+      "unit_price": 5.0,
+      "currency": "USD",
+      "source_url": "https://platform.claude.com/docs/en/about-claude/pricing",
+      "retrieved_at": "2026-08-22",
+      "notes": "Standard first-party API pricing, global routing."
+    },
+    {
+      "item": "GPT-5.6 Terra — input tokens",
+      "unit": "per 1M input tokens",
+      "unit_price": 2.0,
+      "currency": "USD",
+      "source_url": "https://developers.openai.com/api/docs/pricing",
+      "retrieved_at": "2026-08-22",
+      "notes": "Standard tier, non-batch, non-cached."
+    },
+    {
+      "item": "GPT-5.6 Terra — output tokens",
+      "unit": "per 1M output tokens",
+      "unit_price": 12.0,
+      "currency": "USD",
+      "source_url": "https://developers.openai.com/api/docs/pricing",
+      "retrieved_at": "2026-08-22",
+      "notes": "Standard tier, non-batch."
+    },
+    {
+      "item": "GPT-5.6 Luna — input tokens",
+      "unit": "per 1M input tokens",
+      "unit_price": 0.2,
+      "currency": "USD",
+      "source_url": "https://developers.openai.com/api/docs/pricing",
+      "retrieved_at": "2026-08-22",
+      "notes": "Cost-tier model in the GPT-5.6 family, standard, non-batch."
+    },
+    {
+      "item": "GPT-5.6 Luna — output tokens",
+      "unit": "per 1M output tokens",
+      "unit_price": 1.2,
+      "currency": "USD",
+      "source_url": "https://developers.openai.com/api/docs/pricing",
+      "retrieved_at": "2026-08-22",
+      "notes": "Cost-tier model in the GPT-5.6 family, standard, non-batch."
+    },
+    {
+      "item": "Gemini 3.5 Flash — input tokens",
+      "unit": "per 1M input tokens",
+      "unit_price": 1.5,
+      "currency": "USD",
+      "source_url": "https://ai.google.dev/gemini-api/docs/pricing",
+      "retrieved_at": "2026-08-22",
+      "notes": "Paid tier, text/image/video input."
+    },
+    {
+      "item": "Gemini 3.5 Flash — output tokens",
+      "unit": "per 1M output tokens",
+      "unit_price": 9.0,
+      "currency": "USD",
+      "source_url": "https://ai.google.dev/gemini-api/docs/pricing",
+      "retrieved_at": "2026-08-22",
+      "notes": "Paid tier."
+    },
+    {
+      "item": "Managed vector store — storage",
+      "unit": "per GB per month",
+      "unit_price": 0.33,
+      "currency": "USD",
+      "source_url": "https://www.pinecone.io/pricing/",
+      "retrieved_at": "2026-08-22",
+      "notes": "Standard plan, unlimited storage tier. Example provider (Pinecone); capability is generic — a managed vector store."
+    },
+    {
+      "item": "Managed vector store — write units",
+      "unit": "per 1M write units",
+      "unit_price": 4.0,
+      "currency": "USD",
+      "source_url": "https://www.pinecone.io/pricing/",
+      "retrieved_at": "2026-08-22",
+      "notes": "Standard plan; published range is $4-$4.50/M depending on cloud and region. Low end used."
+    },
+    {
+      "item": "Managed vector store — read units",
+      "unit": "per 1M read units",
+      "unit_price": 16.0,
+      "currency": "USD",
+      "source_url": "https://www.pinecone.io/pricing/",
+      "retrieved_at": "2026-08-22",
+      "notes": "Standard plan; published range is $16-$18/M depending on cloud and region. Low end used."
+    },
+    {
+      "item": "Serverless function — compute duration",
+      "unit": "per GB-second",
+      "unit_price": 0.0000166667,
+      "currency": "USD",
+      "source_url": "https://aws.amazon.com/lambda/pricing/",
+      "retrieved_at": "2026-08-22",
+      "notes": "x86 architecture, US East (N. Virginia), on-demand, after the monthly free tier. Example provider (AWS Lambda); capability is generic — a serverless function runtime."
+    },
+    {
+      "item": "Serverless function — invocations",
+      "unit": "per 1M requests",
+      "unit_price": 0.2,
+      "currency": "USD",
+      "source_url": "https://aws.amazon.com/lambda/pricing/",
+      "retrieved_at": "2026-08-22",
+      "notes": "On-demand, after the monthly free tier."
+    },
+    {
+      "item": "Object storage — standard storage",
+      "unit": "per GB per month",
+      "unit_price": 0.015,
+      "currency": "USD",
+      "source_url": "https://developers.cloudflare.com/r2/pricing/",
+      "retrieved_at": "2026-08-22",
+      "notes": "Standard storage class, no egress fee. Example provider (Cloudflare R2); capability is generic — an object store."
+    },
+    {
+      "item": "Durable workflow runtime — state transitions",
+      "unit": "per 1,000 state transitions",
+      "unit_price": 0.025,
+      "currency": "USD",
+      "source_url": "https://aws.amazon.com/step-functions/pricing/",
+      "retrieved_at": "2026-08-22",
+      "notes": "Standard workflow type, after the monthly free tier of 4,000 transitions. Example provider (AWS Step Functions); capability is generic — a durable workflow / long-run orchestration runtime."
+    }
+  ]
+}

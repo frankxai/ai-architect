@@ -1,0 +1,34 @@
+{
+  "schema": "ai-architect.architecture.v1",
+  "generated_at": "{{generated_at}}",
+  "goal": "{{goal}}",
+  "system_name": "{{system_name}}",
+  "stage": "frame",
+  "decisions": {
+    "model": { "verdict": "OPEN", "evidence": "not yet grepped", "deferral_cost": "uncounted call sites; measured {{generated_at}}" },
+    "loop": { "verdict": "OPEN", "evidence": "exit condition not located", "deferral_cost": "eval harness shape undecided; measured {{generated_at}}" },
+    "trust": { "verdict": "OPEN", "evidence": "label line not found", "deferral_cost": "tool count unknown; measured {{generated_at}}" },
+    "run": { "verdict": "OPEN", "evidence": "longest run and platform ceiling unknown", "deferral_cost": "runtime move later; measured {{generated_at}}" }
+  },
+  "planes": {
+    "experience": { "owner": "unowned", "evidence": "" },
+    "observability": { "owner": "unowned", "evidence": "" },
+    "evaluation": { "owner": "unowned", "evidence": "" },
+    "orchestration": { "owner": "unowned", "evidence": "" },
+    "tools": { "owner": "unowned", "evidence": "" },
+    "context": { "owner": "unowned", "evidence": "" },
+    "model": { "owner": "unowned", "evidence": "" }
+  },
+  "gates": {
+    "gate.frame": { "status": "FAIL", "evidence": [], "verified_by": null },
+    "gate.discovery": { "status": "FAIL", "evidence": [], "verified_by": null },
+    "gate.flow": { "status": "FAIL", "evidence": [], "verified_by": null },
+    "gate.decisions": { "status": "FAIL", "evidence": [], "verified_by": null },
+    "gate.economics": { "status": "FAIL", "evidence": [], "verified_by": null },
+    "gate.trust": { "status": "FAIL", "evidence": [], "verified_by": null },
+    "gate.evals": { "status": "FAIL", "evidence": [], "verified_by": null },
+    "gate.operate": { "status": "FAIL", "evidence": [], "verified_by": null },
+    "gate.verify": { "status": "FAIL", "evidence": [], "verified_by": null }
+  },
+  "artifacts": []
+}

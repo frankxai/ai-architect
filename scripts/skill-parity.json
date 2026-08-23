@@ -1,0 +1,9 @@
+{
+  "schema": "ai-architect.skill-parity.v1",
+  "skill": "ai-architect-review",
+  "file": "skills/ai-architect-review/SKILL.md",
+  "sha256": "24d39ff51bda161fa125cc223bebdbdb3c4f594e68c3e43f1dd6090950dd001d",
+  "recorded_at": "2026-08-22",
+  "recorded_from": "C:\\Users\\frank\\starlight\\repos\\.worktrees\\frankx-ai-architect-team\\public\\skills\\ai-architect-review\\SKILL.md",
+  "note": "Pinned fallback used when the site worktree path above is not present locally. Update this hash whenever the source SKILL.md changes, and re-copy skills/ai-architect-review/SKILL.md byte-identically at the same time."
+}
