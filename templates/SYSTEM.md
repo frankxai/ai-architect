@@ -1,0 +1,84 @@
+# System architecture — {{system_name}}
+
+One sentence: {{one_sentence_outcome}}
+
+Generated for goal: {{goal}}
+Stage of record: {{stage_id}} · last updated {{generated_at}}
+
+## Boundary
+
+| question | answer |
+|---|---|
+| in scope | {{in_scope}} |
+| out of scope | {{out_of_scope}} |
+| who operates it | {{operator}} |
+| who is accountable when it is wrong | {{accountable_owner}} |
+| kill criterion | {{kill_criterion}} |
+
+Inputs crossing the boundary, with trust tier (T0 private local · T1 scoped project · T2 external tools · T3 untrusted content):
+
+| input | source | trust tier | where it lands in the context window |
+|---|---|---|---|
+| {{input_name}} | {{input_source}} | {{trust_tier}} | {{context_position}} |
+
+## The seven planes
+
+Every plane has one named owner. A plane with no owner is where the next incident comes from.
+The seams matter more than the boxes: the boundary column is the line the plane below has to
+hold, and an unheld boundary is what an incident review actually finds.
+
+| # | plane | owns | the boundary below it | owner | evidence |
+|---|---|---|---|---|---|
+| 07 | experience | streaming partial work; letting a human interrupt or approve | human — approval and interruption live here or nowhere | {{owner_experience}} | {{evidence_experience}} |
+| 06 | observability | every model call, tool call and token as one traceable run | evidence — below this line you are guessing | {{owner_observability}} | {{evidence_observability}} |
+| 05 | evaluation | deciding a change helped, before users do | correctness — the loop is only as good as what grades it | {{owner_evaluation}} | {{evidence_evaluation}} |
+| 04 | orchestration | the shape: workflow, one loop, or many | privilege — the loop decides what gets called with real permissions | {{owner_orchestration}} | {{evidence_orchestration}} |
+| 03 | tools | capability with schemas, scopes, an audit trail | trust — everything returned from here is untrusted input | {{owner_tools}} | {{evidence_tools}} |
+| 02 | context | the right tokens in the window, the rest out | relevance — retrieval failures arrive disguised as model failures | {{owner_context}} | {{evidence_context}} |
+| 01 | model | reaching a model; surviving it being slow, wrong, or gone | vendor — swap cost is decided the day you build this | {{owner_model}} | {{evidence_model_plane}} |
+
+The plane ids in this table (`experience`, `observability`, `evaluation`, `orchestration`,
+`tools`, `context`, `model`) are the same keys used by `architecture.json.planes`. Do not rename
+them; a renamed plane is an unowned plane as far as every check in this workflow is concerned.
+
+## The four decisions
+
+Verdicts are `MADE` or `OPEN`. "I do not know" is `OPEN` — an unmade decision and an unknown one
+cost the same, because both are open in the expensive direction. When several are `OPEN`, fix in
+this order: `trust`, `run`, `loop`, `model`.
+
+| id | decision | verdict | evidence pointer | deferral cost (dated) |
+|---|---|---|---|---|
+| `model` | model call seam — exactly one module knows a provider's name | {{verdict_model}} | {{evidence_model}} | {{deferral_model}} |
+| `loop` | orchestration shape — fixed workflow, single loop, parallel or sequential sub-agents | {{verdict_loop}} | {{evidence_loop}} | {{deferral_loop}} |
+| `trust` | trust boundary — the line where retrieved text becomes labelled data | {{verdict_trust}} | {{evidence_trust}} | {{deferral_trust}} |
+| `run` | long-run home — where an eleven-minute run lives | {{verdict_run}} | {{evidence_run}} | {{deferral_run}} |
+
+Every evidence pointer in the four rows above takes one of exactly two forms: a
+`path/to/file.ts:L42` pointer, or a fenced command followed by `→` and the output it produced.
+A verdict with any other kind of evidence is `OPEN`, whatever the row says.
+
+Accepted decision records for each `MADE` verdict live in `adr/`.
+
+## Evidence pointers
+
+This is the table the independent verifier re-runs in a fresh context. Every row must be
+re-derivable by someone with the repository and nothing else: either a `path/to/file.ts:L42`
+pointer, or a command plus the observation it produced. No row may cite this document, a
+conversation, or a person's recollection.
+
+| id | claim | how to re-derive | observed on {{generated_at}} |
+|---|---|---|---|
+| `ev.model.seam` | {{claim_model_seam}} | `{{command_model_seam}}` | {{observation_model_seam}} |
+| `ev.loop.exit` | {{claim_loop_exit}} | `{{command_loop_exit}}` | {{observation_loop_exit}} |
+| `ev.trust.label` | {{claim_trust_label}} | `{{command_trust_label}}` | {{observation_trust_label}} |
+| `ev.run.ceiling` | {{claim_run_ceiling}} | `{{command_run_ceiling}}` | {{observation_run_ceiling}} |
+| `ev.{{id}}` | {{claim}} | `{{command}}` | {{observation}} |
+
+## Open questions
+
+| question | why it matters | who can answer | by when |
+|---|---|---|---|
+| {{open_question}} | {{why_it_matters}} | {{who}} | {{by_when}} |
+
+Generated by AI Architect · https://www.frankx.ai/ai-architect

@@ -1,263 +1,185 @@
-# AI Architect Command Center
+# AI Architect
 
-> Transform Claude Code into your expert AI Architecture assistant specializing in Multi-Cloud AI solutions with Oracle Cloud Infrastructure focus.
+A gated architecture lifecycle for systems that call a language model.
 
-## Quick Start
+Install it into the coding agent that already has the repository open. `/architect`
+runs a nine-stage team. Each stage writes files under `docs/architecture/`. Each
+stage has a gate. A red gate stops the run. An independent verifier re-derives
+every evidence pointer in a fresh context.
+
+It runs on your keys. There is no hosted agent and no account.
+
+Maintained at [frankx.ai/ai-architect](https://www.frankx.ai/ai-architect).
+
+## Install
+
+Four paths in, depending on your harness. Every one of them runs on your own model keys,
+inside your own repository — there is no hosted agent and no account.
+
+### Claude Code
+
+```
+/plugin marketplace add frankxai/ai-architect
+/plugin install ai-architect@frankx
+```
+
+### Codex, Cursor, Gemini CLI — the skills registry
 
 ```bash
-# Clone and enter the repository
-cd claude-ai-architect
-
-# Start Claude Code with this as the working directory
-claude
-
-# Use slash commands to get started
-/design-solution "Customer support AI with RAG"
-/deploy-genai
-/draw-architecture
+npx skills add frankxai/ai-architect
 ```
 
-## What This Repository Does
+### Cursor — the full team, as project rules
 
-This repository configures Claude Code as an **AI Architect** with expertise in:
-
-- **OCI GenAI & Dedicated AI Clusters** - Design, deploy, and optimize GenAI solutions
-- **Multi-Cloud AI Architecture** - AWS, Azure, GCP, OCI workload placement
-- **RAG & Agent Systems** - Knowledge bases, retrieval, multi-agent orchestration
-- **Architecture Diagramming** - Professional D2, Draw.io, Mermaid diagrams
-- **Enterprise AI Patterns** - Security, governance, FinOps
-
-## Repository Structure
-
-```
-claude-ai-architect/
-├── CLAUDE.md                    # Claude Code instructions
-├── README.md                    # This file
-│
-├── knowledge-base/              # Domain expertise
-│   ├── oci-genai/              # OCI GenAI documentation
-│   ├── multi-cloud/            # Multi-cloud patterns
-│   └── ai-infrastructure/      # GPU and infrastructure
-│
-├── skills/                      # 14 specialized skills
-│   ├── architecture-diagramming/
-│   ├── genai-dac-specialist/
-│   ├── rag-expert/
-│   ├── enterprise-ai-patterns/
-│   └── ... (10 more)
-│
-├── templates/
-│   ├── d2/                     # D2 diagram templates
-│   ├── terraform/              # IaC modules
-│   │   ├── oci-genai-dac/
-│   │   ├── oci-rag-system/
-│   │   ├── ai-gateway/
-│   │   └── security-baseline/
-│   ├── cost-calculator.md
-│   └── discovery-questions.md
-│
-├── prompts/                    # Slash command definitions
-│   ├── design-solution.md
-│   ├── deploy-genai.md
-│   ├── build-rag.md
-│   ├── multi-cloud-setup.md
-│   ├── optimize-costs.md
-│   ├── security-review.md
-│   └── draw-architecture.md
-│
-├── examples/                   # Real-world solutions
-│   ├── customer-support-ai.md
-│   └── multi-cloud-analytics.md
-│
-├── sdk-examples/               # Python code examples
-│   └── oci_genai_examples.py
-│
-├── cheatsheets/               # Quick reference
-│   ├── OCI-GENAI-CHEATSHEET.md
-│   ├── D2-DIAGRAM-CHEATSHEET.md
-│   └── MODEL-COMPARISON-MATRIX.md
-│
-├── mcp-servers/               # Custom MCP servers
-│   ├── oci-infrastructure/    # OCI operations
-│   └── terraform-ops/         # Terraform operations
-│
-├── agent-teams/               # Agent organization
-├── workflows/                 # Architecture workflows
-└── config/                    # MCP server configs
-```
-
-## Slash Commands
-
-| Command | Description |
-|---------|-------------|
-| `/design-solution` | End-to-end AI solution design |
-| `/deploy-genai` | Deploy OCI GenAI Dedicated AI Cluster |
-| `/build-rag` | Build RAG system with knowledge bases |
-| `/multi-cloud-setup` | Configure multi-cloud AI architecture |
-| `/optimize-costs` | Cost optimization review |
-| `/security-review` | Security assessment |
-| `/draw-architecture` | Generate architecture diagrams |
-
-## Features
-
-### 1. Knowledge Base
-Comprehensive documentation on:
-- OCI Dedicated AI Clusters (DACs)
-- OCI GenAI Agents and RAG
-- Multi-cloud AI patterns
-- GPU infrastructure and training
-
-### 2. Terraform Modules
-Ready-to-deploy infrastructure:
 ```bash
-cd templates/terraform/oci-genai-dac
-terraform init && terraform apply
+node scripts/install-cross-harness.mjs --cursor
 ```
 
-### 3. D2 Diagram Templates
-Professional architecture diagrams:
+Run from a clone of this repository. Writes one `.cursor/rules/ai-architect-<skill>.mdc` per
+skill in `skills/`, pointing at that skill's `SKILL.md` and the `/architect` stage it serves.
+
+### Codex, Windsurf, Copilot — the full team, via AGENTS.md
+
 ```bash
-d2 --layout=tala templates/d2/oci-genai-rag.d2 output.svg
+node scripts/install-cross-harness.mjs --agents-md --target /path/to/your/repo
 ```
 
-### 4. Python SDK Examples
-Working code for OCI GenAI:
-```python
-# See sdk-examples/oci_genai_examples.py
-from oci.generative_ai_inference import GenerativeAiInferenceClient
+Inserts a marked block into that repository's `AGENTS.md` with the install commands and a
+pointer to `SOP.md`, and leaves the rest of the file alone. This repository's own `AGENTS.md`
+is what a harness with no slash commands reads to run a stage by hand.
+
+### Review skill only, no install
+
+If you want the four-decision review and not the full lifecycle team, copy
+`skills/ai-architect-review/SKILL.md` to `.claude/skills/ai-architect-review/SKILL.md`.
+The same file is served at `https://www.frankx.ai/skills/ai-architect-review/SKILL.md`.
+
+## What `/architect` writes
+
+| stage | agent | output |
+|---|---|---|
+| frame | discovery-analyst | `00-frame.md` |
+| discover | discovery-analyst | `01-discovery.md` |
+| flow | experience-designer | `02-user-flows.md`, `03-experience-blueprint.md` |
+| decide | principal-architect | `SYSTEM.md`, `adr/*`, `architecture.json` |
+| cost | economics-analyst | `04-roi.md`, `prices.json` |
+| secure | trust-reviewer | `05-trust-boundary.md` |
+| prove | eval-engineer | `06-evals/cases.jsonl`, `06-evals/rubric.md` |
+| operate | delivery-engineer | `WORKFLOW.md`, `SOP.md`, `07-runbook.md` |
+| verify | independent-verifier | `receipts/<date>-verify.md`, `review.md` |
+
+The router is re-entrant. Run `/architect` again after a stop. Use
+`/architect --stage decide` to redo one stage. Use `/architect-verify` in a
+fresh context — that is the point of a separate command.
+
+Agents do not write application source code. If a file already exists they write
+`<name>.proposed.md` beside it.
+
+## The artifact contract
+
+Everything `/architect` writes lands under `<your repo>/docs/architecture/`, in this shape:
+
+```
+SYSTEM.md                  boundary · seven planes with owners · four decisions with verdict + evidence pointer
+WORKFLOW.md                stage table (stage · agent · input · output · gate) — /architect parses this for stage order
+SOP.md                     model routing · write scopes · stop conditions · human gates · escalation — every command loads this first
+00-frame.md                one-sentence outcome, named non-goals, kill criterion
+01-discovery.md            the discovery question bank, answered
+02-user-flows.md           each flow: happy path, failure branch, human step
+03-experience-blueprint.md Stage | Human | AI/Agents | Systems, covering every stage in the flows
+04-roi.md                  the cost model, arithmetic over prices.json only
+prices.json                { schema, rows: [{ item, unit, unit_price, currency, source_url, retrieved_at, notes }] }
+05-trust-boundary.md       the retrieval trace, trust tiers, irreversible tools and their human gates
+06-evals/cases.jsonl       one JSON line per case: { id, kind, input, expect, must_not }
+06-evals/rubric.md         how each case is graded
+07-runbook.md              operator commands, dry-run status, rollback, owner
+adr/ADR-0001-<slug>.md     one ADR per decision that changed state, numbered upward
+architecture.json          { schema, generated_at, goal, decisions, planes, gates, artifacts } — the resumable run state
+receipts/<YYYY-MM-DD>-verify.md   the independent verifier's re-derivation, dated
+review.md                  the verifier's findings
 ```
 
-### 5. MCP Servers
-Custom servers for Claude integration:
-- **oci-infrastructure** - OCI API operations
-- **terraform-ops** - Terraform plan/apply/state
+Rules: an existing file is never overwritten — the agent writes `<name>.proposed.md` beside it
+and says so. Every generated markdown file ends with the line
+`Generated by AI Architect · https://www.frankx.ai/ai-architect`. An evidence pointer is either
+`path/to/file.ts:L42` or a fenced command together with its observed output.
 
-## Installation
+## The team
 
-### Prerequisites
-- Claude Code CLI installed
-- OCI CLI configured (for OCI operations)
-- Terraform installed (for IaC)
-- D2 installed (for diagrams)
+| agent | model | writes |
+|---|---|---|
+| discovery-analyst | sonnet | `00-frame.md`, `01-discovery.md` |
+| experience-designer | sonnet | `02-user-flows.md`, `03-experience-blueprint.md` |
+| principal-architect | opus | `SYSTEM.md`, `adr/*`, `architecture.json` |
+| economics-analyst | sonnet | `04-roi.md`, `prices.json` |
+| trust-reviewer | opus | `05-trust-boundary.md` |
+| eval-engineer | sonnet | `06-evals/*` |
+| delivery-engineer | sonnet | `WORKFLOW.md`, `SOP.md`, `07-runbook.md` |
+| independent-verifier | opus | `receipts/*`, `review.md` — holds no `Edit`/`Write`/`MultiEdit`/`NotebookEdit`; writes only via shell redirection |
 
-### Install D2 (for diagrams)
+No agent writes application source code. Each agent's full purpose, inputs, stop conditions and
+handoff target are in its own `agents/<id>.md`. The same roster, generated from those files, is
+`data/team.json` (`node scripts/build-team-json.mjs` rebuilds it — never hand-edit the JSON).
+
+## The gates
+
+| gate | stage | green when |
+|---|---|---|
+| `gate.frame` | frame | a one-sentence outcome, named non-goals, a falsifiable kill criterion |
+| `gate.discovery` | discover | at least one answered question per bank section; zero `[assumed]` tags (`[unknown]` is allowed) |
+| `gate.flow` | flow | every flow has a failure branch and a human step; the experience blueprint covers every stage |
+| `gate.decisions` | decide | four decisions each `MADE` or `OPEN` with an evidence pointer; every `OPEN` carries a dated deferral cost; every plane has an owner |
+| `gate.economics` | cost | every price row has `source_url` and `retrieved_at` within 90 days; a sensitivity band on three drivers; no `IRR` |
+| `gate.trust` | secure | retrieved text traced to the line where it becomes labelled data; every irreversible tool gated by a human step |
+| `gate.evals` | prove | at least 10 cases, at least one refusal case, at least one injection case; the harness runs; the injection case fails closed |
+| `gate.operate` | operate | every runbook command exists and dry-runs exit 0; rollback and owner named |
+| `gate.verify` | verify | a receipt written by the verifier in a fresh context; every evidence pointer re-derived |
+
+A stage is complete when its gate is `PASS` in `architecture.json`, or `SKIPPED` with a written
+reason. `FAIL`, or absent from the gates map, means the stage has not run. When more than one
+gate is red, `/architect` names the highest-reversal-cost one first; within `gate.decisions`,
+the fix-first order among `OPEN` decisions is `trust`, `run`, `loop`, `model`.
+
+## Local MCP (optional)
+
+A rubric is a file. MCP starts earning its complexity when the reviewer needs to
+read the repository and carry gate state across calls. The optional stdio server
+exposes those checks. It does not call a model and it does not leave the machine.
+
 ```bash
-# macOS
-brew install d2
-
-# Linux
-curl -fsSL https://d2lang.com/install.sh | sh
-
-# Windows (PowerShell)
-iwr -useb https://d2lang.com/install.ps1 | iex
+node mcp/server.mjs
 ```
 
-### Install MCP Servers
+Tools: `architect_status`, `architect_check_artifacts`, `architect_check_roi`,
+`architect_next_stage`. Configure it in your harness as a local stdio server.
+
+## One-click deploy kits
+
+Reference stacks live under `templates/deploy/`. They encode the four decisions
+as code, not as a slide.
+
+| kit | plane it owns | deploy |
+|---|---|---|
+| `durable-worker` | long-run home | Railway worker + Postgres + Redis |
+| `request-scoped-agent` | experience | Vercel (or any Node host) in front of the worker |
+
+Publishing a Railway template to the marketplace (and earning kickback) is a
+human action in the Railway dashboard. The kit is the source. The button is not
+this repository pretending to be your Railway account.
+
+## Related
+
+- Field guide: [frankx.ai/ai-architecture](https://www.frankx.ai/ai-architecture)
+- Academy labs: [github.com/frankxai/ai-architect-academy](https://github.com/frankxai/ai-architect-academy)
+- CoE operating model: [github.com/frankxai/ai-coe](https://github.com/frankxai/ai-coe)
+
+This repository used to be a single-cloud command center. That tree is preserved
+at a legacy tag on this remote. The current tree is vendor-neutral on purpose.
+
+## Verify
+
 ```bash
-# OCI Infrastructure Server
-cd mcp-servers/oci-infrastructure
-pip install -r requirements.txt
-
-# Terraform Operations Server
-cd mcp-servers/terraform-ops
-pip install -r requirements.txt
+npm test
 ```
 
-### Configure MCP Servers
-Add to `~/.claude/settings.json`:
-```json
-{
-  "mcpServers": {
-    "oci": {
-      "command": "python",
-      "args": ["/path/to/mcp-servers/oci-infrastructure/server.py"]
-    },
-    "terraform": {
-      "command": "python",
-      "args": ["/path/to/mcp-servers/terraform-ops/server.py"]
-    }
-  }
-}
-```
-
-## Usage Examples
-
-### Design a Solution
-```
-User: Design an AI solution for customer support
-
-Claude: I'll use the /design-solution workflow...
-[Generates architecture, D2 diagram, Terraform, cost estimate]
-```
-
-### Deploy GenAI Cluster
-```
-User: Deploy a production GenAI cluster
-
-Claude: I'll use the /deploy-genai workflow...
-[Recommends sizing, generates Terraform, provides validation steps]
-```
-
-### Generate Diagram
-```
-User: Create an architecture diagram for our RAG system
-
-Claude: I'll generate a D2 diagram...
-[Creates professional diagram with OCI components]
-```
-
-## Model Comparison
-
-| Model | Best For | Cost |
-|-------|----------|------|
-| Command R+ | Complex reasoning, RAG | $$$ |
-| Command R | General purpose | $$ |
-| Command Light | High volume, simple | $ |
-| Llama 3.1 70B | Open source | $$$ |
-| GPT-4 Turbo | Best capability | $$$$ |
-| Claude 3.5 Sonnet | Best balance | $$$ |
-
-See `cheatsheets/MODEL-COMPARISON-MATRIX.md` for full comparison.
-
-## Cost Reference
-
-| DAC Size | Units | Monthly Est. |
-|----------|-------|--------------|
-| Dev/Test | 2-5 | $3-7.5K |
-| Production | 5-15 | $7.5-22.5K |
-| High Volume | 15-30 | $22.5-45K |
-| Enterprise | 30-50 | $45-75K |
-
-See `templates/cost-calculator.md` for detailed scenarios.
-
-## Contributing
-
-1. Add knowledge to `knowledge-base/`
-2. Create skills in `skills/`
-3. Add templates to `templates/`
-4. Document in `cheatsheets/`
-
-## Resources
-
-### OCI Documentation
-- [OCI GenAI](https://docs.oracle.com/en-us/iaas/Content/generative-ai/overview.htm)
-- [Dedicated AI Clusters](https://docs.oracle.com/en-us/iaas/Content/generative-ai/ai-cluster.htm)
-- [GenAI Agents](https://docs.oracle.com/en-us/iaas/Content/generative-ai-agents/overview.htm)
-- [OCI Icons](https://docs.oracle.com/en-us/iaas/Content/General/Reference/graphicsfordiagrams.htm)
-
-### Diagramming
-- [D2 Language](https://d2lang.com/)
-- [D2 Playground](https://play.d2lang.com/)
-
-### Agent Frameworks
-- [Claude Agent SDK](https://github.com/anthropics/anthropic-cookbook)
-- [Oracle ADK](https://docs.oracle.com/en-us/iaas/Content/generative-ai-agents/adk/)
-- [MCP Protocol](https://modelcontextprotocol.io/)
-
-## License
-
-MIT License - Use freely for your AI architecture projects.
-
----
-
-*AI Architect Command Center - Design with excellence, diagram with clarity, deploy with confidence.*
+MIT. Frank Riemer / FrankX.

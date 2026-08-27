@@ -1,0 +1,11 @@
+{
+  "name": "ai-architect-durable-worker",
+  "private": true,
+  "type": "module",
+  "description": "Long-run home for an agent job. One model seam, bounded workflow, labelled tool data.",
+  "license": "MIT",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test src/server.test.js"
+  }
+}

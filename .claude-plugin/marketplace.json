@@ -1,0 +1,16 @@
+{
+  "name": "frankx",
+  "owner": {
+    "name": "Frank Riemer",
+    "url": "https://www.frankx.ai"
+  },
+  "description": "Frank Riemer's engineering plugins: the AI Architect team that turns a coding agent into a gated architecture lifecycle.",
+  "plugins": [
+    {
+      "name": "ai-architect",
+      "source": "./",
+      "description": "A gated AI-architecture lifecycle: /architect runs a nine-stage agent team that writes an evidence-backed artifact set into your repo. Runs on your keys, no hosted service.",
+      "category": "engineering"
+    }
+  ]
+}

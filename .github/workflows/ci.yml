@@ -1,0 +1,38 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**/*.mjs'
+      - '**/*.json'
+      - '**/*.md'
+      - '.github/workflows/ci.yml'
+      - 'package.json'
+  pull_request:
+    # ready_for_review matters: the job below skips drafts, and without this
+    # type the check never re-runs when a draft is marked ready — it just
+    # stays "skipped" and the PR looks checked when nothing ran.
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - '**/*.mjs'
+      - '**/*.json'
+      - '**/*.md'
+      - '.github/workflows/ci.yml'
+      - 'package.json'
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm test
