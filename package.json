@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "description": "Tooling for the AI Architect Claude Code plugin: manifest validation, skill-parity checks, artifact-contract gates, ROI checks, a devendor audit, and the eval harness.",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "scripts": {
     "validate": "node scripts/validate-install.mjs",
     "parity": "node scripts/check-skill-parity.mjs",
@@ -16,5 +16,6 @@
     "conductor": "node scripts/architect-conductor.mjs",
     "worker:test": "node --test templates/deploy/durable-worker/src/server.test.js",
     "test": "npm run validate && npm run parity && npm run devendor && npm run roi && npm run evals && node --test scripts/architect-conductor.test.mjs"
-  }
+  },
+  "author": "Frank Riemer <frank@frankx.ai>"
 }
