@@ -14,6 +14,7 @@ import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { nextIncomplete, parseWorkflow } from '../scripts/parse-workflow.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const pluginRoot = path.resolve(__dirname, '..');
@@ -61,17 +62,12 @@ const TOOLS = [
   },
 ];
 
-const STAGES = [
-  ['frame', 'gate.frame'],
-  ['discover', 'gate.discovery'],
-  ['flow', 'gate.flow'],
-  ['decide', 'gate.decisions'],
-  ['cost', 'gate.economics'],
-  ['secure', 'gate.trust'],
-  ['prove', 'gate.evals'],
-  ['operate', 'gate.operate'],
-  ['verify', 'gate.verify'],
-];
+function loadStages(root) {
+  const preferred = path.join(root, 'docs', 'architecture', 'WORKFLOW.md');
+  const fallback = path.join(pluginRoot, 'templates', 'WORKFLOW.md');
+  const file = existsSync(preferred) ? preferred : fallback;
+  return parseWorkflow(readFileSync(file, 'utf8'));
+}
 
 function archPath(root) {
   return path.join(root, 'docs', 'architecture', 'architecture.json');
@@ -83,14 +79,14 @@ function readArch(root) {
   return JSON.parse(readFileSync(p, 'utf8'));
 }
 
-function nextStage(arch) {
-  if (!arch) return { stage: 'frame', reason: 'architecture.json missing; start with /architect' };
-  for (const [stage, gate] of STAGES) {
-    const g = arch.gates?.[gate];
-    const done = g && (g.status === 'PASS' || (g.status === 'SKIPPED' && g.reason));
-    if (!done) return { stage, gate, status: g?.status || 'absent' };
+function nextStage(arch, root) {
+  const stages = loadStages(root);
+  const row = nextIncomplete(stages, arch);
+  if (!row) {
+    return { stage: null, reason: arch ? 'all gates complete' : 'architecture.json missing; start with /architect' };
   }
-  return { stage: null, reason: 'all gates complete' };
+  const g = arch?.gates?.[row.gate];
+  return { stage: row.stage, gate: row.gate, status: g?.status || 'absent' };
 }
 
 function runScript(script, root) {
@@ -109,7 +105,7 @@ function handleTool(name, args = {}) {
   const root = path.resolve(args.root || process.cwd());
   if (name === 'architect_status' || name === 'architect_next_stage') {
     const arch = readArch(root);
-    const next = nextStage(arch);
+    const next = nextStage(arch, root);
     return {
       root,
       goal: arch?.goal || null,
@@ -150,7 +146,7 @@ process.stdin.on('data', (chunk) => {
     if (method === 'initialize') {
       respond(id, {
         protocolVersion: '2025-03-26',
-        serverInfo: { name: 'ai-architect', version: '0.1.0' },
+        serverInfo: { name: 'ai-architect', version: '0.1.1' },
         capabilities: { tools: {} },
       });
       continue;

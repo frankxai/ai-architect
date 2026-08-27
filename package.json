@@ -1,6 +1,6 @@
 {
   "name": "@frankxai/ai-architect",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "type": "module",
   "description": "Tooling for the AI Architect Claude Code plugin: manifest validation, skill-parity checks, artifact-contract gates, ROI checks, a devendor audit, and the eval harness.",
@@ -13,7 +13,8 @@
     "devendor": "node scripts/devendor-audit.mjs",
     "evals": "node evals/run.mjs --allow-missing",
     "team": "node scripts/build-team-json.mjs",
+    "conductor": "node scripts/architect-conductor.mjs",
     "worker:test": "node --test templates/deploy/durable-worker/src/server.test.js",
-    "test": "npm run validate && npm run parity && npm run devendor && npm run roi && npm run evals"
+    "test": "npm run validate && npm run parity && npm run devendor && npm run roi && npm run evals && node --test scripts/architect-conductor.test.mjs"
   }
 }
