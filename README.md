@@ -48,6 +48,23 @@ Inserts a marked block into that repository's `AGENTS.md` with the install comma
 pointer to `SOP.md`, and leaves the rest of the file alone. This repository's own `AGENTS.md`
 is what a harness with no slash commands reads to run a stage by hand.
 
+### Conductor (Codex / Claude / any CLI)
+
+Slash commands still run the team inside Claude Code. The conductor is the
+mechanical router for every other harness: it parses `WORKFLOW.md`, finds the
+next incomplete gate, and prints a dispatch card. It does not call a model.
+
+```bash
+node scripts/architect-conductor.mjs --root /path/to/your/repo next
+node scripts/architect-conductor.mjs --root /path/to/your/repo card
+node scripts/architect-conductor.mjs --root /path/to/your/repo check
+```
+
+`card` names the stage, agent, model (`opus` or `sonnet`), reasoning effort, and
+the write paths under `docs/architecture/`. Sonnet cards default to Codex;
+opus cards default to Claude. A red previous gate exits 2. A goal mismatch
+exits 3. Dispatch stays opt-in — this CLI prints JSON only.
+
 ### Review skill only, no install
 
 If you want the four-decision review and not the full lifecycle team, copy
