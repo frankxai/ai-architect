@@ -1,6 +1,6 @@
 {
   "name": "@frankxai/ai-architect",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "type": "module",
   "description": "Tooling for the AI Architect Claude Code plugin: manifest validation, skill-parity checks, artifact-contract gates, ROI checks, a devendor audit, and the eval harness.",

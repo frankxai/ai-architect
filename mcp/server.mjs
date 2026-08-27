@@ -9,6 +9,8 @@
 //   architect_next_stage        — returns the router hint, does not run agents
 //
 // Configure as a local stdio server. Do not host this.
+// Caller-supplied `root` is a local filesystem path. This server does not
+// make network calls. Treat it as machine-local only.
 
 import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
@@ -85,6 +87,19 @@ function nextStage(arch, root) {
   if (!row) {
     return { stage: null, reason: arch ? 'all gates complete' : 'architecture.json missing; start with /architect' };
   }
+  const index = stages.findIndex((s) => s.stage === row.stage);
+  for (let i = 0; i < index; i += 1) {
+    const previous = stages[i];
+    if (arch?.gates?.[previous.gate]?.status === 'FAIL') {
+      return {
+        stage: null,
+        blocked: true,
+        fix_first: previous.gate,
+        run: `/architect --stage ${previous.stage}`,
+        status: 'FAIL',
+      };
+    }
+  }
   const g = arch?.gates?.[row.gate];
   return { stage: row.stage, gate: row.gate, status: g?.status || 'absent' };
 }
@@ -111,7 +126,11 @@ function handleTool(name, args = {}) {
       goal: arch?.goal || null,
       generated_at: arch?.generated_at || null,
       next,
-      command: next.stage === 'verify' ? '/architect-verify' : next.stage ? `/architect --stage ${next.stage}` : '/architect',
+      command: next.blocked
+        ? next.run
+        : next.stage
+          ? `/architect --stage ${next.stage}`
+          : '/architect',
     };
   }
   if (name === 'architect_check_artifacts') return runScript('check-artifacts.mjs', root);
@@ -146,7 +165,7 @@ process.stdin.on('data', (chunk) => {
     if (method === 'initialize') {
       respond(id, {
         protocolVersion: '2025-03-26',
-        serverInfo: { name: 'ai-architect', version: '0.1.1' },
+        serverInfo: { name: 'ai-architect', version: '0.1.2' },
         capabilities: { tools: {} },
       });
       continue;

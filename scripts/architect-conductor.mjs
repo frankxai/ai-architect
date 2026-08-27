@@ -2,7 +2,9 @@
 
 import { spawnSync } from 'node:child_process';
 import {
+  copyFileSync,
   existsSync,
+  mkdirSync,
   readFileSync,
   statSync,
 } from 'node:fs';
@@ -14,11 +16,10 @@ import {
   modelForAgent,
   nextIncomplete,
   parseWorkflow,
-  previousGate,
   reasoningEffort,
 } from './parse-workflow.mjs';
 
-const COMMANDS = new Set(['status', 'next', 'card', 'check']);
+const COMMANDS = new Set(['status', 'next', 'card', 'check', 'init']);
 const HUMAN_GATE_HEADING = /^##\s+Human gates\s*$/i;
 const DECISION_FIX_ORDER = ['trust', 'run', 'loop', 'model'];
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
@@ -72,7 +73,7 @@ function parseArgs(argv) {
     options.goalParts.push(arg);
   }
   if (!options.command) {
-    throw new ConductorError('invalid-arguments', 'command must be one of: status, next, card, check');
+    throw new ConductorError('invalid-arguments', 'command must be one of: status, next, card, check, init');
   }
   if (options.stage && options.from) {
     throw new ConductorError('invalid-arguments', '--stage and --from are mutually exclusive');
@@ -178,29 +179,34 @@ function stageSummary(stage, architecture) {
 }
 
 function blockFor(stages, stage, architecture) {
-  const previous = previousGate(stages, stage);
-  if (!previous) return null;
-  const gateState = architecture?.gates?.[previous.gate];
-  if (gateState?.status !== 'FAIL') return null;
-
-  let fixFirst = previous.gate;
-  if (previous.gate === 'gate.decisions') {
-    const decision = DECISION_FIX_ORDER.find((key) => architecture?.decisions?.[key]?.verdict === 'OPEN');
-    if (decision) fixFirst = `${previous.gate}/${decision}`;
+  if (!stage) return null;
+  const index = stages.findIndex((row) => row.stage === stage.stage);
+  for (let i = 0; i < index; i += 1) {
+    const previous = stages[i];
+    const gateState = architecture?.gates?.[previous.gate];
+    if (gateState?.status !== 'FAIL') continue;
+    let fixFirst = previous.gate;
+    if (previous.gate === 'gate.decisions') {
+      const decision = DECISION_FIX_ORDER.find((key) => architecture?.decisions?.[key]?.verdict === 'OPEN');
+      if (decision) fixFirst = `${previous.gate}/${decision}`;
+    }
+    return {
+      blocked: true,
+      fix_first: fixFirst,
+      missing: gateState.missing || gateState.reason || 'an earlier gate failed',
+      run: `/architect-${previous.stage}`,
+    };
   }
-  const missing = gateState.missing || gateState.reason || 'previous gate failed';
-  return {
-    blocked: true,
-    fix_first: fixFirst,
-    missing,
-    run: `/architect-${previous.stage}`,
-  };
+  return null;
 }
 
 function outputTokens(output) {
-  const quoted = [...output.matchAll(/`([^`]+)`/g)].map((match) => match[1].trim());
+  const quoted = [...String(output).matchAll(/`([^`]+)`/g)].map((match) => match[1].trim()).filter(Boolean);
   if (quoted.length > 0) return quoted;
-  return output.split(',').map((part) => part.trim()).filter(Boolean);
+  return String(output)
+    .split(',')
+    .map((part) => part.trim())
+    .filter((part) => /^[\w./{}*+-]+$/.test(part));
 }
 
 function isContained(parent, candidate) {
@@ -211,14 +217,19 @@ function isContained(parent, candidate) {
 function writePaths(root, output) {
   const artifactRoot = path.resolve(root, 'docs', 'architecture');
   return outputTokens(output).map((relativePath) => {
-    if (path.isAbsolute(relativePath) || path.win32.isAbsolute(relativePath) || relativePath.includes('\0')) {
+    const unix = String(relativePath).replace(/\\/g, '/').replace(/^\.?\//, '');
+    const stripped = unix.replace(/^docs\/architecture\//, '');
+    if (!stripped || stripped.includes('\0') || path.isAbsolute(stripped) || path.win32.isAbsolute(stripped)) {
       throw new ConductorError('unsafe-write-path', `output path is not artifact-relative: ${relativePath}`);
     }
-    const target = path.resolve(artifactRoot, relativePath);
+    if (stripped.split('/').some((seg) => seg === '..')) {
+      throw new ConductorError('unsafe-write-path', `output path escapes docs/architecture: ${relativePath}`);
+    }
+    const target = path.resolve(artifactRoot, stripped);
     if (!isContained(artifactRoot, target)) {
       throw new ConductorError('unsafe-write-path', `output path escapes docs/architecture: ${relativePath}`);
     }
-    return path.posix.join('docs', 'architecture', relativePath.replace(/\\/g, '/'));
+    return path.posix.join('docs', 'architecture', stripped);
   });
 }
 
@@ -283,6 +294,27 @@ export function run(argv = process.argv.slice(2)) {
     options = parseArgs(argv);
     assertDirectory(options.root, 'root');
     assertDirectory(options.pluginRoot, 'plugin-root');
+
+    if (options.command === 'init') {
+      const archDir = path.join(options.root, 'docs', 'architecture');
+      mkdirSync(archDir, { recursive: true });
+      const written = [];
+      const skipped = [];
+      for (const name of ['SOP.md', 'WORKFLOW.md']) {
+        const dest = path.join(archDir, name);
+        const src = path.join(options.pluginRoot, 'templates', name);
+        if (!existsSync(src)) {
+          throw new ConductorError('missing-contract', `missing templates/${name}`);
+        }
+        if (existsSync(dest)) skipped.push(name);
+        else {
+          copyFileSync(src, dest);
+          written.push(name);
+        }
+      }
+      print({ ok: true, written, skipped });
+      return 0;
+    }
 
     const sopPath = contractPath(options.root, options.pluginRoot, 'SOP.md');
     process.stderr.write(`sop: ${sopPath}\n`);

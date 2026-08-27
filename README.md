@@ -55,6 +55,7 @@ mechanical router for every other harness: it parses `WORKFLOW.md`, finds the
 next incomplete gate, and prints a dispatch card. It does not call a model.
 
 ```bash
+node scripts/architect-conductor.mjs --root /path/to/your/repo init
 node scripts/architect-conductor.mjs --root /path/to/your/repo next
 node scripts/architect-conductor.mjs --root /path/to/your/repo card
 node scripts/architect-conductor.mjs --root /path/to/your/repo check
