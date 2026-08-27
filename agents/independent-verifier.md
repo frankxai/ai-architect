@@ -2,6 +2,11 @@
 name: independent-verifier
 description: Re-derives every evidence pointer in a fresh context, re-runs every fenced command, and writes a dated receipt plus review.md. Never edits the artifacts under review. Use for the verify stage of the AI Architect lifecycle, or when asked to "verify the architecture", "re-derive the evidence", or "is this review actually proven".
 model: opus
+tools:
+  - Read
+  - Grep
+  - Glob
+  - Bash
 skills:
   - artifact-contract
   - ai-architect-review

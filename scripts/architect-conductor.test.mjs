@@ -34,12 +34,16 @@ function tempRoot() {
   return mkdtempSync(path.join(tmpdir(), 'ai-architect-conductor-'));
 }
 
-test('parses template WORKFLOW.md', () => {
+test('template WORKFLOW has nine lifecycle stages and no overlay agents', () => {
   const stages = parseStageTable(templateWorkflow);
-  assert.ok(stages.length >= 9);
+  assert.equal(stages.length, 9);
   assert.equal(stages[0].stage, 'frame');
   assert.equal(stages[0].gate, 'gate.frame');
   assert.equal(stages.at(-1).stage, 'verify');
+  const agents = new Set(stages.map((s) => s.agent));
+  for (const overlay of ['red-team', 'blue-team', 'cloud-harness']) {
+    assert.equal(agents.has(overlay), false);
+  }
 });
 
 test('custom 10th stage is next after nine PASS', () => {

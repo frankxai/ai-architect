@@ -4,6 +4,8 @@ const OPUS_AGENTS = new Set([
   'principal-architect',
   'trust-reviewer',
   'independent-verifier',
+  'red-team',
+  'cloud-harness',
 ]);
 
 const SONNET_AGENTS = new Set([
@@ -12,6 +14,7 @@ const SONNET_AGENTS = new Set([
   'economics-analyst',
   'eval-engineer',
   'delivery-engineer',
+  'blue-team',
 ]);
 
 export class WorkflowParseError extends Error {

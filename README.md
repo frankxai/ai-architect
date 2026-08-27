@@ -66,6 +66,11 @@ the write paths under `docs/architecture/`. Sonnet cards default to Codex;
 opus cards default to Claude. A red previous gate exits 2. A goal mismatch
 exits 3. Dispatch stays opt-in — this CLI prints JSON only.
 
+Overlays (not extra WORKFLOW rows): `/architect-red`, `/architect-blue`,
+`/architect-cloud`. Process: `team/PROCESS.md`. skills.sh pack:
+`skills/ai-architect/SKILL.md`. Local MCP adds `architect_init` and
+`architect_card` (no model calls).
+
 ### Review skill only, no install
 
 If you want the four-decision review and not the full lifecycle team, copy

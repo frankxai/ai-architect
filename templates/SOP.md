@@ -30,6 +30,9 @@ No agent in this workflow writes source code. Every agent writes only into
 | eval-engineer | `06-evals/*` | any other artifact |
 | delivery-engineer | `WORKFLOW.md`, `SOP.md`, `07-runbook.md` | any other artifact |
 | independent-verifier | `receipts/*`, `review.md` | everything else — it holds no editing tools and writes via shell redirection only |
+| red-team | `red-team.md` | any other artifact, and never the files under attack |
+| blue-team | `blue-team.md` | any other artifact, and never application source |
+| cloud-harness | `cloud-harness.md` | any other artifact; never provisions |
 
 Never overwrite a file that already exists. Write `<name>.proposed.md` beside it, and say so in
 the command's closing summary. The only files updated in place are `architecture.json` and
