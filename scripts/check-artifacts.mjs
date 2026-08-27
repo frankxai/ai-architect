@@ -30,6 +30,7 @@ const FIXED_MARKDOWN_FILES = [
   '06-evals/rubric.md', 'review.md',
 ];
 const FIXED_DATA_FILES = ['prices.json', '06-evals/cases.jsonl', 'architecture.json'];
+const OPTIONAL_OVERLAY_FILES = ['red-team.md', 'blue-team.md', 'cloud-harness.md'];
 
 const dirArg = process.argv[2] || path.join('docs', 'architecture');
 const targetDir = path.resolve(process.cwd(), dirArg);
@@ -77,6 +78,16 @@ for (const rel of stampTargets) {
     continue;
   }
   check(`stamp: ${rel}`, content.includes(STAMP_LINE), content.includes(STAMP_LINE) ? 'present' : 'stamp line missing or altered');
+}
+
+// 2b. overlay files are optional; if present they must carry the stamp
+for (const rel of OPTIONAL_OVERLAY_FILES) {
+  const content = read(rel);
+  if (content === null) {
+    rows.push({ name: `overlay stamp: ${rel}`, status: 'SKIPPED', detail: 'absent (overlay is optional)' });
+    continue;
+  }
+  check(`overlay stamp: ${rel}`, content.includes(STAMP_LINE), content.includes(STAMP_LINE) ? 'present' : 'stamp line missing or altered');
 }
 
 // 3. WORKFLOW.md stage table
