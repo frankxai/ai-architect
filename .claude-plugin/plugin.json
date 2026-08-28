@@ -8,7 +8,7 @@
   },
   "homepage": "https://www.frankx.ai/ai-architect",
   "repository": "https://github.com/frankxai/ai-architect",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "keywords": [
     "ai-architecture",
     "agent-team",
