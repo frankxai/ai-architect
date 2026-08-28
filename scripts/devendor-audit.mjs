@@ -18,6 +18,7 @@ const repoRoot = path.resolve(__dirname, '..');
 const PATTERN = /oracle|\bOCI\b|canon europe|morrisons|\bNHS\b|pearson|vodafone/i;
 
 const EXCLUDE_DIRS = new Set(['.git', 'node_modules']);
+const EXCLUDE_FILES = new Set(['NOTICE', 'LICENSE', 'LICENSING.md']);
 const BINARY_EXT = new Set(['.png', '.jpg', '.jpeg', '.gif', '.ico', '.woff', '.woff2', '.ttf', '.eot', '.pdf', '.zip']);
 
 function walk(dir, files = []) {
@@ -26,7 +27,7 @@ function walk(dir, files = []) {
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) {
       walk(full, files);
-    } else {
+    } else if (!EXCLUDE_FILES.has(entry.name)) {
       files.push(full);
     }
   }
