@@ -34,12 +34,16 @@ function tempRoot() {
   return mkdtempSync(path.join(tmpdir(), 'ai-architect-conductor-'));
 }
 
-test('parses template WORKFLOW.md', () => {
+test('template WORKFLOW has nine lifecycle stages and no overlay agents', () => {
   const stages = parseStageTable(templateWorkflow);
-  assert.ok(stages.length >= 9);
+  assert.equal(stages.length, 9);
   assert.equal(stages[0].stage, 'frame');
   assert.equal(stages[0].gate, 'gate.frame');
   assert.equal(stages.at(-1).stage, 'verify');
+  const agents = new Set(stages.map((s) => s.agent));
+  for (const overlay of ['red-team', 'blue-team', 'cloud-harness']) {
+    assert.equal(agents.has(overlay), false);
+  }
 });
 
 test('custom 10th stage is next after nine PASS', () => {
@@ -153,3 +157,54 @@ test('check skips missing architecture dir', () => {
   const json = parseStdout(result);
   assert.equal(json.skipped, 'no-architecture-dir');
 });
+
+test('init writes SOP and WORKFLOW once, then skips', () => {
+  const root = tempRoot();
+  const first = run(['--root', root, '--plugin-root', pluginRoot, 'init']);
+  assert.equal(first.status, 0);
+  const created = parseStdout(first);
+  assert.deepEqual(created.written.sort(), ['SOP.md', 'WORKFLOW.md']);
+  const second = run(['--root', root, '--plugin-root', pluginRoot, 'init']);
+  assert.equal(second.status, 0);
+  const again = parseStdout(second);
+  assert.deepEqual(again.skipped.sort(), ['SOP.md', 'WORKFLOW.md']);
+  assert.deepEqual(again.written, []);
+});
+
+test('ancestral FAIL blocks --stage secure (exit 2)', () => {
+  const root = tempRoot();
+  const archDir = path.join(root, 'docs', 'architecture');
+  mkdirSync(archDir, { recursive: true });
+  writeFileSync(
+    path.join(archDir, 'architecture.json'),
+    JSON.stringify({ goal: 'demo', gates: { 'gate.frame': { status: 'FAIL' } } }),
+  );
+  const result = run(['--root', root, '--plugin-root', pluginRoot, '--stage', 'secure', 'card']);
+  assert.equal(result.status, 2);
+  const json = parseStdout(result);
+  assert.equal(json.blocked, true);
+  assert.equal(json.fix_first, 'gate.frame');
+});
+
+test('conductor card rejects escaping write paths', () => {
+  const root = tempRoot();
+  const archDir = path.join(root, 'docs', 'architecture');
+  mkdirSync(archDir, { recursive: true });
+  writeFileSync(
+    path.join(archDir, 'WORKFLOW.md'),
+    [
+      '## Stage table',
+      '',
+      '| stage | agent | input | output | gate |',
+      '|---|---|---|---|---|',
+      '| frame | discovery-analyst | goal | `00-frame.md`, `foo/../../../etc/x.md` | `gate.frame` |',
+      '',
+    ].join('\n'),
+  );
+  writeFileSync(path.join(archDir, 'SOP.md'), readFileSync(path.join(pluginRoot, 'templates', 'SOP.md'), 'utf8'));
+  const result = run(['--root', root, '--plugin-root', pluginRoot, 'card']);
+  assert.equal(result.status, 1);
+  const json = parseStdout(result);
+  assert.equal(json.error, 'unsafe-write-path');
+});
+

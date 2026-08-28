@@ -55,6 +55,7 @@ mechanical router for every other harness: it parses `WORKFLOW.md`, finds the
 next incomplete gate, and prints a dispatch card. It does not call a model.
 
 ```bash
+node scripts/architect-conductor.mjs --root /path/to/your/repo init
 node scripts/architect-conductor.mjs --root /path/to/your/repo next
 node scripts/architect-conductor.mjs --root /path/to/your/repo card
 node scripts/architect-conductor.mjs --root /path/to/your/repo check
@@ -64,6 +65,11 @@ node scripts/architect-conductor.mjs --root /path/to/your/repo check
 the write paths under `docs/architecture/`. Sonnet cards default to Codex;
 opus cards default to Claude. A red previous gate exits 2. A goal mismatch
 exits 3. Dispatch stays opt-in — this CLI prints JSON only.
+
+Overlays (not extra WORKFLOW rows): `/architect-red`, `/architect-blue`,
+`/architect-cloud`. Process: `team/PROCESS.md`. skills.sh pack:
+`skills/ai-architect/SKILL.md`. Local MCP adds `architect_init` and
+`architect_card` (no model calls).
 
 ### Review skill only, no install
 

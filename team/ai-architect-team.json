@@ -13,7 +13,7 @@
     "cursor": "supported",
     "gemini_cli": "supported"
   },
-  "last_reviewed": "2026-08-22",
+  "last_reviewed": "2026-08-27",
   "profile_kind": "agent_team",
   "mission": "Turn a stated goal into a reviewable architecture for a system that calls a language model, by running nine gated stages inside the customer's own repository and leaving an evidence-backed artifact set under docs/architecture/ that an independent verifier can re-derive from scratch.",
   "roles": [
@@ -27,7 +27,15 @@
         "Write one ADR per decision that changed state during the run",
         "Create and maintain architecture.json as the run's resumable state file"
       ],
-      "allowed_tools": ["Read", "Grep", "Glob", "Write", "Edit", "Bash", "Skill"],
+      "allowed_tools": [
+        "Read",
+        "Grep",
+        "Glob",
+        "Write",
+        "Edit",
+        "Bash",
+        "Skill"
+      ],
       "write_scope": [
         "docs/architecture/SYSTEM.md",
         "docs/architecture/adr/*.md",
@@ -44,7 +52,9 @@
         "docs/architecture/adr/ADR-0001-<slug>.md",
         "docs/architecture/architecture.json"
       ],
-      "handoff_to": ["Economics Analyst"]
+      "handoff_to": [
+        "Economics Analyst"
+      ]
     },
     {
       "role": "Discovery Analyst",
@@ -54,7 +64,14 @@
         "Work the discovery question bank and record an answer for at least one question in every section",
         "Mark anything not established as [unknown] and never as [assumed]"
       ],
-      "allowed_tools": ["Read", "Grep", "Glob", "Write", "Bash", "Skill"],
+      "allowed_tools": [
+        "Read",
+        "Grep",
+        "Glob",
+        "Write",
+        "Bash",
+        "Skill"
+      ],
       "write_scope": [
         "docs/architecture/00-frame.md",
         "docs/architecture/01-discovery.md"
@@ -68,7 +85,9 @@
         "docs/architecture/00-frame.md",
         "docs/architecture/01-discovery.md"
       ],
-      "handoff_to": ["Experience Designer"]
+      "handoff_to": [
+        "Experience Designer"
+      ]
     },
     {
       "role": "Experience Designer",
@@ -77,7 +96,14 @@
         "Write the user flows, each with a happy path, a failure branch, and a named human step",
         "Write the experience blueprint as a Stage | Human | AI/Agents | Systems table covering every stage in the flows"
       ],
-      "allowed_tools": ["Read", "Grep", "Glob", "Write", "Bash", "Skill"],
+      "allowed_tools": [
+        "Read",
+        "Grep",
+        "Glob",
+        "Write",
+        "Bash",
+        "Skill"
+      ],
       "write_scope": [
         "docs/architecture/02-user-flows.md",
         "docs/architecture/03-experience-blueprint.md"
@@ -91,7 +117,9 @@
         "docs/architecture/02-user-flows.md",
         "docs/architecture/03-experience-blueprint.md"
       ],
-      "handoff_to": ["Principal Architect"]
+      "handoff_to": [
+        "Principal Architect"
+      ]
     },
     {
       "role": "Economics Analyst",
@@ -101,7 +129,15 @@
         "Build the cost model from those rows only, and show the arithmetic",
         "State a sensitivity band on the three drivers that move the total most"
       ],
-      "allowed_tools": ["Read", "Grep", "Glob", "Write", "Bash", "WebFetch", "Skill"],
+      "allowed_tools": [
+        "Read",
+        "Grep",
+        "Glob",
+        "Write",
+        "Bash",
+        "WebFetch",
+        "Skill"
+      ],
       "write_scope": [
         "docs/architecture/04-roi.md",
         "docs/architecture/prices.json"
@@ -116,7 +152,9 @@
         "docs/architecture/04-roi.md",
         "docs/architecture/prices.json"
       ],
-      "handoff_to": ["Trust Reviewer"]
+      "handoff_to": [
+        "Trust Reviewer"
+      ]
     },
     {
       "role": "Trust Reviewer",
@@ -126,15 +164,28 @@
         "Assign every input and tool a trust tier: T0 private local, T1 scoped project, T2 external tools, T3 untrusted content",
         "List every irreversible tool and name the human step that gates it"
       ],
-      "allowed_tools": ["Read", "Grep", "Glob", "Write", "Bash", "Skill"],
-      "write_scope": ["docs/architecture/05-trust-boundary.md"],
+      "allowed_tools": [
+        "Read",
+        "Grep",
+        "Glob",
+        "Write",
+        "Bash",
+        "Skill"
+      ],
+      "write_scope": [
+        "docs/architecture/05-trust-boundary.md"
+      ],
       "stop_conditions": [
         "The line where retrieved text becomes labelled data cannot be located, so the finding is recorded as ABSENT rather than guessed",
         "An irreversible tool has no human gate, which is recorded as a finding and not repaired by editing code",
         "A target file already exists, so the proposed variant is written beside it instead"
       ],
-      "expected_outputs": ["docs/architecture/05-trust-boundary.md"],
-      "handoff_to": ["Eval Engineer"]
+      "expected_outputs": [
+        "docs/architecture/05-trust-boundary.md"
+      ],
+      "handoff_to": [
+        "Eval Engineer"
+      ]
     },
     {
       "role": "Eval Engineer",
@@ -144,8 +195,17 @@
         "Write the grading rubric",
         "Run the harness and record the observed output as evidence, including that the injection case fails closed"
       ],
-      "allowed_tools": ["Read", "Grep", "Glob", "Write", "Bash", "Skill"],
-      "write_scope": ["docs/architecture/06-evals/*"],
+      "allowed_tools": [
+        "Read",
+        "Grep",
+        "Glob",
+        "Write",
+        "Bash",
+        "Skill"
+      ],
+      "write_scope": [
+        "docs/architecture/06-evals/*"
+      ],
       "stop_conditions": [
         "Fewer than ten cases, or no refusal case, or no injection case",
         "The harness has not been run in this session, so no observed output exists to cite",
@@ -156,7 +216,9 @@
         "docs/architecture/06-evals/cases.jsonl",
         "docs/architecture/06-evals/rubric.md"
       ],
-      "handoff_to": ["Delivery Engineer"]
+      "handoff_to": [
+        "Delivery Engineer"
+      ]
     },
     {
       "role": "Delivery Engineer",
@@ -166,7 +228,15 @@
         "Write SOP.md with model routing, write scopes, stop conditions, human gates, and escalation",
         "Write the runbook, and dry-run every command in it so the exit status is observed rather than assumed"
       ],
-      "allowed_tools": ["Read", "Grep", "Glob", "Write", "Edit", "Bash", "Skill"],
+      "allowed_tools": [
+        "Read",
+        "Grep",
+        "Glob",
+        "Write",
+        "Edit",
+        "Bash",
+        "Skill"
+      ],
       "write_scope": [
         "docs/architecture/WORKFLOW.md",
         "docs/architecture/SOP.md",
@@ -183,7 +253,9 @@
         "docs/architecture/SOP.md",
         "docs/architecture/07-runbook.md"
       ],
-      "handoff_to": ["Independent Verifier"]
+      "handoff_to": [
+        "Independent Verifier"
+      ]
     },
     {
       "role": "Independent Verifier",
@@ -193,7 +265,13 @@
         "Re-run every fenced command and compare the observed output against the recorded output",
         "Write a dated receipt and a review, and never edit the artifacts under review"
       ],
-      "allowed_tools": ["Read", "Grep", "Glob", "Bash", "Skill"],
+      "allowed_tools": [
+        "Read",
+        "Grep",
+        "Glob",
+        "Bash",
+        "Skill"
+      ],
       "write_scope": [
         "docs/architecture/receipts/*.md",
         "docs/architecture/review.md"
@@ -208,6 +286,97 @@
         "docs/architecture/review.md"
       ],
       "handoff_to": []
+    },
+    {
+      "role": "Red Team",
+      "primary_agent": "agent.red-team",
+      "responsibilities": [
+        "Attack evidence pointers, instruction smuggling, cost inflation, and human-gate bypass",
+        "Write docs/architecture/red-team.md without editing the files under attack"
+      ],
+      "allowed_tools": [
+        "Read",
+        "Grep",
+        "Glob",
+        "Write",
+        "Skill"
+      ],
+      "write_scope": [
+        "docs/architecture/red-team.md"
+      ],
+      "stop_conditions": [
+        "A finding would be recorded without an evidence pointer",
+        "The work would rotate a secret, publish, or spend",
+        "A target file already exists, so the proposed variant is written beside it instead"
+      ],
+      "expected_outputs": [
+        "docs/architecture/red-team.md"
+      ],
+      "handoff_to": [
+        "Blue Team"
+      ]
+    },
+    {
+      "role": "Blue Team",
+      "primary_agent": "agent.blue-team",
+      "responsibilities": [
+        "Map each red-team finding to a fail-closed control, owner, and detection",
+        "Write docs/architecture/blue-team.md without patching application source"
+      ],
+      "allowed_tools": [
+        "Read",
+        "Grep",
+        "Glob",
+        "Write",
+        "Bash",
+        "Skill"
+      ],
+      "write_scope": [
+        "docs/architecture/blue-team.md"
+      ],
+      "stop_conditions": [
+        "red-team.md is missing",
+        "A control would cross a human gate",
+        "A target file already exists, so the proposed variant is written beside it instead"
+      ],
+      "expected_outputs": [
+        "docs/architecture/blue-team.md"
+      ],
+      "handoff_to": [
+        "Independent Verifier"
+      ]
+    },
+    {
+      "role": "Cloud and Harness Reviewer",
+      "primary_agent": "agent.cloud-harness",
+      "responsibilities": [
+        "Compare clouds and agent harnesses with evidence, not slogans",
+        "Record how the team is provided (plugin, skills.sh, conductor, MCP, AGENTS.md)",
+        "Write docs/architecture/cloud-harness.md without provisioning"
+      ],
+      "allowed_tools": [
+        "Read",
+        "Grep",
+        "Glob",
+        "Write",
+        "Bash",
+        "WebFetch",
+        "Skill"
+      ],
+      "write_scope": [
+        "docs/architecture/cloud-harness.md"
+      ],
+      "stop_conditions": [
+        "A vendor would be crowned without an evidence pointer",
+        "The work would create a cloud account, change DNS, or paste a key",
+        "A target file already exists, so the proposed variant is written beside it instead"
+      ],
+      "expected_outputs": [
+        "docs/architecture/cloud-harness.md"
+      ],
+      "handoff_to": [
+        "Principal Architect"
+      ]
     }
   ],
   "handoff_protocol": [
@@ -215,7 +384,7 @@
     "Evidence pointers are either path/to/file.ts:L42 or a fenced command together with its observed output",
     "No agent writes application source code; the artifact set under docs/architecture/ is the only output",
     "An existing file is never overwritten; the agent writes <name>.proposed.md beside it and says so in the handoff",
-    "Every generated markdown file ends with the line: Generated by AI Architect · https://www.frankx.ai/ai-architect",
+    "Every generated markdown file ends with the line: Generated by AI Architect \u00b7 https://www.frankx.ai/ai-architect",
     "Implementation roles and the verification role stay independent; the Independent Verifier reads artifacts and re-derives evidence, and never edits what it reviews",
     "architecture.json is the resumable state file; the /architect router records each stage's gate result into it, and only the Principal Architect authors its decisions, planes, and artifacts sections"
   ],
@@ -229,8 +398,8 @@
       "content_hash": null,
       "owner_ref": "owner.frankx",
       "lifecycle": "active",
-      "version": "0.1.0",
-      "last_reviewed": "2026-08-22"
+      "version": "0.1.3",
+      "last_reviewed": "2026-08-27"
     },
     "interfaces": {
       "role_scope_refs": [
@@ -241,7 +410,10 @@
         "agent.trust-reviewer",
         "agent.eval-engineer",
         "agent.delivery-engineer",
-        "agent.independent-verifier"
+        "agent.independent-verifier",
+        "agent.red-team",
+        "agent.blue-team",
+        "agent.cloud-harness"
       ],
       "gate_refs": [
         "gate.frame",
@@ -256,7 +428,9 @@
       ],
       "verifier_ref": "agent.independent-verifier",
       "independent_verifier": true,
-      "routing_refs": ["workflow.adlc-architecture-lifecycle"]
+      "routing_refs": [
+        "workflow.adlc-architecture-lifecycle"
+      ]
     }
   }
 }

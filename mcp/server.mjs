@@ -1,14 +1,20 @@
 #!/usr/bin/env node
 // Local stdio MCP server for AI Architect gate checks.
-// No model calls. No network. Reads the current working directory.
+// No model calls. No network sockets.
+// architect_init may copy SOP.md and WORKFLOW.md into <root>/docs/architecture/.
+// Other tools only read that tree or run local node scripts.
 //
 // Tools:
 //   architect_status            — next incomplete stage from architecture.json
 //   architect_check_artifacts   — runs scripts/check-artifacts.mjs
 //   architect_check_roi         — runs scripts/check-roi.mjs
 //   architect_next_stage        — returns the router hint, does not run agents
+//   architect_init              — copies SOP/WORKFLOW once via the conductor
+//   architect_card              — dispatch card JSON, does not spawn a model
 //
 // Configure as a local stdio server. Do not host this.
+// Caller-supplied `root` is a local filesystem path. This server does not
+// make network calls. Treat it as machine-local only.
 
 import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
@@ -60,6 +66,26 @@ const TOOLS = [
       },
     },
   },
+  {
+    name: 'architect_init',
+    description: 'Copy SOP.md and WORKFLOW.md into docs/architecture/ once. Mechanical. Does not call a model.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        root: { type: 'string' },
+      },
+    },
+  },
+  {
+    name: 'architect_card',
+    description: 'Print the conductor dispatch card for the next incomplete stage. Does not spawn a model.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        root: { type: 'string' },
+      },
+    },
+  },
 ];
 
 function loadStages(root) {
@@ -85,6 +111,19 @@ function nextStage(arch, root) {
   if (!row) {
     return { stage: null, reason: arch ? 'all gates complete' : 'architecture.json missing; start with /architect' };
   }
+  const index = stages.findIndex((s) => s.stage === row.stage);
+  for (let i = 0; i < index; i += 1) {
+    const previous = stages[i];
+    if (arch?.gates?.[previous.gate]?.status === 'FAIL') {
+      return {
+        stage: null,
+        blocked: true,
+        fix_first: previous.gate,
+        run: `/architect --stage ${previous.stage}`,
+        status: 'FAIL',
+      };
+    }
+  }
   const g = arch?.gates?.[row.gate];
   return { stage: row.stage, gate: row.gate, status: g?.status || 'absent' };
 }
@@ -101,6 +140,25 @@ function runScript(script, root) {
   };
 }
 
+function runConductor(root, command) {
+  const result = spawnSync(process.execPath, [
+    path.join(pluginRoot, 'scripts', 'architect-conductor.mjs'),
+    '--root',
+    root,
+    '--plugin-root',
+    pluginRoot,
+    command,
+  ], {
+    encoding: 'utf8',
+    cwd: root,
+  });
+  return {
+    exit: result.status ?? 1,
+    stdout: (result.stdout || '').slice(0, 8000),
+    stderr: (result.stderr || result.error?.message || '').slice(0, 2000),
+  };
+}
+
 function handleTool(name, args = {}) {
   const root = path.resolve(args.root || process.cwd());
   if (name === 'architect_status' || name === 'architect_next_stage') {
@@ -111,11 +169,17 @@ function handleTool(name, args = {}) {
       goal: arch?.goal || null,
       generated_at: arch?.generated_at || null,
       next,
-      command: next.stage === 'verify' ? '/architect-verify' : next.stage ? `/architect --stage ${next.stage}` : '/architect',
+      command: next.blocked
+        ? next.run
+        : next.stage
+          ? `/architect --stage ${next.stage}`
+          : '/architect',
     };
   }
   if (name === 'architect_check_artifacts') return runScript('check-artifacts.mjs', root);
   if (name === 'architect_check_roi') return runScript('check-roi.mjs', root);
+  if (name === 'architect_init') return runConductor(root, 'init');
+  if (name === 'architect_card') return runConductor(root, 'card');
   throw new Error(`unknown tool ${name}`);
 }
 
@@ -146,7 +210,7 @@ process.stdin.on('data', (chunk) => {
     if (method === 'initialize') {
       respond(id, {
         protocolVersion: '2025-03-26',
-        serverInfo: { name: 'ai-architect', version: '0.1.1' },
+        serverInfo: { name: 'ai-architect', version: '0.1.3' },
         capabilities: { tools: {} },
       });
       continue;
@@ -168,3 +232,4 @@ process.stdin.on('data', (chunk) => {
     if (id != null) respondError(id, -32601, `method not found: ${method}`);
   }
 });
+process.stdin.on('end', () => process.exit(0));
