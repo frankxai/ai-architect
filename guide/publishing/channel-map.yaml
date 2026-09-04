@@ -1,0 +1,29 @@
+schema: ai-architect-guide-channel-map/v1
+canonical:
+  system: github
+  repository: frankxai/ai-architect
+  path: guide
+projections:
+  notion:
+    purpose: editorial control surface
+    may_edit_canonical_text: false
+  google_drive:
+    purpose: review copy and signed export
+    may_edit_canonical_text: false
+  web:
+    purpose: living reader edition and search entry points
+    target: https://www.frankx.ai/ai-architecture
+    may_edit_canonical_text: false
+  pdf:
+    purpose: fixed edition
+    may_edit_canonical_text: false
+  epub:
+    purpose: portable fixed edition
+    may_edit_canonical_text: false
+  academy:
+    purpose: exercises and assessment derived from chapters
+    target: https://github.com/frankxai/ai-architect-academy
+    may_edit_canonical_text: false
+return_path:
+  method: pull_request
+  required_for_projection_corrections: true
