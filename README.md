@@ -11,6 +11,10 @@ It runs on your keys. There is no hosted agent and no account.
 
 Maintained at [frankx.ai/ai-architect](https://www.frankx.ai/ai-architect).
 
+## AI Architect Guide 2026
+
+The [AI Architect Guide 2026](guide/README.md) turns the four hard-to-reverse decisions and seven operating planes into a researched field guide, claim ledger, reusable labs, and a versioned publishing system.
+
 ## Install
 
 Four paths in, depending on your harness. Every one of them runs on your own model keys,
