@@ -11,6 +11,7 @@ A release uses evidence gates, not an average score. Any red gate blocks publica
 | style | Humanizer static gate passes; editor reads opening, transitions, and ending aloud | PASS |
 | security | named reviewer checks trust boundary, identity, privilege, and destructive tools | PENDING |
 | legal | accountable author confirms that regulatory language is architectural guidance, not legal advice | PENDING |
+| rights | Frank confirms whether guide content inherits the repository's Apache-2.0 license or receives a separate content license | PENDING |
 | independent verification | fresh-context verifier reopens sources and samples at least 20 claims | PENDING |
 | author approval | Frank approves title, positioning, experience claims, and release note | PENDING |
 | release | tag, immutable receipt, channel hashes, and distribution links exist | PENDING |
