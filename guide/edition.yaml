@@ -28,6 +28,7 @@ required_gates:
   developmental_editor: passed
   humanizer: passed
   technical_security_reviewer: pending
+  rights_and_licensing: pending
   independent_verifier: pending
   accountable_author: pending
 channels:
