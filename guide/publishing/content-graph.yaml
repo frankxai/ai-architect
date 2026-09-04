@@ -1,0 +1,133 @@
+schema: ai-architect-content-graph/v1
+verified_on: 2026-09-04
+canonical_system: github
+identity:
+  founder_role: Founder and AI Systems Architect
+  founder_line: Building intelligence that compounds
+  public_promise: I build AI-native ventures, and show you the architecture behind them.
+products:
+  personal_book:
+    id_prefix: PBOOK
+    title: Building Intelligence That Compounds
+    subtitle: An AI Systems Architect's Operating Doctrine
+    voice: first-person
+    cadence: evergreen
+    status: brief
+  technical_guide:
+    id_prefix: GUIDE
+    title: AI Architect Guide
+    voice: neutral-field-guide
+    cadence: living-draft-and-annual-freeze
+    status: draft
+  monthly_briefing:
+    id_format: AAB-YYYY-MM
+    title_format: AI Architect Briefing YYYY-MM
+    voice: founder-editorial
+    cadence: monthly
+    newsletter_stream: Signal Loop
+    status: planned
+  annual_ultimate:
+    id_format: AAU-YYYY
+    title_format: AI Architect Ultimate YYYY
+    voice: mixed-labeled
+    cadence: annual
+    status: planned
+objects:
+  source:
+    id_format: SNN
+    canonical_path: guide/research/sources.yaml
+  claim:
+    id_format: CNNN
+    canonical_path: guide/research/claims.yaml
+  field_note:
+    id_format: FN-YYYY-NNN
+    required_links: [source_or_experience, claim]
+  monthly_issue:
+    id_format: AAB-YYYY-MM
+    required_links: [claims_changed, guide_sections, tests, source_delta]
+  guide_section:
+    id_format: GUIDE-YYYY-SECTION
+    required_links: [claims]
+  blog_post:
+    id_format: BLOG-SLUG
+    required_links: [field_note_or_monthly_issue, canonical_claims]
+  newsletter_issue:
+    id_format: SIGNAL-ISSUE
+    required_links: [monthly_issue]
+  academy_lab:
+    id_format: LAB-NNN
+    required_links: [guide_section, claims, assessment, evidence_output]
+  field_result:
+    id_format: FR-YYYY-NNN
+    required_links: [method, data, limitations, claims_affected]
+  annual_release:
+    id_format: AAU-YYYY
+    required_links: [guide_tag, issues, labs, results, receipt, errata]
+promotion_rules:
+  source_to_claim:
+    condition: direct support recorded and source review date current
+  claim_to_monthly_issue:
+    condition: architectural consequence and uncertainty stated
+  monthly_issue_to_guide:
+    condition: durable value shown and claim ledger updated
+  guide_to_academy:
+    condition: method stable enough for a reproducible assessment
+  field_result_to_annual_release:
+    condition: data, method, limitations, and review disposition public
+projection_rules:
+  notion:
+    owns: [status, assignments, decisions, calendar, review_notes]
+    may_own_canonical_text: false
+  google_drive:
+    owns: [review_copies, signed_approvals, rights_records, fixed_exports]
+    may_own_canonical_text: false
+  blog:
+    owns: [search_projection]
+    may_own_canonical_text: false
+  signal_loop:
+    owns: [newsletter_projection]
+    may_own_canonical_text: false
+  academy:
+    owns: [labs, assessments, learner_evidence]
+    may_own_guide_text: false
+cadence:
+  monthly:
+    - refresh high-volatility sources
+    - record claim changes
+    - publish one briefing when signal warrants
+    - project to blog and Signal Loop
+    - review corrections and field results
+  quarterly:
+    - publish one reproducible field report
+    - review coverage blockers
+    - update Academy labs
+    - inspect authority scorecard
+  annual:
+    - open candidate in July
+    - freeze volatile research in September
+    - run specialist review in October
+    - release only after every gate passes
+decision_gates:
+  academy_estate:
+    status: unresolved
+    issue: Repository documents conflict on whether AI Architect Academy is a technical product or a redirect history repository.
+    proposed_decision: Keep AI Architect Academy as the technical curriculum and product layer. Preserve Starlight Intelligence Academy as a separate operator-learning property.
+    required_approver: Frank Riemer
+  personal_book_overlap:
+    status: unresolved
+    issue: The Intelligence Systems Playbook overlaps the new personal flagship.
+    proposed_decision: Retire or rename the older concept when the new title is approved.
+    required_approver: Frank Riemer
+authority_rules:
+  prohibited:
+    - invented reviewer credit
+    - unsupported customer or implementation counts
+    - unsupported performance or revenue results
+    - employer or customer endorsement without permission
+    - self-awarded world-leading status
+  required:
+    - visible source and claim records
+    - reproducible tests and labs
+    - named review dispositions
+    - correction history
+    - immutable annual release receipt

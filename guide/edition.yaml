@@ -7,7 +7,7 @@ canonical_repository: https://github.com/frankxai/ai-architect
 canonical_path: guide
 accountable_author:
   name: Frank Riemer
-  role: AI Architect
+  role: Founder and AI Systems Architect
   url: https://www.frankx.ai
 governing_reader:
   - senior AI architect
@@ -35,7 +35,8 @@ channels:
   github:
     status: active
   notion:
-    status: planned
+    status: active
+    target: https://app.notion.com/p/3d126ac2b7f68158891af76314d6a102
   web:
     status: planned
   pdf:
@@ -44,3 +45,9 @@ channels:
     status: planned
   academy_lab:
     status: planned
+    decision_gate: academy-estate-ownership
+product_family:
+  personal_book: Building Intelligence That Compounds
+  monthly_stream: AI Architect Briefing
+  annual_package: AI Architect Ultimate
+  authority_system: strategy/authority-system.md

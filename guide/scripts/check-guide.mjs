@@ -126,6 +126,21 @@ function markdownFiles(root) {
 
 for (const file of markdownFiles(guideRoot)) {
   const text = fs.readFileSync(file, 'utf8');
+  const relative = path.relative(guideRoot, file);
+
+  if (text.includes('—')) failures.push(`${relative}: contains an em dash`);
+
+  for (const word of bannedWords) {
+    const match = new RegExp(`\\b${word}\\b`, 'i').exec(text);
+    if (match) failures.push(`${relative}:${lineOf(text, match.index)} banned word: ${word}`);
+  }
+
+  const lower = text.toLowerCase();
+  for (const phrase of bannedPhrases) {
+    const index = lower.indexOf(phrase);
+    if (index >= 0) failures.push(`${relative}:${lineOf(text, index)} banned phrase: ${phrase}`);
+  }
+
   for (const match of text.matchAll(/\[[^\]]+\]\(([^)]+)\)/g)) {
     const target = match[1].trim();
     if (/^(?:https?:|mailto:|#)/.test(target)) continue;
@@ -144,8 +159,8 @@ const editionText = read('edition.yaml');
 const sourceIds = new Set([...sourcesText.matchAll(/^\s*- id: (S\d{2})$/gm)].map((match) => match[1]));
 const claimIds = [...claimsText.matchAll(/^\s*- id: (C\d{3})$/gm)].map((match) => match[1]);
 
-if (sourceIds.size < 15) failures.push(`source ledger has ${sourceIds.size} sources, minimum is 15`);
-if (claimIds.length < 20) failures.push(`claim ledger has ${claimIds.length} claims, minimum is 20`);
+if (sourceIds.size < 40) failures.push(`source ledger has ${sourceIds.size} sources, minimum is 40`);
+if (claimIds.length < 40) failures.push(`claim ledger has ${claimIds.length} claims, minimum is 40`);
 if (new Set(claimIds).size !== claimIds.length) failures.push('claim ledger contains duplicate IDs');
 for (const match of sourcesText.matchAll(/^\s*url:\s*(\S+)$/gm)) {
   if (!match[1].startsWith('https://')) failures.push(`source URL must use HTTPS: ${match[1]}`);
@@ -184,6 +199,12 @@ for (const file of [
   'editorial/ai-contribution.md',
   'publishing/README.md',
   'publishing/channel-map.yaml',
+  'publishing/content-graph.yaml',
+  'publishing/monthly-brief-template.md',
+  'publishing/annual-ultimate-template.md',
+  'strategy/coverage-gap-audit.md',
+  'strategy/authority-system.md',
+  'strategy/personal-book-brief.md',
   'releases/2026-0-1-draft.md',
 ]) {
   if (!fs.existsSync(path.join(guideRoot, file))) failures.push(`missing publishing-system file: ${file}`);

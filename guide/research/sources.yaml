@@ -169,3 +169,163 @@ sources:
     supports: Multi-agent fit, token cost, parallel research, checkpoints, full tracing, and manual evaluation.
     volatility: medium
     review_by: 2027-03-04
+  - id: S22
+    title: AI Agent Standards Initiative
+    publisher: National Institute of Standards and Technology
+    kind: government-initiative
+    url: https://www.nist.gov/artificial-intelligence/ai-agent-standards-initiative
+    supports: Industry-led standards, community-led protocols, agent authentication and identity, secure human-agent and multi-agent interaction, and security evaluation as active 2026 work.
+    volatility: high
+    review_by: 2026-10-04
+  - id: S23
+    title: ISO IEC 42001 Artificial intelligence management system
+    publisher: International Organization for Standardization
+    kind: international-standard-overview
+    url: https://www.iso.org/standard/42001
+    supports: Organizational AI management systems, risk and opportunity governance, and a plan-do-check-act management cycle.
+    volatility: low
+    review_by: 2027-09-04
+  - id: S24
+    title: AI Data Security Best Practices
+    publisher: National Security Agency Artificial Intelligence Security Center
+    kind: joint-government-guidance
+    url: https://media.defense.gov/2025/May/22/2003720601/-1/-1/0/CSI_AI_DATA_SECURITY.PDF
+    supports: Data supply-chain security, poisoning and drift defenses, provenance, encryption, digital signatures, and trusted infrastructure across AI training and operation.
+    volatility: medium
+    review_by: 2027-03-04
+  - id: S25
+    title: NIST SP 800-218A Secure Software Development Practices for Generative AI and Dual-Use Foundation Models
+    publisher: National Institute of Standards and Technology
+    kind: government-standard
+    url: https://csrc.nist.gov/news/2024/nist-publishes-sp-800-218a
+    supports: AI-specific secure software practices for model producers, system producers, and acquirers across the lifecycle.
+    volatility: low
+    review_by: 2027-09-04
+  - id: S26
+    title: SPDX 3.0.1 AI Profile
+    publisher: SPDX
+    kind: open-standard-specification
+    url: https://spdx.github.io/spdx-spec/v3.0.1/model/AI/AI/
+    supports: Machine-readable descriptions of AI system and model artifacts, datasets, licensing, and related properties.
+    volatility: medium
+    review_by: 2027-03-04
+  - id: S27
+    title: CycloneDX Machine Learning Bill of Materials
+    publisher: CycloneDX
+    kind: open-standard-documentation
+    url: https://cyclonedx.org/capabilities/mlbom/
+    supports: Machine-learning bills of materials covering models, datasets, configurations, provenance, training methods, and risk.
+    volatility: medium
+    review_by: 2027-03-04
+  - id: S28
+    title: Running Agents on Kubernetes with Agent Sandbox
+    publisher: Kubernetes
+    kind: open-source-project-report
+    url: https://kubernetes.io/blog/2026/03/20/running-agents-on-kubernetes-with-agent-sandbox/
+    supports: An experimental model for isolated, stateful agent workloads with persistent identity, secure scratch space, suspension, resumption, and stronger runtime isolation.
+    volatility: high
+    review_by: 2026-10-04
+  - id: S29
+    title: Announcing the Kubernetes AI Gateway Working Group
+    publisher: Kubernetes
+    kind: open-source-project-report
+    url: https://kubernetes.io/blog/2026/03/09/announcing-ai-gateway-wg/
+    supports: Active work on standard networking for AI inference, MCP, agents, policy, and traffic management.
+    volatility: high
+    review_by: 2026-10-04
+  - id: S30
+    title: Gateway API Inference Extension
+    publisher: Kubernetes
+    kind: open-source-project-report
+    url: https://kubernetes.io/blog/2025/06/05/introducing-gateway-api-inference-extension/
+    supports: Model-aware inference routing, shared accelerator workloads, request priorities, and policy through InferencePool resources.
+    volatility: high
+    review_by: 2026-10-04
+  - id: S31
+    title: AWS Well-Architected Generative AI Lens
+    publisher: Amazon Web Services
+    kind: cloud-architecture-guidance
+    url: https://docs.aws.amazon.com/wellarchitected/latest/generative-ai-lens/generative-ai-lens.html
+    supports: Generative AI work from scoping through model choice, customization, development, deployment, continuous improvement, operations, security, reliability, performance, cost, and sustainability.
+    volatility: medium
+    review_by: 2027-03-04
+  - id: S32
+    title: AI workloads on Azure
+    publisher: Microsoft
+    kind: cloud-architecture-guidance
+    url: https://learn.microsoft.com/en-us/azure/well-architected/ai/
+    supports: Nondeterministic AI workloads, application and platform design, training and grounding data, MLOps, GenAIOps, evaluation, operations, and responsible AI.
+    volatility: medium
+    review_by: 2027-03-04
+  - id: S33
+    title: Google Cloud Architecture Framework AI and ML perspective
+    publisher: Google Cloud
+    kind: cloud-architecture-guidance
+    url: https://docs.cloud.google.com/architecture/framework/perspectives/ai-ml
+    supports: AI and ML design, build, and management across operations, security, reliability, cost, and performance.
+    volatility: medium
+    review_by: 2027-03-04
+  - id: S34
+    title: Oracle Enterprise Generative AI Stack
+    publisher: Oracle
+    kind: cloud-architecture-guidance
+    url: https://docs.oracle.com/en/solutions/oci-genai-enterprise/index.html
+    supports: Enterprise generative AI architecture across applications, access, integration, models, development, data integration, context, catalog, logging, and monitoring.
+    volatility: medium
+    review_by: 2027-03-04
+  - id: S35
+    title: Oracle AI Center of Excellence
+    publisher: Oracle
+    kind: organizational-guidance
+    url: https://www.oracle.com/uk/artificial-intelligence/ai-center-excellence/
+    supports: A cross-functional center of architects, technologists, subject-matter experts, and business roles responsible for strategy, standards, governance, and responsible adoption.
+    volatility: medium
+    review_by: 2027-03-04
+  - id: S36
+    title: Effect of Optimization on AI Forecasting
+    publisher: FinOps Foundation
+    kind: practitioner-guidance
+    url: https://www.finops.org/wg/effect-of-optimization-on-ai-forecasting/
+    supports: AI cost forecasting should account for the effect of efficiency work and connect cost per unit of work to business value.
+    volatility: medium
+    review_by: 2027-03-04
+  - id: S37
+    title: C2PA Technical Specification 2.4
+    publisher: Coalition for Content Provenance and Authenticity
+    kind: open-standard-specification
+    url: https://spec.c2pa.org/specifications/specifications/2.4/specs/C2PA_Specification.html
+    supports: Cryptographically verifiable media provenance through assertions, signed claims, manifests, validation, trust, privacy controls, and whole-workflow history.
+    volatility: high
+    review_by: 2026-11-04
+  - id: S38
+    title: General-Purpose AI Code of Practice
+    publisher: European Commission
+    kind: regulator-guidance
+    url: https://digital-strategy.ec.europa.eu/en/policies/contents-code-gpai
+    supports: Transparency, copyright, and safety and security chapters for general-purpose AI model providers under the EU AI Act.
+    volatility: high
+    review_by: 2026-10-04
+  - id: S39
+    title: Draft guidelines for classification of high-risk AI systems
+    publisher: European Commission
+    kind: draft-regulator-guidance
+    url: https://digital-strategy.ec.europa.eu/en/library/draft-commission-guidelines-classification-high-risk-ai-systems
+    supports: The Commission's current draft interpretation of high-risk AI system classification and related obligations.
+    volatility: high
+    review_by: 2026-10-04
+  - id: S40
+    title: Technology Radar and FAQ
+    publisher: Thoughtworks
+    kind: practitioner-publication-method
+    url: https://www.thoughtworks.com/en-us/radar/faq
+    supports: A twice-yearly, dated field snapshot based on practitioner experience that explicitly does not claim full market coverage.
+    volatility: medium
+    review_by: 2027-03-04
+  - id: S41
+    title: A2A joins the Agentic AI Foundation open agent stack
+    publisher: Agentic AI Foundation
+    kind: foundation-project-update
+    url: https://aaif.io/blog/a2a-joins-aaif
+    supports: A2A 1.0 status, open governance, and distinct roles for AGENTS.md, agent runtimes, MCP, agent gateways, and agent-to-agent interoperability.
+    volatility: high
+    review_by: 2026-10-04
