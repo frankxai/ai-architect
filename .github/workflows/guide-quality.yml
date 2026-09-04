@@ -1,0 +1,26 @@
+name: AI Architect Guide quality
+
+on:
+  pull_request:
+    paths:
+      - 'guide/**'
+      - '.github/workflows/guide-quality.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'guide/**'
+      - '.github/workflows/guide-quality.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  guide:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check manuscript, sources, claims, and release gates
+        run: node guide/scripts/check-guide.mjs

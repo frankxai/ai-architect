@@ -1,0 +1,267 @@
+schema: ai-architect-guide-claims/v1
+verified_on: 2026-09-04
+claims:
+  - id: C001
+    class: fact
+    statement: Major model vendors expose materially different model families, prices, context limits, modalities, and release states.
+    sources: [S01, S02, S03, S04]
+    status: verified
+    review_by: 2026-10-04
+  - id: C002
+    class: inference
+    statement: A production system should isolate model-provider specifics behind one owned seam because the vendor catalog changes faster than the business process.
+    sources: [S01, S02, S03, S04]
+    status: verified
+    review_by: 2026-10-04
+  - id: C003
+    class: fact
+    statement: OpenAI documents both model-led and code-led orchestration, and says code-led flow is more predictable for speed, cost, and performance.
+    sources: [S06]
+    status: verified
+    review_by: 2026-12-04
+  - id: C004
+    class: prescription
+    statement: Choose the least autonomous loop that can still handle the task's uncertainty.
+    sources: [S05, S06]
+    status: verified
+    review_by: 2027-03-04
+  - id: C005
+    class: fact
+    statement: Anthropic reports that its agents used about four times the tokens of chat and its multi-agent system used about fifteen times the tokens of chat in its research workload.
+    sources: [S21]
+    status: verified
+    review_by: 2027-03-04
+  - id: C006
+    class: prescription
+    statement: A parallel agent design needs a value and effort budget before it needs more agents.
+    sources: [S21]
+    status: verified
+    review_by: 2027-03-04
+  - id: C007
+    class: fact
+    statement: The 2026-07-28 MCP specification defines hosts, clients, and servers plus resources, prompts, tools, and negotiated extensions.
+    sources: [S08]
+    status: verified
+    review_by: 2026-11-04
+  - id: C008
+    class: fact
+    statement: MCP tells hosts to treat tool descriptions as untrusted unless they come from a trusted server and to obtain user consent before invoking tools.
+    sources: [S08]
+    status: verified
+    review_by: 2026-11-04
+  - id: C009
+    class: fact
+    statement: MCP HTTP authorization uses an OAuth 2.1 profile with protected resource metadata, resource indicators, least-privilege scopes, and token audience validation.
+    sources: [S09]
+    status: verified
+    review_by: 2026-11-04
+  - id: C010
+    class: fact
+    statement: A2A 1.0.0 supports discovery, opaque agent collaboration, synchronous and asynchronous tasks, streaming, artifacts, and in-task authorization.
+    sources: [S10]
+    status: verified
+    review_by: 2026-11-04
+  - id: C011
+    class: inference
+    statement: MCP fits the agent-to-capability boundary while A2A fits a boundary between independently operated agents.
+    sources: [S08, S10]
+    status: verified
+    review_by: 2026-11-04
+  - id: C012
+    class: prescription
+    statement: Retrieved text remains untrusted data until a policy layer turns a cited claim into an allowed action.
+    sources: [S08, S18, S19]
+    status: verified
+    review_by: 2027-03-04
+  - id: C013
+    class: fact
+    statement: Agent evaluations need both the transcript of decisions and the end state in the environment.
+    sources: [S14, S15]
+    status: verified
+    review_by: 2027-03-04
+  - id: C014
+    class: fact
+    statement: Effective agent evals mix code-based checks, model-based rubrics, and human judgment, calibrated against task-specific outcomes.
+    sources: [S13, S15]
+    status: verified
+    review_by: 2027-03-04
+  - id: C015
+    class: prescription
+    statement: The release gate for an agent change should include outcome, path, safety, and economics tests.
+    sources: [S13, S14, S15]
+    status: verified
+    review_by: 2027-03-04
+  - id: C016
+    class: fact
+    statement: OpenTelemetry maintains a separate GenAI semantic-conventions repository for spans, metrics, events, MCP, and provider-specific signals.
+    sources: [S16]
+    status: verified
+    review_by: 2026-11-04
+  - id: C017
+    class: prescription
+    statement: A trace must explain the selected model, supplied context, tool call, policy decision, state change, outcome, latency, and cost.
+    sources: [S14, S15, S16]
+    status: verified
+    review_by: 2026-11-04
+  - id: C018
+    class: fact
+    statement: The NIST GenAI Profile is a cross-sector companion to AI RMF 1.0 for risks across design, development, use, and evaluation.
+    sources: [S17]
+    status: verified
+    review_by: 2027-09-04
+  - id: C019
+    class: fact
+    statement: OWASP's agentic list covers goal hijack, tool misuse, identity and privilege abuse, supply-chain risk, code execution, memory poisoning, insecure agent communication, cascading failure, human trust exploitation, and rogue agents.
+    sources: [S18]
+    status: verified
+    review_by: 2027-03-04
+  - id: C020
+    class: fact
+    statement: The EU AI Act became generally applicable on 2026-08-02, with separate dates for prohibited practices, GPAI duties, and high-risk systems.
+    sources: [S20]
+    status: verified
+    review_by: 2026-10-04
+  - id: C021
+    class: prescription
+    statement: Compliance evidence should be emitted by the runtime and release process instead of assembled after deployment.
+    sources: [S17, S20]
+    status: verified
+    review_by: 2026-10-04
+  - id: C022
+    class: fact
+    statement: Long agent work benefits from incremental steps, explicit progress records, clean handoff state, version history, and end-to-end verification.
+    sources: [S12]
+    status: verified
+    review_by: 2027-03-04
+  - id: C023
+    class: fact
+    statement: Durable workflow systems provide patterns for retries, approval waits, long-running activity, child work, callbacks, and continuing with fresh history.
+    sources: [S11]
+    status: verified
+    review_by: 2027-03-04
+  - id: C024
+    class: prescription
+    statement: Any action that can outlive an HTTP request needs an owned state machine, retry policy, idempotency key, and recovery path.
+    sources: [S10, S11, S12]
+    status: verified
+    review_by: 2027-03-04
+  - id: C025
+    class: fact
+    statement: Tight context, low-overlap tools, and just-in-time retrieval reduce ambiguity and unnecessary context load.
+    sources: [S07]
+    status: verified
+    review_by: 2027-03-04
+  - id: C026
+    class: fact
+    statement: NIST's 2026 AI Agent Standards Initiative treats open protocols, agent authentication, identity infrastructure, secure human-agent and multi-agent interaction, and security evaluation as active standards work.
+    sources: [S22]
+    status: verified
+    review_by: 2026-10-04
+  - id: C027
+    class: prescription
+    statement: A production agent system should separate human, workload, agent, session, and tool identity and record the scope, audience, expiry, and revocation path of delegated authority.
+    sources: [S09, S10, S18, S22]
+    status: verified
+    review_by: 2026-10-04
+  - id: C028
+    class: fact
+    statement: ISO IEC 42001 defines an organizational AI management system built around policy, objectives, risk and opportunity management, and continual management review.
+    sources: [S23]
+    status: verified
+    review_by: 2027-09-04
+  - id: C029
+    class: inference
+    statement: A field method for AI architecture needs an explicit lifecycle and organizational operating model in addition to runtime planes.
+    sources: [S17, S23, S31, S32, S33, S35]
+    status: verified
+    review_by: 2027-03-04
+  - id: C030
+    class: fact
+    statement: Joint government guidance treats data supply-chain security, poisoning, drift, provenance, encryption, signatures, and trusted infrastructure as AI system concerns.
+    sources: [S24]
+    status: verified
+    review_by: 2027-03-04
+  - id: C031
+    class: prescription
+    statement: The data and context architecture should record inventory, lineage, rights, freshness, integrity, retention, deletion, and drift controls.
+    sources: [S24, S31, S32, S33, S34]
+    status: verified
+    review_by: 2027-03-04
+  - id: C032
+    class: fact
+    statement: NIST SP 800-218A adds AI-specific secure software practices for model producers, system producers, and acquirers across the lifecycle.
+    sources: [S25]
+    status: verified
+    review_by: 2027-09-04
+  - id: C033
+    class: fact
+    statement: SPDX and CycloneDX define machine-readable structures for AI models, datasets, configurations, provenance, licensing, and related risk information.
+    sources: [S26, S27]
+    status: verified
+    review_by: 2027-03-04
+  - id: C034
+    class: prescription
+    statement: Each production release should emit a machine-readable inventory for its behavior-bearing models, datasets, prompts, policies, tools, and dependencies.
+    sources: [S25, S26, S27]
+    status: verified
+    review_by: 2027-03-04
+  - id: C035
+    class: fact
+    statement: Kubernetes Agent Sandbox presents an experimental pattern for isolated, stateful agent workloads with persistent identity, suspension, resumption, and stronger runtime isolation.
+    sources: [S28]
+    status: verified
+    review_by: 2026-10-04
+  - id: C036
+    class: inference
+    statement: AI gateways, model-aware routing, capacity allocation, and agent sandboxing form a platform concern separate from application orchestration.
+    sources: [S28, S29, S30, S31, S32, S33]
+    status: verified
+    review_by: 2026-10-04
+  - id: C037
+    class: inference
+    statement: Current cloud architecture guidance makes data, platform, lifecycle operations, security, reliability, performance, cost, and sustainability part of the AI architect's remit.
+    sources: [S31, S32, S33, S34]
+    status: verified
+    review_by: 2027-03-04
+  - id: C038
+    class: prescription
+    statement: AI cost decisions should measure cost per verified unit of work, forecast the effect of efficiency changes, and connect the unit to business value.
+    sources: [S31, S32, S33, S36]
+    status: verified
+    review_by: 2027-03-04
+  - id: C039
+    class: fact
+    statement: C2PA 2.4 defines cryptographically verifiable content provenance through assertions, signed claims, manifests, trust, and validation.
+    sources: [S37]
+    status: verified
+    review_by: 2026-11-04
+  - id: C040
+    class: fact
+    statement: The EU General-Purpose AI Code of Practice has transparency, copyright, and safety and security chapters, with the last chapter applying to providers of models with systemic risk.
+    sources: [S38]
+    status: verified
+    review_by: 2026-10-04
+  - id: C041
+    class: fact
+    statement: The European Commission's 2026 high-risk AI classification guidance remains a draft and should be treated as volatile until finalized.
+    sources: [S39]
+    status: verified
+    review_by: 2026-10-04
+  - id: C042
+    class: inference
+    statement: Dated field signals should be published separately from durable doctrine and promoted into the annual guide only after their architectural value survives review.
+    sources: [S40]
+    status: verified
+    review_by: 2027-03-04
+  - id: C043
+    class: fact
+    statement: AAIF describes distinct open-stack roles for project instructions, agent runtimes, tool connectivity, traffic control, and agent-to-agent interoperability.
+    sources: [S41]
+    status: verified
+    review_by: 2026-10-04
+  - id: C044
+    class: prescription
+    statement: A reference architecture should state its deployment mode, platform boundary, data boundary, identity model, recovery model, and retirement path.
+    sources: [S22, S24, S31, S32, S33]
+    status: verified
+    review_by: 2027-03-04

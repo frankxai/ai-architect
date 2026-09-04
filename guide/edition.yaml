@@ -1,0 +1,53 @@
+schema: ai-architect-guide-edition/v1
+title: AI Architect Guide 2026
+subtitle: Build systems that can change their models without losing control
+edition: 2026.0.1-draft
+status: draft
+canonical_repository: https://github.com/frankxai/ai-architect
+canonical_path: guide
+accountable_author:
+  name: Frank Riemer
+  role: Founder and AI Systems Architect
+  url: https://www.frankx.ai
+governing_reader:
+  - senior AI architect
+  - CTO
+  - technical founder
+  - AI platform lead
+reader_action: Adopt the four-decision and seven-plane method in a production architecture review.
+verified_on: 2026-09-04
+next_source_review_on: 2026-10-04
+source_policy: primary-first
+publication_contract:
+  canonical_source: github
+  editorial_projection: notion
+  review_exports: google-drive
+  release_rule: immutable-tag-and-receipt
+required_gates:
+  source_editor: passed
+  developmental_editor: passed
+  humanizer: passed
+  technical_security_reviewer: pending
+  rights_and_licensing: pending
+  independent_verifier: pending
+  accountable_author: pending
+channels:
+  github:
+    status: active
+  notion:
+    status: active
+    target: https://app.notion.com/p/3d126ac2b7f68158891af76314d6a102
+  web:
+    status: planned
+  pdf:
+    status: planned
+  epub:
+    status: planned
+  academy_lab:
+    status: planned
+    decision_gate: academy-estate-ownership
+product_family:
+  personal_book: Building Intelligence That Compounds
+  monthly_stream: AI Architect Briefing
+  annual_package: AI Architect Ultimate
+  authority_system: strategy/authority-system.md
