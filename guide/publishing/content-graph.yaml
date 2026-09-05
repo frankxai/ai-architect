@@ -1,6 +1,15 @@
 schema: ai-architect-content-graph/v1
 verified_on: 2026-09-04
 canonical_system: github
+proposed_extensions:
+  agency_and_ownership:
+    status: draft
+    contract: guide/strategy/agency-and-ownership.md
+    delivery_plan: guide/strategy/agency-delivery-plan.md
+    lab: guide/labs/agency-and-ownership-review.md
+    example: guide/labs/agency-and-ownership-example.md
+    public_identity_approved: false
+    independent_review: pending
 identity:
   founder_role: Founder and AI Systems Architect
   founder_line: Building intelligence that compounds

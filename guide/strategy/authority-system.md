@@ -8,6 +8,8 @@ The books have different jobs. The personal book establishes Frank's doctrine th
 
 ## Product architecture
 
+The proposed [agency and ownership contract](agency-and-ownership.md) adds the studio promise, operational values, and human operating practice. Its [delivery plan](agency-delivery-plan.md) routes implementation without moving canonical guide text or resolving the existing title and Academy decisions by assumption.
+
 | Product | Working title | Voice | Primary reader | Job | Cadence | Canonical home |
 |---|---|---|---|---|---|---|
 | Personal flagship | *Building Intelligence That Compounds* | first person | technical founder, architect, senior operator | explain the doctrine, its origin, and the decisions behind it | evergreen book with controlled revisions | book repository |

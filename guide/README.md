@@ -85,6 +85,10 @@ The [authority system](strategy/authority-system.md) defines two books with sepa
 
 `AI Architect Briefing` is the monthly change stream inside Signal Loop. `AI Architect Ultimate` is the frozen annual package. The [content graph](publishing/content-graph.yaml), [monthly template](publishing/monthly-brief-template.md), and [annual template](publishing/annual-ultimate-template.md) make the relationships inspectable.
 
+## Agency and ownership extension
+
+The proposed [agency contract](strategy/agency-and-ownership.md) translates FrankX's freedom-oriented mission into architecture requirements without changing this guide's neutral technical voice. Start with the [agency and ownership review](labs/agency-and-ownership-review.md), compare the [synthetic worked example](labs/agency-and-ownership-example.md), and track the [delivery plan](strategy/agency-delivery-plan.md). These additions are draft material, not a public rebrand or release approval.
+
 ## Contribution rule
 
 A pull request that changes a factual claim must change its claim record or explain why the claim record is unaffected. A release cannot be marked ready while any required human gate is pending.

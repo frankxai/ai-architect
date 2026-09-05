@@ -205,6 +205,10 @@ for (const file of [
   'strategy/coverage-gap-audit.md',
   'strategy/authority-system.md',
   'strategy/personal-book-brief.md',
+  'strategy/agency-and-ownership.md',
+  'strategy/agency-delivery-plan.md',
+  'labs/agency-and-ownership-review.md',
+  'labs/agency-and-ownership-example.md',
   'releases/2026-0-1-draft.md',
 ]) {
   if (!fs.existsSync(path.join(guideRoot, file))) failures.push(`missing publishing-system file: ${file}`);

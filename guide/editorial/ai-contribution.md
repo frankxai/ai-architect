@@ -9,3 +9,5 @@ OpenAI Codex, GPT-5 family, supported research, source extraction, structure, in
 No external human expert is credited in this draft. The specialist titles in the editorial constitution are required review roles. They remain gates until a named reviewer completes the work.
 
 The draft does not claim that AI output is expert review. Source links, claim records, tests, a pull request, and later human decisions make the contribution auditable.
+
+On 2026-09-05, Codex prepared a proposed agency-and-ownership extension from Frank's direction and the existing guide draft: a strategy contract, delivery plan, reusable review lab, and synthetic worked example. It added no new technical claim to the manuscript or evidence ledgers. The example has not been executed. Independent different-provider critique and accountable-author approval remain pending for this extension.
