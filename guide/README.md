@@ -52,7 +52,9 @@ The current chapters establish the core. The [coverage audit](strategy/coverage-
 
 ## Publication state
 
-Edition `2026.0.1-draft` is a researched draft. Automated source, structure, and style checks pass before a pull request is opened. Release still requires named human review and an independent verifier in a fresh context. See [edition.yaml](edition.yaml) and [review gates](editorial/review-gates.md).
+Edition `2026.0.2-working` is a public working edition, not the final annual book. It has 16 manuscript files, a source and claim ledger, and an executable authority-boundary lab. Final-book source, security, rights, editorial, and author gates remain open. See [edition.yaml](edition.yaml) and [review gates](editorial/review-gates.md). Claims of full field coverage, human expert certification, and production benchmark results are not made.
+
+Start with the [four decisions](manuscript/02-four-decisions.md), run the [authority-boundary lab](labs/delegated-authority/README.md), or read the [September briefing](publishing/issues/AAB-2026-09.md). The [architecture hub](https://www.frankx.ai/ai-architecture) connects this working source to the wider field guide.
 
 ## System map
 
@@ -71,10 +73,12 @@ Edition `2026.0.1-draft` is a researched draft. Automated source, structure, and
 ## Local quality gate
 
 ```bash
-node guide/scripts/check-guide.mjs
+npm ci --ignore-scripts
+npm run guide:check
+npm run guide:test
 ```
 
-The script checks the manuscript inventory, required authority-system files, word floor, source IDs, claim evidence, review dates, placeholders, em dashes, and the Humanizer ban list. It does not certify truth. That remains a source-editor and verifier duty.
+The script checks the manuscript inventory, required authority-system files, word floor, YAML structure, unique IDs, claim metadata, real calendar dates, final-gate evidence, local links, placeholders, em dashes, and the Humanizer ban list. Regression tests exercise gate failures. Lab tests exercise local policy behavior. Neither certifies truth or production security.
 
 ## Authority system
 
@@ -87,6 +91,6 @@ The [authority system](strategy/authority-system.md) defines two books with sepa
 
 ## Contribution rule
 
-A pull request that changes a factual claim must change its claim record or explain why the claim record is unaffected. A release cannot be marked ready while any required human gate is pending.
+A pull request that changes a factual claim must change its claim record or explain why the claim record is unaffected. A final edition cannot be marked released while any required human gate is pending. Merging a clearly labeled working draft does not close those gates.
 
-Maintained by Frank Riemer, Founder and AI Systems Architect. Research and initial drafting support for this edition is disclosed in [AI contribution](editorial/ai-contribution.md).
+Maintained by Frank Riemer, Founder and AI Architect. Research and initial drafting support for this edition is disclosed in [AI contribution](editorial/ai-contribution.md).

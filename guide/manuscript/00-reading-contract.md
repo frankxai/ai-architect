@@ -28,7 +28,7 @@ It will not call every model loop an agent. A fixed workflow is often the right 
 
 It will not treat a fluent answer as proof of an external action. A booking agent can say a seat was booked while the reservation table says otherwise. Agent evaluation has to inspect the transcript and the end state. [S15](../research/sources.yaml)
 
-It will not present this researched draft as independently verified. The initial source and manuscript checks passed. A named security reviewer, a fresh-context verifier, and Frank Riemer still have to approve a public release. The red gates are visible in the repository.
+This public working edition is unfinished. Automated checks and an isolated agent's source sample do not establish complete coverage or human expert certification. A named security reviewer, an independent final-edition verifier, and Frank Riemer still have to approve the final annual book. The open gates remain visible in the repository.
 
 ## How evidence works here
 

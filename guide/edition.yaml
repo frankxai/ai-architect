@@ -1,13 +1,14 @@
 schema: ai-architect-guide-edition/v1
 title: AI Architect Guide 2026
 subtitle: Build systems that can change their models without losing control
-edition: 2026.0.1-draft
+edition: 2026.0.2-working
 status: draft
+publication_state: public-working-edition
 canonical_repository: https://github.com/frankxai/ai-architect
 canonical_path: guide
 accountable_author:
   name: Frank Riemer
-  role: Founder and AI Systems Architect
+  role: Founder and AI Architect
   url: https://www.frankx.ai
 governing_reader:
   - senior AI architect
@@ -24,9 +25,9 @@ publication_contract:
   review_exports: google-drive
   release_rule: immutable-tag-and-receipt
 required_gates:
-  source_editor: passed
-  developmental_editor: passed
-  humanizer: passed
+  source_editor: pending
+  developmental_editor: pending
+  humanizer: pending
   technical_security_reviewer: pending
   rights_and_licensing: pending
   independent_verifier: pending
@@ -38,7 +39,8 @@ channels:
     status: active
     target: https://app.notion.com/p/3d126ac2b7f68158891af76314d6a102
   web:
-    status: planned
+    status: integration-pending
+    target: https://www.frankx.ai/ai-architecture
   pdf:
     status: planned
   epub:

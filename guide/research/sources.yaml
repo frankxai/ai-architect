@@ -77,7 +77,7 @@ sources:
     title: Agent2Agent protocol specification 1.0.0
     publisher: A2A Project
     kind: protocol-specification
-    url: https://a2a-protocol.org/latest/specification/
+    url: https://a2a-protocol.org/v1.0.0/specification/
     supports: Agent discovery, tasks, artifacts, streaming, asynchronous work, in-task authorization, scoped access, and MCP relationship.
     volatility: high
     review_by: 2026-11-04

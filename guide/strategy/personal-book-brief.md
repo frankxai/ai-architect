@@ -4,7 +4,7 @@
 
 **Title:** *Building Intelligence That Compounds*
 
-**Subtitle:** *An AI Systems Architect's Operating Doctrine*
+**Proposed subtitle:** *An AI Architect's Operating Doctrine*
 
 **Author promise:** I build AI-native ventures, and show you the architecture behind them.
 
@@ -28,7 +28,7 @@ My job as an architect is to decide what may vary, what must remain stable, who 
 
 ## Narrative spine
 
-The approved story spine is:
+The proposed story spine, pending Frank's confirmation, is:
 
 - early exposure to construction, electronics, web work, and the reality that systems fail at their joints;
 - enterprise cloud and AI work, including architecture, an AI center of excellence, workshops, and translation between executive intent and technical decisions;
@@ -107,7 +107,7 @@ The prose can say “I believe” and “I learned.” It must not turn memory i
 | Material | Draft use | Condition |
 |---|---|---|
 | family construction, electronics, and early web origin | allowed as personal memory | Frank approves wording |
-| Oracle tenure and role chronology | hold for exact dates and title check | employment evidence or approved public record |
+| employer tenure and role chronology | hold for exact dates and title check | employment evidence or approved public record |
 | AI architect and AI center of excellence work | allowed at role level after wording review | no confidential program, customer, or result detail |
 | work across generative AI, retrieval, agents, data, cloud or GPU, governance, workshops, and executive translation | allowed as scope statement after review | distinguish direct work, collaboration, and observation |
 | current founder ventures and public repositories | allowed | cite public artifact and current status |
@@ -134,6 +134,8 @@ Create an experience ledger beside the manuscript:
 No personal episode enters a release candidate without an experience record.
 
 ## Voice sample
+
+Illustrative proposed prose, not an approved autobiographical account. The scenes and wording require Frank's confirmation before use in a book or marketing copy.
 
 I learned architecture before I had a name for it. A wall, a circuit, and a software system punish the same kind of carelessness: the parts can look correct while the joint between them carries the failure.
 

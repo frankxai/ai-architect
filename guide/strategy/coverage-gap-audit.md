@@ -58,7 +58,7 @@ Data security now covers the whole supply chain. Joint government guidance addre
 
 Secure delivery now includes AI-specific assets. NIST SP 800-218A extends secure software practice for model producers, system producers, and acquirers. SPDX and CycloneDX can describe models, datasets, configurations, training methods, licenses, and provenance in machine-readable inventories. Each guide reference implementation should emit an AI bill of materials with its release evidence.
 
-The application is only one layer. Current AWS, Azure, Google Cloud, and Oracle guidance covers data platforms, infrastructure, lifecycle operations, security, reliability, cost, performance, and sustainability. Kubernetes work on agent sandboxes, inference routing, and AI gateways makes platform choices visible in the open stack. The guide needs a platform chapter without becoming a cloud product catalog.
+The application is only one layer. The cloud architecture sources S31 through S34 cover data platforms, infrastructure, lifecycle operations, security, reliability, cost, performance, and sustainability. Kubernetes work on agent sandboxes, inference routing, and AI gateways makes platform choices visible in the open stack. The guide needs a platform chapter without becoming a cloud product catalog.
 
 Management and regulatory systems also moved. ISO/IEC 42001 defines an organizational AI management system. The EU General-Purpose AI Code of Practice now has transparency, copyright, and safety and security chapters. Architecture records must connect runtime evidence to organizational decisions and legal classification.
 

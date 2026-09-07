@@ -8,25 +8,25 @@ Prices are public list prices observed in vendor documentation on 2026-09-04. Th
 
 OpenAI's catalog named GPT-6 Astra as its flagship for hard end-to-end work and documented three GPT-5.6 tiers. The listed text prices and limits were: [S01](../research/sources.yaml)
 
-| Model | Model ID | Input per million tokens | Output per million tokens | Context | Max output |
-|---|---|---:|---:|---:|---:|
-| GPT-6 Astra | `gpt-6-astra` | $10.00 | $50.00 | 1.05M | 128K |
-| GPT-5.6 Sol | `gpt-5.6-sol` | $4.00 | $20.00 | 1.05M | 128K |
-| GPT-5.6 Terra | `gpt-5.6-terra` | $2.00 | $12.00 | 1.05M | 128K |
-| GPT-5.6 Luna | `gpt-5.6-luna` | $0.20 | $1.20 | 1.05M | 128K |
+| Model | Model ID | Input per million tokens | Output per million tokens | Context | Max output | Claim |
+|---|---|---:|---:|---:|---:|---|
+| GPT-6 Astra | `gpt-6-astra` | $10.00 | $50.00 | 1.05M | 128K | C045 |
+| GPT-5.6 Sol | `gpt-5.6-sol` | $4.00 | $20.00 | 1.05M | 128K | C046 |
+| GPT-5.6 Terra | `gpt-5.6-terra` | $2.00 | $12.00 | 1.05M | 128K | C047 |
+| GPT-5.6 Luna | `gpt-5.6-luna` | $0.20 | $1.20 | 1.05M | 128K | C048 |
 
-The page showed functions, web search, file search, and computer use for those models. GPT-6 Astra was in a staged rollout on the access date, which makes availability part of the procurement check.
+The page showed functions, web search, file search, and computer use for those models. Check availability for the actual account and region before choosing a route. The catalog alone does not prove access.
 
 ## Anthropic
 
 Anthropic's current family covered Fable, Opus, Sonnet, and Haiku. Its page advised starting with Opus 5 for most work and moving to Fable 5.1 for demanding long-horizon work when higher-effort Opus evals still fell short. [S02](../research/sources.yaml)
 
-| Model | Model ID | Input per million tokens | Output per million tokens | Context | Max output |
-|---|---|---:|---:|---:|---:|
-| Claude Fable 5.1 | `claude-fable-5-1` | $10.00 | $50.00 | 1M | 128K |
-| Claude Opus 5 | `claude-opus-5` | $5.00 | $25.00 | 1M | 128K |
-| Claude Sonnet 5 | `claude-sonnet-5` | $2.00 | $10.00 | 1M | 128K |
-| Claude Haiku 4.5 | `claude-haiku-4-5-20251001` | $1.00 | $5.00 | 200K | 64K |
+| Model | Model ID | Input per million tokens | Output per million tokens | Context | Max output | Claim |
+|---|---|---:|---:|---:|---:|---|
+| Claude Fable 5.1 | `claude-fable-5-1` | $10.00 | $50.00 | 1M | 128K | C049 |
+| Claude Opus 5 | `claude-opus-5` | $5.00 | $25.00 | 1M | 128K | C050 |
+| Claude Sonnet 5 | `claude-sonnet-5` | $2.00 | $10.00 | 1M | 128K | C051 |
+| Claude Haiku 4.5 | `claude-haiku-4-5-20251001` | $1.00 | $5.00 | 200K | 64K | C052 |
 
 All four were documented with text and image input, text output, vision, multilingual use, and tools. Capability labels remain vendor claims until the task bank measures them.
 
@@ -40,7 +40,9 @@ The catalog page used here did not supply one comparable price and context table
 
 ## xAI
 
-xAI documented Grok 4.6 as `grok-4.6`, with a 500K-token context window and list prices of $2.00 per million input tokens and $6.00 per million output tokens. The page stated a 2026-02-01 knowledge cutoff and was last updated 2026-08-21. [S04](../research/sources.yaml)
+xAI documented Grok 4.6 as `grok-4.6`, with a 500K-token context window and list prices of $2.00 per million input tokens and $6.00 per million output tokens. The page stated a 2026-02-01 knowledge cutoff and was last updated 2026-08-21. [S04](../research/sources.yaml) [C053](../research/claims.yaml)
+
+Claims C045 through C053 map the numeric rows to their sources. An isolated agent verifier rechecked these rows on 2026-09-07. That confirms documentary support on that date, not account access, negotiated pricing, or task performance.
 
 The same page distinguished moving aliases from dated snapshots. That distinction belongs in the release record. An alias may be suitable for exploration; a reproducible baseline needs the exact observed version or an explicit statement that the provider does not offer one.
 

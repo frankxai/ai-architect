@@ -5,11 +5,17 @@ on:
     paths:
       - 'guide/**'
       - '.github/workflows/guide-quality.yml'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'scripts/devendor-audit*'
   push:
     branches: [main]
     paths:
       - 'guide/**'
       - '.github/workflows/guide-quality.yml'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'scripts/devendor-audit*'
 
 permissions:
   contents: read
@@ -22,5 +28,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - run: npm ci --ignore-scripts
       - name: Check manuscript, sources, claims, and release gates
-        run: node guide/scripts/check-guide.mjs
+        run: npm run guide:check && npm run guide:test

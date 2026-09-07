@@ -20,6 +20,8 @@ flowchart TD
 
 ## Release procedure
 
+This procedure is for a final, tagged edition. Public working drafts may merge and receive a version-pinned web link while their final-book gates remain pending. Such a merge authorizes draft access only. It does not authorize paid-book claims, personal experience claims, Academy redirects, newsletter sends, or a final-edition tag.
+
 1. Refresh volatile sources and update `verified_on` fields.
 2. Run `node guide/scripts/check-guide.mjs`.
 3. Request the named security review and independent verification.

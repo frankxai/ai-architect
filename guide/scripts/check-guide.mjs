@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
+import { parseLedger, validateLedgers } from './validate-ledgers.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const guideRoot = path.resolve(here, '..');
@@ -149,6 +150,14 @@ for (const file of markdownFiles(guideRoot)) {
     const resolved = path.resolve(path.dirname(file), fileTarget);
     if (!fs.existsSync(resolved)) {
       failures.push(`${path.relative(guideRoot, file)}:${lineOf(text, match.index)} broken local link: ${target}`);
+    } else {
+      const repositoryRoot = fs.realpathSync(path.resolve(guideRoot, '..'));
+      const actual = fs.realpathSync(resolved);
+      const relativeActual = path.relative(repositoryRoot, actual);
+      if (relativeActual === '..' || relativeActual.startsWith(`..${path.sep}`) || path.isAbsolute(relativeActual)) {
+        failures.push(`${relative}: local link escapes repository: ${target}`);
+      }
+      if (actual !== resolved) failures.push(`${relative}: local link traverses a symlink: ${target}`);
     }
   }
 }
@@ -156,20 +165,21 @@ for (const file of markdownFiles(guideRoot)) {
 const sourcesText = read('research/sources.yaml');
 const claimsText = read('research/claims.yaml');
 const editionText = read('edition.yaml');
-const sourceIds = new Set([...sourcesText.matchAll(/^\s*- id: (S\d{2})$/gm)].map((match) => match[1]));
-const claimIds = [...claimsText.matchAll(/^\s*- id: (C\d{3})$/gm)].map((match) => match[1]);
-
-if (sourceIds.size < 40) failures.push(`source ledger has ${sourceIds.size} sources, minimum is 40`);
-if (claimIds.length < 40) failures.push(`claim ledger has ${claimIds.length} claims, minimum is 40`);
-if (new Set(claimIds).size !== claimIds.length) failures.push('claim ledger contains duplicate IDs');
-for (const match of sourcesText.matchAll(/^\s*url:\s*(\S+)$/gm)) {
-  if (!match[1].startsWith('https://')) failures.push(`source URL must use HTTPS: ${match[1]}`);
+let ledgers;
+try {
+  ledgers = { sources: parseLedger(sourcesText), claims: parseLedger(claimsText), edition: parseLedger(editionText) };
+} catch (error) {
+  console.error(`AI Architect Guide quality gate: FAIL\nInvalid YAML: ${error.message}`);
+  process.exit(1);
 }
+failures.push(...validateLedgers(ledgers, new Date().toISOString().slice(0, 10)));
+const sourceIds = new Set((ledgers.sources?.sources ?? []).map((source) => source?.id));
+const claimIds = (ledgers.claims?.claims ?? []).map((claim) => claim?.id);
 
-for (const match of claimsText.matchAll(/sources:\s*\[([^\]]+)\]/g)) {
-  for (const raw of match[1].split(',')) {
-    const id = raw.trim();
-    if (!sourceIds.has(id)) failures.push(`claim ledger refers to unknown source: ${id}`);
+for (const file of markdownFiles(guideRoot)) {
+  const text = fs.readFileSync(file, 'utf8');
+  for (const match of text.matchAll(/\bC\d{3,}\b/g)) {
+    if (!claimIds.includes(match[0])) failures.push(`${path.relative(guideRoot, file)}: unknown claim marker ${match[0]}`);
   }
 }
 
@@ -180,17 +190,6 @@ for (const chapter of requiredChapters) {
   for (const match of text.matchAll(/\bS\d{2}\b/g)) {
     if (!sourceIds.has(match[0])) failures.push(`${chapter}: unknown source marker ${match[0]}`);
   }
-}
-
-const dates = [...sourcesText.matchAll(/^\s*review_by: (\d{4}-\d{2}-\d{2})$/gm), ...claimsText.matchAll(/^\s*review_by: (\d{4}-\d{2}-\d{2})$/gm)];
-const today = new Date().toISOString().slice(0, 10);
-for (const match of dates) {
-  if (match[1] < today) failures.push(`stale evidence review date: ${match[1]} is before ${today}`);
-}
-
-if (!/^status: (draft|candidate|released)$/m.test(editionText)) failures.push('edition has no valid status');
-if (/^status: released$/m.test(editionText) && /:\s*pending$/m.test(editionText)) {
-  failures.push('edition is released while a required gate is pending');
 }
 
 for (const file of [
@@ -220,4 +219,5 @@ console.log('AI Architect Guide quality gate: PASS');
 console.log(`- ${requiredChapters.length} manuscript files`);
 console.log(`- ${sourceIds.size} sources`);
 console.log(`- ${claimIds.length} claims`);
+console.log('- Mechanical checks only: no assertion of complete claim coverage, source truth, or human approval');
 for (const note of notes) console.log(`- ${note}`);
