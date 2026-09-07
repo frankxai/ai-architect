@@ -1,0 +1,33 @@
+name: AI Architect Guide quality
+
+on:
+  pull_request:
+    paths:
+      - 'guide/**'
+      - '.github/workflows/guide-quality.yml'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'scripts/devendor-audit*'
+  push:
+    branches: [main]
+    paths:
+      - 'guide/**'
+      - '.github/workflows/guide-quality.yml'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'scripts/devendor-audit*'
+
+permissions:
+  contents: read
+
+jobs:
+  guide:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci --ignore-scripts
+      - name: Check manuscript, sources, claims, and release gates
+        run: npm run guide:check && npm run guide:test

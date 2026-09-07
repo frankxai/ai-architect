@@ -1,0 +1,54 @@
+schema: ai-architect-guide-channel-map/v1
+canonical:
+  system: github
+  repository: frankxai/ai-architect
+  path: guide
+projections:
+  notion:
+    purpose: editorial control surface
+    target: https://app.notion.com/p/3d126ac2b7f68158891af76314d6a102
+    may_edit_canonical_text: false
+  google_drive:
+    purpose: review copy and signed export
+    may_edit_canonical_text: false
+  web:
+    purpose: living reader edition and search entry points
+    target: https://www.frankx.ai/ai-architecture
+    may_edit_canonical_text: false
+  research_hub:
+    purpose: public evidence, benchmarks, and dated results
+    target: https://www.frankx.ai/research
+    may_edit_canonical_text: false
+  blog:
+    purpose: searchable standalone analysis derived from canonical claims
+    target: https://www.frankx.ai/blog
+    may_edit_canonical_text: false
+  signal_loop:
+    purpose: founder editorial projection of the monthly AI Architect Briefing
+    target: https://www.frankx.ai/newsletter
+    may_edit_canonical_text: false
+  pdf:
+    purpose: fixed edition
+    may_edit_canonical_text: false
+  epub:
+    purpose: portable fixed edition
+    may_edit_canonical_text: false
+  academy:
+    purpose: technical labs, assessments, and learner evidence derived from stable guide methods
+    target: https://github.com/frankxai/ai-architect-academy
+    may_edit_canonical_text: false
+    estate_status: decision-required
+    estate_issue: Repository documents conflict on active-product versus redirect-history status.
+series:
+  personal_book:
+    title: Building Intelligence That Compounds
+    voice: first-person
+  monthly:
+    title: AI Architect Briefing
+    channel: signal_loop
+  annual:
+    title: AI Architect Ultimate
+    release_type: tagged-package
+return_path:
+  method: pull_request
+  required_for_projection_corrections: true
