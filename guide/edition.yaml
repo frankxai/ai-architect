@@ -30,6 +30,7 @@ required_gates:
   humanizer: pending
   technical_security_reviewer: pending
   rights_and_licensing: pending
+  legal_review: pending
   independent_verifier: pending
   accountable_author: pending
 channels:

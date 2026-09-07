@@ -119,6 +119,7 @@ function markdownFiles(root) {
   const files = [];
   for (const entry of fs.readdirSync(root, { withFileTypes: true })) {
     const fullPath = path.join(root, entry.name);
+    if (entry.isSymbolicLink()) failures.push(`guide contains a symlink: ${path.relative(guideRoot, fullPath)}`);
     if (entry.isDirectory()) files.push(...markdownFiles(fullPath));
     if (entry.isFile() && entry.name.endsWith('.md')) files.push(fullPath);
   }

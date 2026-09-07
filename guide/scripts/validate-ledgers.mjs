@@ -2,7 +2,7 @@ import { parseDocument } from 'yaml';
 
 export const FINAL_GATES = [
   'source_editor', 'developmental_editor', 'humanizer',
-  'technical_security_reviewer', 'rights_and_licensing',
+  'technical_security_reviewer', 'rights_and_licensing', 'legal_review',
   'independent_verifier', 'accountable_author',
 ];
 
