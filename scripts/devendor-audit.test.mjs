@@ -6,6 +6,7 @@ const source = { id: 'S34', ...ATTRIBUTED_SOURCES.S34, supports: 'Public archite
 const encode = (record) => JSON.stringify({ sources: [record] });
 test('exact source attribution is allowed only in the source ledger', () => {
   assert.equal(violationCount('guide/research/sources.yaml', encode(source)), 0);
+  assert.equal(violationCount('guide\\research\\sources.yaml', encode(source)), 0);
   assert.ok(violationCount('guide/manuscript/example.md', encode(source)) > 0);
 });
 test('a source does not exempt narrative, altered URLs, or unknown records', () => {

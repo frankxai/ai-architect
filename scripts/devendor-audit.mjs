@@ -30,7 +30,8 @@ export const ATTRIBUTED_SOURCES = {
 };
 
 export function auditContent(relativePath, content) {
-  if (relativePath !== 'guide/research/sources.yaml') return content;
+  const rel = String(relativePath).replaceAll('\\', '/');
+  if (rel !== 'guide/research/sources.yaml') return content;
   const document = parseLedger(content);
   for (const record of document.sources ?? []) {
     const allowed = ATTRIBUTED_SOURCES[record.id];
