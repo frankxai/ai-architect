@@ -30,7 +30,9 @@ export const ATTRIBUTED_SOURCES = {
 };
 
 export function auditContent(relativePath, content) {
-  const rel = String(relativePath).replaceAll('\\', '/');
+  // Host separators only. A literal backslash on POSIX is a different filename
+  // and must still be scanned.
+  const rel = String(relativePath).split(path.sep).join('/');
   if (rel !== 'guide/research/sources.yaml') return content;
   const document = parseLedger(content);
   for (const record of document.sources ?? []) {
