@@ -1,7 +1,7 @@
 schema: ai-architect-guide-edition/v1
 title: AI Architect Guide 2026
 subtitle: Build systems that can change their models without losing control
-edition: 2026.0.2-working
+edition: 2026.0.3-working
 status: draft
 publication_state: public-working-edition
 canonical_repository: https://github.com/frankxai/ai-architect
@@ -54,3 +54,5 @@ product_family:
   monthly_stream: AI Architect Briefing
   annual_package: AI Architect Ultimate
   authority_system: strategy/authority-system.md
+  roadmap: strategy/roadmap.md
+  agency_contract: strategy/agency-and-ownership.md
