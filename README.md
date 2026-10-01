@@ -13,7 +13,7 @@ Maintained at [frankx.ai/ai-architect](https://www.frankx.ai/ai-architect).
 
 ## AI Architect Guide 2026
 
-The [AI Architect Guide 2026](guide/README.md) turns the four hard-to-reverse decisions and seven operating planes into a researched field guide, claim ledger, reusable labs, and a versioned publishing system.
+The [AI Architect Guide 2026](guide/README.md) turns the four hard-to-reverse decisions and seven operating planes into a researched field guide, claim ledger, reusable labs, and a versioned publishing system. Its [status and roadmap](guide/strategy/roadmap.md) shows coverage progress and the open task board.
 
 ## Install
 

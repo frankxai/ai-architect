@@ -335,3 +335,66 @@ claims:
     location: labs/delegated-authority/README.md
     status: proposed
     review_by: 2026-11-04
+  - id: C055
+    class: prescription
+    statement: A knowledge source enters production only with a data contract naming its owner, rights basis, freshness target, and deletion rule, and deletion must propagate to every derived copy.
+    sources: [ S24, S32, S34 ]
+    location: manuscript/14-data-knowledge-provenance.md
+    status: proposed
+    review_by: 2027-03-04
+  - id: C056
+    class: prescription
+    statement: Generated or edited media published under an authenticity claim should carry signed provenance that is validated before publication, not only at creation.
+    sources: [ S37 ]
+    location: manuscript/14-data-knowledge-provenance.md
+    status: proposed
+    review_by: 2026-11-04
+  - id: C057
+    class: prescription
+    statement: Agent code execution, browser automation, and file manipulation should run in an isolated sandbox with no ambient credentials, an egress allow-list, resource limits, and disposable storage.
+    sources: [ S18, S28 ]
+    location: manuscript/15-identity-security-delivery.md
+    status: proposed
+    review_by: 2027-03-04
+  - id: C058
+    class: prescription
+    statement: Prompts, policies, tool definitions, retrieval configuration, routing rules, and eval sets are behavior-bearing assets and need version control, review, signed builds, and provenance like code.
+    sources: [ S25, S26, S27 ]
+    location: manuscript/15-identity-security-delivery.md
+    status: proposed
+    review_by: 2027-03-04
+  - id: C059
+    class: prescription
+    statement: Every behavior-bearing change should ship through comparison against frozen cases, a canary, and a rollback that has been executed at least once.
+    sources: [ S31, S32, S33 ]
+    location: manuscript/16-platform-release-reliability.md
+    status: proposed
+    review_by: 2027-03-04
+  - id: C060
+    class: prescription
+    statement: Retirement is a designed state that disables access, revokes agent and tool identities, exports required records, deletes data including derived copies, preserves audit evidence, and notifies owners.
+    sources: [ S23, S24, S31 ]
+    location: manuscript/16-platform-release-reliability.md
+    status: proposed
+    review_by: 2027-03-04
+  - id: C061
+    class: prescription
+    statement: Degradation should be designed per dependency so that a model, tool, or retrieval failure moves the system to a narrower safe mode rather than a confident guess.
+    sources: [ S31, S32, S33 ]
+    location: manuscript/16-platform-release-reliability.md
+    status: proposed
+    review_by: 2027-03-04
+  - id: C062
+    class: prescription
+    statement: Governance should be expressed as decision rights with one accountable role, required evidence, and a logged, expiring exception path for each decision.
+    sources: [ S23, S35 ]
+    location: manuscript/17-governance-law-operating-model.md
+    status: proposed
+    review_by: 2027-03-04
+  - id: C063
+    class: prescription
+    statement: A federated operating model, with a small central group owning standards, shared platform, review, and exceptions while product teams own outcomes and operation, fits most organizations better than full centralization or full autonomy.
+    sources: [ S32, S35 ]
+    location: manuscript/17-governance-law-operating-model.md
+    status: proposed
+    review_by: 2027-03-04
