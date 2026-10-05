@@ -13,7 +13,7 @@ Maintained at [frankx.ai/ai-architect](https://www.frankx.ai/ai-architect).
 
 ## AI Architect Guide 2026
 
-The [AI Architect Guide 2026](guide/README.md) turns the four hard-to-reverse decisions and seven operating planes into a researched field guide, claim ledger, reusable labs, and a versioned publishing system.
+The [AI Architect Guide 2026](guide/README.md) turns the four hard-to-reverse decisions and seven operating planes into a researched field guide, claim ledger, reusable labs, and a versioned publishing system. Its [status and roadmap](guide/strategy/roadmap.md) shows coverage progress and the open task board.
 
 ## Install
 
@@ -178,21 +178,30 @@ node mcp/server.mjs
 ```
 
 Tools: `architect_status`, `architect_check_artifacts`, `architect_check_roi`,
-`architect_next_stage`. Configure it in your harness as a local stdio server.
+`architect_next_stage`, `architect_init`, and `architect_card`. Configure it in your
+harness as a local stdio server. Initialization copies the two process contracts
+once inside `docs/architecture/`; it refuses symlink paths. Execution failures
+are returned as MCP tool errors.
 
-## One-click deploy kits
+## Deploy reference labs
 
 Reference stacks live under `templates/deploy/`. They encode the four decisions
 as code, not as a slide.
 
 | kit | plane it owns | deploy |
 |---|---|---|
-| `durable-worker` | long-run home | Railway worker + Postgres + Redis |
+| `durable-worker` | run plane | Railway Node process; in-memory dry-run queue |
 | `request-scoped-agent` | experience | Vercel (or any Node host) in front of the worker |
 
-Publishing a Railway template to the marketplace (and earning kickback) is a
-human action in the Railway dashboard. The kit is the source. The button is not
-this repository pretending to be your Railway account.
+These kits have local integration tests and deploy configuration. The worker
+requires an authenticated operator tick and loses jobs on restart. Durable
+storage, a real model adapter, restart recovery, end-user tenancy, and paid
+entitlements are separate implementation gates. See each kit's README before
+deployment.
+
+A published Railway marketplace template can be a distribution and consumption
+revenue path under the platform's current program. No marketplace template or
+cloud deployment is created by this repository's tests.
 
 ## Related
 
@@ -209,4 +218,5 @@ at a legacy tag on this remote. The current tree is vendor-neutral on purpose.
 npm test
 ```
 
-MIT. Frank Riemer / FrankX.
+Apache-2.0 for original software and technical documentation, subject to the
+express exceptions in [LICENSING.md](LICENSING.md). Frank Riemer / FrankX.

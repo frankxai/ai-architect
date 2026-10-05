@@ -1,0 +1,12 @@
+{
+  "name": "ai-architect-request-surface",
+  "private": true,
+  "type": "module",
+  "description": "Authenticated request surface for the bounded dry-run worker kit.",
+  "license": "Apache-2.0",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test src/proxy.test.js"
+  }
+}

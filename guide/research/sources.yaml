@@ -8,7 +8,9 @@ sources:
     url: https://developers.openai.com/api/docs/models
     supports: Current OpenAI model lineup, model IDs, context limits, capabilities, and list prices.
     volatility: high
-    review_by: 2026-10-04
+    review_by: 2026-10-15
+    accessed_on: 2026-10-05
+    review_receipt: releases/2026-10-05-source-review.md
   - id: S02
     title: Claude models overview
     publisher: Anthropic
@@ -16,7 +18,9 @@ sources:
     url: https://platform.claude.com/docs/en/models/overview
     supports: Current Claude lineup, model IDs, context limits, output limits, guidance, and list prices.
     volatility: high
-    review_by: 2026-10-04
+    review_by: 2026-10-15
+    accessed_on: 2026-10-05
+    review_receipt: releases/2026-10-05-source-review.md
   - id: S03
     title: Gemini API models
     publisher: Google
@@ -24,15 +28,19 @@ sources:
     url: https://ai.google.dev/gemini-api/docs/models
     supports: Current stable and preview Gemini model catalog.
     volatility: high
-    review_by: 2026-10-04
+    review_by: 2026-10-15
+    accessed_on: 2026-10-05
+    review_receipt: releases/2026-10-05-source-review.md
   - id: S04
     title: Grok models and pricing
     publisher: xAI
     kind: vendor-documentation
     url: https://docs.x.ai/developers/models
-    supports: Grok 4.6 model ID, context size, list price, knowledge cutoff, and alias behavior.
+    supports: Grok 4.7 model ID, context size, list price, knowledge cutoff, and alias behavior.
     volatility: high
-    review_by: 2026-10-04
+    review_by: 2026-10-15
+    accessed_on: 2026-10-05
+    review_receipt: releases/2026-10-05-source-review.md
   - id: S05
     title: Building effective agents
     publisher: Anthropic
@@ -160,7 +168,9 @@ sources:
     url: https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai
     supports: Application dates, enforcement roles, GPAI duties, transparency guidance, and high-risk transition dates.
     volatility: high
-    review_by: 2026-10-04
+    review_by: 2026-10-15
+    accessed_on: 2026-10-05
+    review_receipt: releases/2026-10-05-source-review.md
   - id: S21
     title: How we built our multi-agent research system
     publisher: Anthropic
@@ -176,7 +186,9 @@ sources:
     url: https://www.nist.gov/artificial-intelligence/ai-agent-standards-initiative
     supports: Industry-led standards, community-led protocols, agent authentication and identity, secure human-agent and multi-agent interaction, and security evaluation as active 2026 work.
     volatility: high
-    review_by: 2026-10-04
+    review_by: 2026-10-15
+    accessed_on: 2026-10-05
+    review_receipt: releases/2026-10-05-source-review.md
   - id: S23
     title: ISO IEC 42001 Artificial intelligence management system
     publisher: International Organization for Standardization
@@ -222,9 +234,11 @@ sources:
     publisher: Kubernetes
     kind: open-source-project-report
     url: https://kubernetes.io/blog/2026/03/20/running-agents-on-kubernetes-with-agent-sandbox/
-    supports: An experimental model for isolated, stateful agent workloads with persistent identity, secure scratch space, suspension, resumption, and stronger runtime isolation.
+    supports: An in-development model for isolated, stateful agent workloads with persistent identity, secure scratch space, suspension, resumption, and stronger runtime isolation.
     volatility: high
-    review_by: 2026-10-04
+    review_by: 2026-10-15
+    accessed_on: 2026-10-05
+    review_receipt: releases/2026-10-05-source-review.md
   - id: S29
     title: Announcing the Kubernetes AI Gateway Working Group
     publisher: Kubernetes
@@ -232,7 +246,9 @@ sources:
     url: https://kubernetes.io/blog/2026/03/09/announcing-ai-gateway-wg/
     supports: Active work on standard networking for AI inference, MCP, agents, policy, and traffic management.
     volatility: high
-    review_by: 2026-10-04
+    review_by: 2026-10-15
+    accessed_on: 2026-10-05
+    review_receipt: releases/2026-10-05-source-review.md
   - id: S30
     title: Gateway API Inference Extension
     publisher: Kubernetes
@@ -240,7 +256,9 @@ sources:
     url: https://kubernetes.io/blog/2025/06/05/introducing-gateway-api-inference-extension/
     supports: Model-aware inference routing, shared accelerator workloads, request priorities, and policy through InferencePool resources.
     volatility: high
-    review_by: 2026-10-04
+    review_by: 2026-10-15
+    accessed_on: 2026-10-05
+    review_receipt: releases/2026-10-05-source-review.md
   - id: S31
     title: AWS Well-Architected Generative AI Lens
     publisher: Amazon Web Services
@@ -304,7 +322,9 @@ sources:
     url: https://digital-strategy.ec.europa.eu/en/policies/contents-code-gpai
     supports: Transparency, copyright, and safety and security chapters for general-purpose AI model providers under the EU AI Act.
     volatility: high
-    review_by: 2026-10-04
+    review_by: 2026-10-15
+    accessed_on: 2026-10-05
+    review_receipt: releases/2026-10-05-source-review.md
   - id: S39
     title: Draft guidelines for classification of high-risk AI systems
     publisher: European Commission
@@ -312,7 +332,9 @@ sources:
     url: https://digital-strategy.ec.europa.eu/en/library/draft-commission-guidelines-classification-high-risk-ai-systems
     supports: The Commission's current draft interpretation of high-risk AI system classification and related obligations.
     volatility: high
-    review_by: 2026-10-04
+    review_by: 2026-10-15
+    accessed_on: 2026-10-05
+    review_receipt: releases/2026-10-05-source-review.md
   - id: S40
     title: Technology Radar and FAQ
     publisher: Thoughtworks
@@ -328,4 +350,6 @@ sources:
     url: https://aaif.io/blog/a2a-joins-aaif
     supports: A2A 1.0 status, open governance, and distinct roles for AGENTS.md, agent runtimes, MCP, agent gateways, and agent-to-agent interoperability.
     volatility: high
-    review_by: 2026-10-04
+    review_by: 2026-10-15
+    accessed_on: 2026-10-05
+    review_receipt: releases/2026-10-05-source-review.md

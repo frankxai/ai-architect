@@ -17,7 +17,7 @@
 // make network calls. Treat it as machine-local only.
 
 import { spawnSync } from 'node:child_process';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { nextIncomplete, parseWorkflow } from '../scripts/parse-workflow.mjs';
@@ -86,7 +86,16 @@ const TOOLS = [
       },
     },
   },
-];
+].map((tool) => ({
+  ...tool,
+  inputSchema: { ...tool.inputSchema, additionalProperties: false },
+  annotations: {
+    readOnlyHint: tool.name !== 'architect_init',
+    destructiveHint: false,
+    idempotentHint: true,
+    openWorldHint: false,
+  },
+}));
 
 function loadStages(root) {
   const preferred = path.join(root, 'docs', 'architecture', 'WORKFLOW.md');
@@ -132,11 +141,12 @@ function runScript(script, root) {
   const result = spawnSync(process.execPath, [path.join(pluginRoot, 'scripts', script), path.join(root, 'docs', 'architecture')], {
     encoding: 'utf8',
     cwd: root,
+    timeout: 15000,
   });
   return {
-    exit: result.status,
+    exit: result.status ?? 1,
     stdout: (result.stdout || '').slice(0, 8000),
-    stderr: (result.stderr || '').slice(0, 2000),
+    stderr: (result.stderr || result.error?.message || '').slice(0, 2000),
   };
 }
 
@@ -151,6 +161,7 @@ function runConductor(root, command) {
   ], {
     encoding: 'utf8',
     cwd: root,
+    timeout: 15000,
   });
   return {
     exit: result.status ?? 1,
@@ -160,7 +171,15 @@ function runConductor(root, command) {
 }
 
 function handleTool(name, args = {}) {
+  if (!args || typeof args !== 'object' || Array.isArray(args)
+    || (args.root !== undefined && (typeof args.root !== 'string' || !args.root))
+    || Object.keys(args).some((key) => key !== 'root')) {
+    throw new Error('arguments must be an object with an optional nonempty root string');
+  }
   const root = path.resolve(args.root || process.cwd());
+  if (!existsSync(root) || !statSync(root).isDirectory()) {
+    throw new Error('root must be an existing customer repository directory');
+  }
   if (name === 'architect_status' || name === 'architect_next_stage') {
     const arch = readArch(root);
     const next = nextStage(arch, root);
@@ -192,21 +211,41 @@ function respondError(id, code, message) {
 }
 
 let buffer = '';
+let discarding = false;
+const MAX_LINE_CHARS = 1024 * 1024;
 process.stdin.setEncoding('utf8');
 process.stdin.on('data', (chunk) => {
+  if (discarding) {
+    const end = chunk.indexOf('\n');
+    if (end < 0) return;
+    chunk = chunk.slice(end + 1);
+    discarding = false;
+  }
   buffer += chunk;
   let idx;
   while ((idx = buffer.indexOf('\n')) >= 0) {
     const line = buffer.slice(0, idx).trim();
     buffer = buffer.slice(idx + 1);
     if (!line) continue;
+    if (line.length > MAX_LINE_CHARS) {
+      respondError(null, -32600, 'request too large');
+      continue;
+    }
     let msg;
     try {
       msg = JSON.parse(line);
     } catch {
+      respondError(null, -32700, 'parse error');
+      continue;
+    }
+    if (!msg || typeof msg !== 'object' || Array.isArray(msg) || msg.jsonrpc !== '2.0'
+      || typeof msg.method !== 'string'
+      || (msg.id !== undefined && msg.id !== null && typeof msg.id !== 'string' && typeof msg.id !== 'number')) {
+      respondError(null, -32600, 'invalid request');
       continue;
     }
     const { id, method, params } = msg;
+    if (id === undefined) continue; // JSON-RPC notifications never receive a response.
     if (method === 'initialize') {
       respond(id, {
         protocolVersion: '2025-03-26',
@@ -215,21 +254,36 @@ process.stdin.on('data', (chunk) => {
       });
       continue;
     }
-    if (method === 'notifications/initialized') continue;
+    if (method === 'ping') {
+      respond(id, {});
+      continue;
+    }
     if (method === 'tools/list') {
       respond(id, { tools: TOOLS });
       continue;
     }
     if (method === 'tools/call') {
+      if (!params || typeof params.name !== 'string' || !TOOLS.some((tool) => tool.name === params.name)) {
+        respondError(id, -32602, 'unknown tool or invalid parameters');
+        continue;
+      }
       try {
-        const data = handleTool(params.name, params.arguments || {});
-        respond(id, { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] });
+        const data = handleTool(params.name, Object.hasOwn(params, 'arguments') ? params.arguments : {});
+        respond(id, {
+          content: [{ type: 'text', text: JSON.stringify(data, null, 2) }],
+          ...(data.exit !== undefined && data.exit !== 0 ? { isError: true } : {}),
+        });
       } catch (err) {
-        respondError(id, -32000, err.message);
+        respond(id, { content: [{ type: 'text', text: err.message }], isError: true });
       }
       continue;
     }
     if (id != null) respondError(id, -32601, `method not found: ${method}`);
+  }
+  if (buffer.length > MAX_LINE_CHARS) {
+    buffer = '';
+    discarding = true;
+    respondError(null, -32600, 'request too large');
   }
 });
 process.stdin.on('end', () => process.exit(0));

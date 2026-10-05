@@ -7,7 +7,9 @@ function fixture() {
   const read = (file) => parseLedger(fs.readFileSync(new URL(`../${file}`, import.meta.url), 'utf8'));
   return { sources: read('research/sources.yaml'), claims: read('research/claims.yaml'), edition: read('edition.yaml') };
 }
-const validate = (data) => validateLedgers(data, '2026-09-07');
+// Deliberately fixed to the access date of the checked-in source-review fixture.
+// The guide quality command separately enforces freshness against today's date.
+const validate = (data) => validateLedgers(data, '2026-10-05');
 
 test('current working edition validates without certifying final review', () => {
   const data = fixture();
@@ -18,6 +20,11 @@ test('current working edition validates without certifying final review', () => 
 test('real calendar dates, including leap years', () => {
   for (const value of ['2026-02-29', '2026-13-04', '2026-09-31', '2026-9-07', null]) assert.equal(isCalendarDate(value), false);
   assert.equal(isCalendarDate('2028-02-29'), true);
+});
+test('future access dates remain invalid after a source refresh', () => {
+  const data = fixture();
+  data.sources.sources[0].accessed_on = '2026-10-06';
+  assert.match(validate(data).join('\n'), /future access date/);
 });
 test('duplicate YAML keys and unsafe aliases fail parsing', () => {
   assert.throws(() => parseLedger('id: one\nid: two'));

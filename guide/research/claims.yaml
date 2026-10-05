@@ -6,13 +6,17 @@ claims:
     statement: Major model vendors expose materially different model families, prices, context limits, modalities, and release states.
     sources: [ S01, S02, S03, S04 ]
     status: source-supported
-    review_by: 2026-10-04
+    review_by: 2026-10-15
+    reviewed_on: 2026-10-05
+    review_receipt: releases/2026-10-05-source-review.md
   - id: C002
     class: inference
     statement: A production system should isolate model-provider specifics behind one owned seam because the vendor catalog changes faster than the business process.
     sources: [ S01, S02, S03, S04 ]
     status: reasoned
-    review_by: 2026-10-04
+    review_by: 2026-10-15
+    reviewed_on: 2026-10-05
+    review_receipt: releases/2026-10-05-source-review.md
   - id: C003
     class: fact
     statement: OpenAI documents both model-led and code-led orchestration, and says code-led flow is more predictable for speed, cost, and performance.
@@ -120,13 +124,17 @@ claims:
     statement: The EU AI Act became generally applicable on 2026-08-02, with separate dates for prohibited practices, GPAI duties, and high-risk systems.
     sources: [ S20 ]
     status: source-supported
-    review_by: 2026-10-04
+    review_by: 2026-10-15
+    reviewed_on: 2026-10-05
+    review_receipt: releases/2026-10-05-source-review.md
   - id: C021
     class: prescription
     statement: Compliance evidence should be emitted by the runtime and release process instead of assembled after deployment.
     sources: [ S17, S20 ]
     status: proposed
-    review_by: 2026-10-04
+    review_by: 2026-10-15
+    reviewed_on: 2026-10-05
+    review_receipt: releases/2026-10-05-source-review.md
   - id: C022
     class: fact
     statement: Long agent work benefits from incremental steps, explicit progress records, clean handoff state, version history, and end-to-end verification.
@@ -156,13 +164,17 @@ claims:
     statement: NIST's 2026 AI Agent Standards Initiative treats open protocols, agent authentication, identity infrastructure, secure human-agent and multi-agent interaction, and security evaluation as active standards work.
     sources: [ S22 ]
     status: source-supported
-    review_by: 2026-10-04
+    review_by: 2026-10-15
+    reviewed_on: 2026-10-05
+    review_receipt: releases/2026-10-05-source-review.md
   - id: C027
     class: prescription
     statement: A production agent system should separate human, workload, agent, session, and tool identity and record the scope, audience, expiry, and revocation path of delegated authority.
     sources: [ S09, S10, S18, S22 ]
     status: proposed
-    review_by: 2026-10-04
+    review_by: 2026-10-15
+    reviewed_on: 2026-10-05
+    review_receipt: releases/2026-10-05-source-review.md
   - id: C028
     class: fact
     statement: ISO IEC 42001 defines an organizational AI management system built around policy, objectives, risk and opportunity management, and continual management review.
@@ -207,16 +219,20 @@ claims:
     review_by: 2027-03-04
   - id: C035
     class: fact
-    statement: Kubernetes Agent Sandbox presents an experimental pattern for isolated, stateful agent workloads with persistent identity, suspension, resumption, and stronger runtime isolation.
+    statement: The Kubernetes report describes an in-development Agent Sandbox for isolated, stateful workloads with stable identity, suspension, and resumption.
     sources: [ S28 ]
     status: source-supported
-    review_by: 2026-10-04
+    review_by: 2026-10-15
+    reviewed_on: 2026-10-05
+    review_receipt: releases/2026-10-05-source-review.md
   - id: C036
     class: inference
     statement: AI gateways, model-aware routing, capacity allocation, and agent sandboxing form a platform concern separate from application orchestration.
     sources: [ S28, S29, S30, S31, S32, S33 ]
     status: reasoned
-    review_by: 2026-10-04
+    review_by: 2026-10-15
+    reviewed_on: 2026-10-05
+    review_receipt: releases/2026-10-05-source-review.md
   - id: C037
     class: inference
     statement: Current cloud architecture guidance makes data, platform, lifecycle operations, security, reliability, performance, cost, and sustainability part of the AI architect's remit.
@@ -240,13 +256,17 @@ claims:
     statement: The EU General-Purpose AI Code of Practice has transparency, copyright, and safety and security chapters, with the last chapter applying to providers of models with systemic risk.
     sources: [ S38 ]
     status: source-supported
-    review_by: 2026-10-04
+    review_by: 2026-10-15
+    reviewed_on: 2026-10-05
+    review_receipt: releases/2026-10-05-source-review.md
   - id: C041
     class: fact
-    statement: The European Commission's 2026 high-risk AI classification guidance remains a draft and should be treated as volatile until finalized.
+    statement: The linked European Commission high-risk AI classification page presents its guidance as a draft; it does not establish every publication's status.
     sources: [ S39 ]
     status: source-supported
-    review_by: 2026-10-04
+    review_by: 2026-10-15
+    reviewed_on: 2026-10-05
+    review_receipt: releases/2026-10-05-source-review.md
   - id: C042
     class: inference
     statement: Dated field signals should be published separately from durable doctrine and promoted into the annual guide only after their architectural value survives review.
@@ -258,7 +278,9 @@ claims:
     statement: AAIF describes distinct open-stack roles for project instructions, agent runtimes, tool connectivity, traffic control, and agent-to-agent interoperability.
     sources: [ S41 ]
     status: source-supported
-    review_by: 2026-10-04
+    review_by: 2026-10-15
+    reviewed_on: 2026-10-05
+    review_receipt: releases/2026-10-05-source-review.md
   - id: C044
     class: prescription
     statement: A reference architecture should state its deployment mode, platform boundary, data boundary, identity model, recovery model, and retirement path.
@@ -271,63 +293,81 @@ claims:
     sources: [S01]
     location: manuscript/appendix-a-model-snapshot.md
     status: source-supported
-    review_by: 2026-10-04
+    review_by: 2026-10-15
+    reviewed_on: 2026-10-05
+    review_receipt: releases/2026-10-05-source-review.md
   - id: C046
     class: fact
-    statement: OpenAI's catalog lists gpt-5.6-sol at USD 4 input and USD 20 output per million tokens, 1.05M context and 128K maximum output.
+    statement: "OpenAI lists gpt-6.1-sol: USD 2 input, USD 10 output per million tokens; 1.05M context, 128K maximum output."
     sources: [S01]
     location: manuscript/appendix-a-model-snapshot.md
     status: source-supported
-    review_by: 2026-10-04
+    review_by: 2026-10-15
+    reviewed_on: 2026-10-05
+    review_receipt: releases/2026-10-05-source-review.md
   - id: C047
     class: fact
-    statement: OpenAI's catalog lists gpt-5.6-terra at USD 2 input and USD 12 output per million tokens, 1.05M context and 128K maximum output.
+    statement: OpenAI's featured text catalog lists GPT-6 Astra, GPT-6.1 Sol, and GPT-6 Luna.
     sources: [S01]
     location: manuscript/appendix-a-model-snapshot.md
     status: source-supported
-    review_by: 2026-10-04
+    review_by: 2026-10-15
+    reviewed_on: 2026-10-05
+    review_receipt: releases/2026-10-05-source-review.md
   - id: C048
     class: fact
-    statement: OpenAI's catalog lists gpt-5.6-luna at USD 0.20 input and USD 1.20 output per million tokens, 1.05M context and 128K maximum output.
+    statement: "OpenAI lists gpt-6-luna: USD 0.10 input, USD 0.50 output per million tokens; 1.05M context, 128K maximum output."
     sources: [S01]
     location: manuscript/appendix-a-model-snapshot.md
     status: source-supported
-    review_by: 2026-10-04
+    review_by: 2026-10-15
+    reviewed_on: 2026-10-05
+    review_receipt: releases/2026-10-05-source-review.md
   - id: C049
     class: fact
-    statement: Anthropic's catalog lists claude-fable-5-1 at USD 10 input and USD 50 output per million tokens, 1M context and 128K maximum output.
+    statement: "Anthropic lists claude-fable-5-1: USD 10 input, USD 50 output per million tokens; 1M context, 128K maximum output."
     sources: [S02]
     location: manuscript/appendix-a-model-snapshot.md
     status: source-supported
-    review_by: 2026-10-04
+    review_by: 2026-10-15
+    reviewed_on: 2026-10-05
+    review_receipt: releases/2026-10-05-source-review.md
   - id: C050
     class: fact
-    statement: Anthropic's catalog lists claude-opus-5 at USD 5 input and USD 25 output per million tokens, 1M context and 128K maximum output.
+    statement: "Anthropic lists claude-opus-5-5: USD 4 input, USD 20 output per million tokens; 1M context, 128K maximum output."
     sources: [S02]
     location: manuscript/appendix-a-model-snapshot.md
     status: source-supported
-    review_by: 2026-10-04
+    review_by: 2026-10-15
+    reviewed_on: 2026-10-05
+    review_receipt: releases/2026-10-05-source-review.md
   - id: C051
     class: fact
-    statement: Anthropic's catalog lists claude-sonnet-5 at USD 2 input and USD 10 output per million tokens, 1M context and 128K maximum output.
+    statement: "Anthropic lists claude-sonnet-5-5: USD 2 input, USD 10 output per million tokens; 1M context, 128K maximum output."
     sources: [S02]
     location: manuscript/appendix-a-model-snapshot.md
     status: source-supported
-    review_by: 2026-10-04
+    review_by: 2026-10-15
+    reviewed_on: 2026-10-05
+    review_receipt: releases/2026-10-05-source-review.md
   - id: C052
     class: fact
-    statement: Anthropic's catalog lists claude-haiku-4-5-20251001 at USD 1 input and USD 5 output per million tokens, 200K context and 64K maximum output.
+    statement: "Anthropic lists claude-haiku-4-5-20251001: USD 1 input, USD 5 output per million tokens; 200K context, 64K maximum output."
     sources: [S02]
     location: manuscript/appendix-a-model-snapshot.md
     status: source-supported
-    review_by: 2026-10-04
+    review_by: 2026-10-15
+    reviewed_on: 2026-10-05
+    review_receipt: releases/2026-10-05-source-review.md
   - id: C053
     class: fact
-    statement: xAI's catalog lists grok-4.6 at USD 2 input and USD 6 output per million tokens and 500K context, with a 2026-02-01 knowledge cutoff and a 2026-08-21 page update.
+    statement: "xAI lists grok-4.7: USD 2 input and USD 6 output per million tokens, 500K context, and a May 2026 knowledge cutoff."
     sources: [S04]
     location: manuscript/appendix-a-model-snapshot.md
     status: source-supported
-    review_by: 2026-10-04
+    review_by: 2026-10-15
+    reviewed_on: 2026-10-05
+    review_receipt: releases/2026-10-05-source-review.md
   - id: C054
     class: prescription
     statement: Bind approval to the exact authenticated actor, tenant, grant, action, resource, amount and replay key, then check revocation before execution; test denial without mutation and replay without duplicate effects.
@@ -335,3 +375,66 @@ claims:
     location: labs/delegated-authority/README.md
     status: proposed
     review_by: 2026-11-04
+  - id: C055
+    class: prescription
+    statement: A knowledge source enters production only with a data contract naming its owner, rights basis, freshness target, and deletion rule, and deletion must propagate to every derived copy.
+    sources: [ S24, S32, S34 ]
+    location: manuscript/14-data-knowledge-provenance.md
+    status: proposed
+    review_by: 2027-03-04
+  - id: C056
+    class: prescription
+    statement: Generated or edited media published under an authenticity claim should carry signed provenance that is validated before publication, not only at creation.
+    sources: [ S37 ]
+    location: manuscript/14-data-knowledge-provenance.md
+    status: proposed
+    review_by: 2026-11-04
+  - id: C057
+    class: prescription
+    statement: Agent code execution, browser automation, and file manipulation should run in an isolated sandbox with no ambient credentials, an egress allow-list, resource limits, and disposable storage.
+    sources: [ S18, S28 ]
+    location: manuscript/15-identity-security-delivery.md
+    status: proposed
+    review_by: 2027-03-04
+  - id: C058
+    class: prescription
+    statement: Prompts, policies, tool definitions, retrieval configuration, routing rules, and eval sets are behavior-bearing assets and need version control, review, signed builds, and provenance like code.
+    sources: [ S25, S26, S27 ]
+    location: manuscript/15-identity-security-delivery.md
+    status: proposed
+    review_by: 2027-03-04
+  - id: C059
+    class: prescription
+    statement: Every behavior-bearing change should ship through comparison against frozen cases, a canary, and a rollback that has been executed at least once.
+    sources: [ S31, S32, S33 ]
+    location: manuscript/16-platform-release-reliability.md
+    status: proposed
+    review_by: 2027-03-04
+  - id: C060
+    class: prescription
+    statement: Retirement is a designed state that disables access, revokes agent and tool identities, exports required records, deletes data including derived copies, preserves audit evidence, and notifies owners.
+    sources: [ S23, S24, S31 ]
+    location: manuscript/16-platform-release-reliability.md
+    status: proposed
+    review_by: 2027-03-04
+  - id: C061
+    class: prescription
+    statement: Degradation should be designed per dependency so that a model, tool, or retrieval failure moves the system to a narrower safe mode rather than a confident guess.
+    sources: [ S31, S32, S33 ]
+    location: manuscript/16-platform-release-reliability.md
+    status: proposed
+    review_by: 2027-03-04
+  - id: C062
+    class: prescription
+    statement: Governance should be expressed as decision rights with one accountable role, required evidence, and a logged, expiring exception path for each decision.
+    sources: [ S23, S35 ]
+    location: manuscript/17-governance-law-operating-model.md
+    status: proposed
+    review_by: 2027-03-04
+  - id: C063
+    class: prescription
+    statement: A federated operating model, with a small central group owning standards, shared platform, review, and exceptions while product teams own outcomes and operation, fits most organizations better than full centralization or full autonomy.
+    sources: [ S32, S35 ]
+    location: manuscript/17-governance-law-operating-model.md
+    status: proposed
+    review_by: 2027-03-04

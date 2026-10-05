@@ -55,7 +55,7 @@ Track the distribution, not only the average. A small tail of looping runs can b
 
 ## Treat the 2026 catalog as dated data
 
-On 2026-09-04, OpenAI documented GPT-6 Astra and a GPT-5.6 family with a wide price range; Anthropic documented Fable 5.1, Opus 5, Sonnet 5, and Haiku 4.5; Google listed several stable Gemini 3.x Flash models and preview models; xAI documented Grok 4.6. Context windows, output limits, tools, and prices differed. [S01](../research/sources.yaml) [S02](../research/sources.yaml) [S03](../research/sources.yaml) [S04](../research/sources.yaml)
+The 2026-10-05 source review found changes in the named model families and prices since September. Appendix A holds the corrected rows. Account access, latency, and task performance require separate tests. [S01](../research/sources.yaml) [S02](../research/sources.yaml) [S03](../research/sources.yaml) [S04](../research/sources.yaml)
 
 That snapshot belongs in Appendix A, outside the core method. The architectural conclusion is an inference: vendor facts decay too quickly to carry the product boundary.
 
