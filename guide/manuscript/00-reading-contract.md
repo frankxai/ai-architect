@@ -34,7 +34,7 @@ This public working edition is unfinished. Automated checks and an isolated agen
 
 A source marker such as `S08` points to `research/sources.yaml`. A claim such as `C012` lives in `research/claims.yaml`. Facts report what a source says. Inferences state a conclusion drawn from facts. Prescriptions are Frank's rules for architecture work. They must carry a reason, a failure mode, and a test even when no standards body can prove them.
 
-Treat dates as part of the claim. The model appendix is a snapshot verified on 2026-09-04. The EU AI Act dates reflect the European Commission page on that date. The MCP section cites the 2026-07-28 specification, and the A2A section cites version 1.0.0. Volatile claims have near-term review dates because memory is not evidence.
+Treat dates as part of the claim. The model appendix was checked against vendor documentation on 2026-10-05. The EU AI Act source was reopened on that date; legal review remains pending. The MCP section cites the 2026-07-28 specification, and the A2A section cites version 1.0.0. Volatile claims have near-term review dates because memory is not evidence.
 
 ## The working agreement
 

@@ -25,6 +25,10 @@ const requiredChapters = [
   '11-economics.md',
   '12-reference-architecture.md',
   '13-ninety-day-adoption.md',
+  '14-data-knowledge-provenance.md',
+  '15-identity-security-delivery.md',
+  '16-platform-release-reliability.md',
+  '17-governance-law-operating-model.md',
   'appendix-a-model-snapshot.md',
   'appendix-b-decision-records.md',
 ];
@@ -205,6 +209,10 @@ for (const file of [
   'strategy/coverage-gap-audit.md',
   'strategy/authority-system.md',
   'strategy/personal-book-brief.md',
+  'strategy/agency-and-ownership.md',
+  'strategy/roadmap.md',
+  'labs/agency-and-ownership-review.md',
+  'labs/agency-and-ownership-example.md',
   'releases/2026-0-1-draft.md',
 ]) {
   if (!fs.existsSync(path.join(guideRoot, file))) failures.push(`missing publishing-system file: ${file}`);

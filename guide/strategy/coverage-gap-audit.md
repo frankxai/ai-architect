@@ -1,5 +1,7 @@
 # September 2026 coverage audit
 
+Progress against this audit is tracked in the [status and roadmap](roadmap.md). Edition 2026.0.3 drafts the data, security, platform, lifecycle, and governance domains in chapters 14 to 17; their proof artifacts remain open.
+
 ## Decision
 
 The current manuscript is a strong decision core for production agent systems. It is not yet the full annual reference an AI systems architect needs in September 2026.

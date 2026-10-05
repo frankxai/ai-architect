@@ -3,7 +3,9 @@
 import { spawnSync } from 'node:child_process';
 import {
   copyFileSync,
+  constants,
   existsSync,
+  lstatSync,
   mkdirSync,
   readFileSync,
   statSync,
@@ -91,6 +93,21 @@ function assertDirectory(directory, label) {
     throw new ConductorError('invalid-directory', `${label} must be an existing directory`, {
       [label]: directory,
     });
+  }
+}
+
+function assertArtifactTree(root) {
+  // A local agent may write only inside the customer's actual artifact tree.
+  // Reject links even when their textual path appears to be contained.
+  for (const relative of ['docs', 'docs/architecture', 'docs/architecture/SOP.md', 'docs/architecture/WORKFLOW.md']) {
+    const target = path.join(root, relative);
+    try {
+      if (lstatSync(target).isSymbolicLink()) {
+        throw new ConductorError('unsafe-artifact-path', `artifact path traverses a symlink: ${relative}`);
+      }
+    } catch (error) {
+      if (error.code !== 'ENOENT') throw error;
+    }
   }
 }
 
@@ -294,6 +311,7 @@ export function run(argv = process.argv.slice(2)) {
     options = parseArgs(argv);
     assertDirectory(options.root, 'root');
     assertDirectory(options.pluginRoot, 'plugin-root');
+    assertArtifactTree(options.root);
 
     if (options.command === 'init') {
       const archDir = path.join(options.root, 'docs', 'architecture');
@@ -308,7 +326,7 @@ export function run(argv = process.argv.slice(2)) {
         }
         if (existsSync(dest)) skipped.push(name);
         else {
-          copyFileSync(src, dest);
+          copyFileSync(src, dest, constants.COPYFILE_EXCL);
           written.push(name);
         }
       }
