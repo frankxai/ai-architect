@@ -19,3 +19,7 @@ On 2026-09-05, Codex prepared a proposed agency-and-ownership extension: a strat
 ## Working edition 2026.0.5
 
 On 2026-10-11 OpenAI Codex drafted chapter 18, the initial solution encyclopedia, ecosystem and invention register, and a local diagram/portal compiler. The exact model identifier is not supplied by the host metadata and is not inferred. Frank remains the accountable author; no human line editor is credited. Official sources were reopened for the scoped observations in the solution-kit source register. Local tests and separate agent review are distinct from provider execution and specialist human review. No final-book gate is closed by this addition.
+
+## Working edition 2026.0.6
+
+On 2026-10-11 Codex extended the technical book with chapter 19 and a reproducible book exporter, deterministic practice desk, proposed quality contract and living-design handoff. Source corrections are scoped to newly inspected documentation. The host does not expose an exact maker model ID. Separate agent review is recorded in the delivery receipt; it is not specialist or human author approval. No autobiographical chapter or approved personal episode is invented. Figma composition is blocked by the connected Starter-plan tool limit; a created empty draft is not a completed design. The Canva presentation is a distribution draft, with source-wording corrections prepared for required user preview approval.

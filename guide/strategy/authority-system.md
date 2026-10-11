@@ -63,7 +63,7 @@ Use the existing Signal Loop newsletter. Add `AI Architect Briefing` as a named 
 
 The Academy is the technical curriculum and proof layer for this system. Stable guide decisions become labs. Completed labs create evidence of reader capability and reveal where the method fails in practice.
 
-There is an unresolved estate conflict: one repository document describes AI Architect Academy as a redirect or historical template, while another estate contract describes it as the broader technical architecture property. Do not change redirects, domains, or brand ownership until Frank records one decision. The proposed decision is to keep AI Architect Academy as the technical product and curriculum layer, with Starlight Intelligence Academy serving its separate operator-learning mission.
+Current Academy repository instructions select `frankxai/ai-architect-academy` as canonical and preserve the Academy as an independent brand. Historical redirect and ownership conflicts do not reopen that decision. Its current acceptance obligation is [issue 35](https://github.com/frankxai/ai-architect-academy/issues/35); the source-pinned `/library` proposal adds no competency graph or commercial grant. Hosted Studio placement still requires reviewed runtime admission.
 
 ## Monthly briefing contract
 
@@ -190,3 +190,7 @@ The editorial control room should report these measures each month:
 | authority quality | growth in qualified citations, lab completions, reviewer participation, and invited technical work |
 
 Follower count and page views can inform distribution. They do not substitute for proof.
+
+## Living practice extension / 11 October 2026
+
+[Chapter 19](../manuscript/19-the-living-architecture-practice.md) and the [living design contract](../../solution-kit/living-design.md) connect the existing book system to a portable workbench, proposed quality metrics and deterministic failure/correction/export practice. The current extension is an implementation candidate, not an approved product launch. Personal-book source selection and approved experience remain pending.

@@ -30,6 +30,7 @@ const requiredChapters = [
   '16-platform-release-reliability.md',
   '17-governance-law-operating-model.md',
   '18-customer-solution-systems.md',
+  '19-the-living-architecture-practice.md',
   'appendix-a-model-snapshot.md',
   'appendix-b-decision-records.md',
 ];

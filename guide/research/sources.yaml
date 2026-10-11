@@ -403,3 +403,63 @@ sources:
     accessed_on: 2026-10-11
     review_by: 2026-10-18
     review_receipt: releases/2026-10-11-solution-systems.md
+  - id: S47
+    title: Vercel Workflow
+    publisher: Vercel
+    kind: vendor-documentation
+    url: https://vercel.com/docs/workflows
+    supports: Run-region pinning, separate function deployment, existing-run region and SDK migration behavior.
+    volatility: high
+    accessed_on: 2026-10-11
+    review_by: 2026-10-18
+    review_receipt: releases/2026-10-11-living-practice.md
+  - id: S48
+    title: Vercel Sandbox
+    publisher: Vercel
+    kind: vendor-documentation
+    url: https://vercel.com/docs/sandbox
+    supports: Isolated execution, persistence and snapshot capability descriptions; no local product run implied.
+    volatility: high
+    accessed_on: 2026-10-11
+    review_by: 2026-10-18
+    review_receipt: releases/2026-10-11-living-practice.md
+  - id: S49
+    title: DTCG Design Tokens Format 2025.10
+    publisher: Design Tokens Community Group
+    kind: open-standard-specification
+    url: https://www.designtokens.org/tr/2025.10/format/
+    supports: Stable community exchange specification status, explicitly not a W3C Standard.
+    volatility: high
+    accessed_on: 2026-10-11
+    review_by: 2026-10-18
+    review_receipt: releases/2026-10-11-living-practice.md
+  - id: S50
+    title: Canva REST APIs
+    publisher: Canva
+    kind: vendor-documentation
+    url: https://www.canva.dev/docs/apps/rest-apis/
+    supports: Current unified Developers SDK and design/asset REST API integration scope.
+    volatility: high
+    accessed_on: 2026-10-11
+    review_by: 2026-10-18
+    review_receipt: releases/2026-10-11-living-practice.md
+  - id: S51
+    title: WCAG 2.2
+    publisher: W3C
+    kind: open-standard-specification
+    url: https://www.w3.org/TR/WCAG22/
+    supports: Accessibility recommendation for task, keyboard and focus acceptance.
+    volatility: high
+    accessed_on: 2026-10-11
+    review_by: 2026-10-18
+    review_receipt: releases/2026-10-11-living-practice.md
+  - id: S52
+    title: Core Web Vitals
+    publisher: Google
+    kind: vendor-documentation
+    url: https://web.dev/articles/vitals
+    supports: LCP, INP and CLS performance measures and field-versus-lab context.
+    volatility: high
+    accessed_on: 2026-10-11
+    review_by: 2026-10-18
+    review_receipt: releases/2026-10-11-living-practice.md

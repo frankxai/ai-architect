@@ -2,6 +2,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
+import { validatePractice } from './practice.mjs';
+import { buildBook } from '../guide/scripts/export-book.mjs';
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const MATURITY = ['concept', 'visualized', 'local-tested', 'provider-tested', 'production-verified'];
@@ -123,7 +125,8 @@ export function compile(specPath, out) {
   const spec=JSON.parse(fs.readFileSync(specPath,'utf8'));
   const sources=JSON.parse(fs.readFileSync(path.join(ROOT,'sources.json'),'utf8'));
   validate(spec,sources);
-  const expected=new Set(['index.html','solution.json','sources.json','icon-registry.json','LICENSE','README.md','method.md','encyclopedia.md','encyclopedia.json','ecosystem.md','visual-recipes.md','execution-plan.md','vercel.json','Dockerfile','nginx.conf','railway.json','manifest.json',...spec.profiles.flatMap(p=>[`${p.id}.svg`,`${p.id}.mmd`,`${p.id}.drawio`,`${p.id}.reactflow.json`])]);
+  const practice=validatePractice(JSON.parse(fs.readFileSync(path.join(ROOT,'practice.json'),'utf8')),sources);
+  const expected=new Set(['index.html','practice.html','practice.json','practice.mjs','design.tokens.json','living-design.md','guide.html','guide.md','solution.json','sources.json','icon-registry.json','LICENSE','README.md','method.md','encyclopedia.md','encyclopedia.json','ecosystem.md','visual-recipes.md','execution-plan.md','vercel.json','Dockerfile','nginx.conf','railway.json','manifest.json',...spec.profiles.flatMap(p=>[`${p.id}.svg`,`${p.id}.mmd`,`${p.id}.drawio`,`${p.id}.reactflow.json`])]);
   if(fs.existsSync(out)) {
     if(fs.lstatSync(out).isSymbolicLink()) throw new Error('Output directory must not be a symlink');
     for(const name of fs.readdirSync(out)) if(!expected.has(name)||!fs.lstatSync(path.join(out,name)).isFile()||fs.lstatSync(path.join(out,name)).isSymbolicLink()) throw new Error('Output directory contains unrelated or unsafe files; use a clean directory');
@@ -136,6 +139,15 @@ export function compile(specPath, out) {
   const encoded=JSON.stringify({...spec,profiles:models,sources,documents}).replace(/</g,'\\u003c').replace(/\u2028/g,'\\u2028').replace(/\u2029/g,'\\u2029');
   const html=fs.readFileSync(path.join(ROOT,'portal.html'),'utf8').replace('/*__SOLUTION__*/',()=>encoded);
   write('index.html',html);
+  const sha=spec.source_revision??'main';
+  const exportedBook=buildBook(path.join(ROOT,'../guide'),spec.source_revision);
+  const book=exportedBook.sections.map(c=>({title:c.title,href:`https://github.com/frankxai/ai-architect/blob/${sha}/guide/manuscript/${c.file}`,words:c.words}));
+  write('guide.html',exportedBook.html);write('guide.md',exportedBook.markdown);
+  const tokens=JSON.parse(fs.readFileSync(path.join(ROOT,'design.tokens.json'),'utf8'));
+  const practiceData=JSON.stringify({practice,profiles:models,sources,source_revision:spec.source_revision,book,tokens,design:fs.readFileSync(path.join(ROOT,'living-design.md'),'utf8'),license:fs.readFileSync(path.join(ROOT,'../LICENSE'),'utf8')}).replace(/</g,'\\u003c').replace(/\u2028/g,'\\u2028').replace(/\u2029/g,'\\u2029');
+  const domain=fs.readFileSync(path.join(ROOT,'practice.mjs'),'utf8').replace(/^export /gm,'');
+  write('practice.html',fs.readFileSync(path.join(ROOT,'practice.html'),'utf8').replace('/*__PRACTICE__*/',()=>practiceData).replace('/*__DOMAIN__*/',()=>domain));
+  for(const name of ['practice.json','practice.mjs','design.tokens.json','living-design.md'])write(name,fs.readFileSync(path.join(ROOT,name)));
   write('solution.json',JSON.stringify(spec,null,2)+'\n');
   write('sources.json',JSON.stringify(sources,null,2)+'\n');
   write('icon-registry.json',fs.readFileSync(path.join(ROOT,'icons/registry.json')));
@@ -151,7 +163,7 @@ export function compile(specPath, out) {
   write('nginx.conf','server {\n listen ${PORT};\n server_name _;\n root /usr/share/nginx/html;\n location = /health { return 200 "ok"; }\n location / { try_files $uri $uri/ =404; }\n}\n');
   write('railway.json',JSON.stringify({$schema:'https://railway.com/railway.schema.json',build:{builder:'DOCKERFILE',dockerfilePath:'Dockerfile'},deploy:{healthcheckPath:'/health',restartPolicyType:'ON_FAILURE',restartPolicyMaxRetries:3}},null,2));
   const files=fs.readdirSync(out).filter(n=>n!=='manifest.json').sort().map(n=>({path:n,sha256:hash(fs.readFileSync(path.join(out,n)))}));
-  const manifest={schema:'ai-architect-export/v1',solution_id:spec.id,spec_sha256:hash(fs.readFileSync(specPath)),compiler_sha256:hash(fs.readFileSync(path.join(ROOT,'compile.mjs'))),portal_template_sha256:hash(fs.readFileSync(path.join(ROOT,'portal.html'))),source_revision:spec.source_revision,fixture:true,portal_state:'compiled',workload_state:new Set(spec.profiles.map(p=>p.maturity)).size===1?spec.profiles[0].maturity:'mixed-design',workload_states:Object.fromEntries(spec.profiles.map(p=>[p.id,p.maturity])),provider_deployment:null,model_run:null,files};
+  const manifest={schema:'ai-architect-export/v1',solution_id:spec.id,spec_sha256:hash(fs.readFileSync(specPath)),compiler_sha256:hash(fs.readFileSync(path.join(ROOT,'compile.mjs'))),portal_template_sha256:hash(fs.readFileSync(path.join(ROOT,'portal.html'))),practice_template_sha256:hash(fs.readFileSync(path.join(ROOT,'practice.html'))),practice_domain_sha256:hash(fs.readFileSync(path.join(ROOT,'practice.mjs'))),practice_contract_sha256:hash(fs.readFileSync(path.join(ROOT,'practice.json'))),source_revision:spec.source_revision,fixture:true,portal_state:'compiled',workload_state:new Set(spec.profiles.map(p=>p.maturity)).size===1?spec.profiles[0].maturity:'mixed-design',workload_states:Object.fromEntries(spec.profiles.map(p=>[p.id,p.maturity])),provider_deployment:null,model_run:null,files};
   write('manifest.json',JSON.stringify(manifest,null,2)+'\n');
   return manifest;
 }

@@ -116,7 +116,7 @@ The guide stays canonical in this repository. Other surfaces project it and must
 | Public site copy and entry paths | `frankx.ai` website repository | Reverify repository, brand source, and deployment queue |
 | Business implementation templates | business templates repository | Reverify template contracts |
 | Personal book manuscript | publishing repository, not yet selected | Resolve title and canonical source |
-| Academy lab projection | ownership unresolved | Resolve Academy ownership first |
+| Academy lab projection | `frankxai/ai-architect-academy` | Reuse the existing graph and issue 35 acceptance; source-pin public fixtures |
 | Notion and Drive | editorial and review projections | Record the canonical commit in each projection |
 
 ## Measures

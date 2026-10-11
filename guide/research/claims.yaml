@@ -501,3 +501,38 @@ claims:
     location: manuscript/18-customer-solution-systems.md
     status: source-supported
     review_by: 2026-10-18
+  - id: C073
+    class: prescription
+    statement: "Keep engine, Studio, Academy, technical guide, personal book and publication projections connected without exchanging their authority."
+    sources: [ S47, S49 ]
+    location: manuscript/19-the-living-architecture-practice.md
+    status: proposed
+    review_by: 2026-10-18
+  - id: C074
+    class: prescription
+    statement: "Compare the simplest feasible architecture and a justified alternative on frozen tasks, acceptance, recovery and full cost."
+    sources: [ S13, S31 ]
+    location: manuscript/19-the-living-architecture-practice.md
+    status: proposed
+    review_by: 2026-10-18
+  - id: C075
+    class: prescription
+    statement: "Allocate evaluations at source-access, tool-effect and post-review revision seams where errors change authority or consequence."
+    sources: [ S09, S13, S18 ]
+    location: manuscript/19-the-living-architecture-practice.md
+    status: proposed
+    review_by: 2026-10-18
+  - id: C076
+    class: prescription
+    statement: "Include reviewer effort and realized capacity use in full-path customer economics, separate from attributable provider consumption."
+    sources: [ S31, S36 ]
+    location: manuscript/19-the-living-architecture-practice.md
+    status: proposed
+    review_by: 2026-10-18
+  - id: C077
+    class: prescription
+    statement: "Record source changes with their impact on claims, chapters, profiles, templates and tests before regenerating projections."
+    sources: [ S13, S49 ]
+    location: manuscript/19-the-living-architecture-practice.md
+    status: proposed
+    review_by: 2026-10-18
