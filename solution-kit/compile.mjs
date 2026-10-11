@@ -123,7 +123,7 @@ export function compile(specPath, out) {
   const spec=JSON.parse(fs.readFileSync(specPath,'utf8'));
   const sources=JSON.parse(fs.readFileSync(path.join(ROOT,'sources.json'),'utf8'));
   validate(spec,sources);
-  const expected=new Set(['index.html','solution.json','sources.json','icon-registry.json','README.md','method.md','encyclopedia.md','encyclopedia.json','ecosystem.md','visual-recipes.md','execution-plan.md','vercel.json','Dockerfile','nginx.conf','railway.json','manifest.json',...spec.profiles.flatMap(p=>[`${p.id}.svg`,`${p.id}.mmd`,`${p.id}.drawio`,`${p.id}.reactflow.json`])]);
+  const expected=new Set(['index.html','solution.json','sources.json','icon-registry.json','LICENSE','README.md','method.md','encyclopedia.md','encyclopedia.json','ecosystem.md','visual-recipes.md','execution-plan.md','vercel.json','Dockerfile','nginx.conf','railway.json','manifest.json',...spec.profiles.flatMap(p=>[`${p.id}.svg`,`${p.id}.mmd`,`${p.id}.drawio`,`${p.id}.reactflow.json`])]);
   if(fs.existsSync(out)) {
     if(fs.lstatSync(out).isSymbolicLink()) throw new Error('Output directory must not be a symlink');
     for(const name of fs.readdirSync(out)) if(!expected.has(name)||!fs.lstatSync(path.join(out,name)).isFile()||fs.lstatSync(path.join(out,name)).isSymbolicLink()) throw new Error('Output directory contains unrelated or unsafe files; use a clean directory');
@@ -139,6 +139,7 @@ export function compile(specPath, out) {
   write('solution.json',JSON.stringify(spec,null,2)+'\n');
   write('sources.json',JSON.stringify(sources,null,2)+'\n');
   write('icon-registry.json',fs.readFileSync(path.join(ROOT,'icons/registry.json')));
+  write('LICENSE',fs.readFileSync(path.join(ROOT,'..','LICENSE')));
   for(const p of spec.profiles) {
     write(`${p.id}.svg`,svg(p)); write(`${p.id}.mmd`,mermaid(p)); write(`${p.id}.drawio`,drawio(p));
     write(`${p.id}.reactflow.json`,flow(p));
