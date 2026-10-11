@@ -31,6 +31,7 @@ const requiredChapters = [
   '17-governance-law-operating-model.md',
   '18-customer-solution-systems.md',
   '19-the-living-architecture-practice.md',
+  '20-multi-cloud-realization.md',
   'appendix-a-model-snapshot.md',
   'appendix-b-decision-records.md',
 ];

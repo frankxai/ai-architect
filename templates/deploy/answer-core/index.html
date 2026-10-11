@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Grounded answer service: every sentence cites a passage, or the service refuses.">
+<meta name="color-scheme" content="dark">
+<title>Grounded answers</title>
+<style>
+:root{--bg:#0f1017;--panel:#151824;--line:#262a3a;--ink:#f2f1ec;--ink2:#b9bccb;--ink3:#8b90a0;--accent:#7c93ff;--ok:#5ee6cf;--warn:#ffc07a;--bad:#ff8a8a}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--accent)}button,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+main{max-width:760px;margin:0 auto;padding:clamp(28px,6vw,72px) 20px 64px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font-weight:600;letter-spacing:-.01em}.badges{display:flex;gap:8px;flex-wrap:wrap}
+.badge{border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-size:12px;color:var(--ink2)}
+.badge[data-mode=live]{border-color:#2f6f63;color:var(--ok)}.badge[data-mode=fixture]{border-color:#6b5534;color:var(--warn)}
+h1{font-size:clamp(32px,6vw,52px);line-height:1.05;letter-spacing:-.03em;margin:40px 0 12px;font-weight:600}
+.lead{color:var(--ink2);margin:0 0 28px;max-width:56ch}
+form{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px}
+label{display:block;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin:2px 4px 8px}
+textarea{width:100%;min-height:96px;resize:vertical;background:transparent;border:0;outline:none;padding:4px;font-size:18px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:8px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{background:transparent;border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:13px;color:var(--ink2);cursor:pointer;transition:border-color .2s,color .2s}
+.chip:hover{border-color:var(--accent);color:var(--ink)}
+.go{background:var(--accent);color:#0b0d16;border:0;border-radius:10px;padding:10px 18px;font-weight:600;cursor:pointer;transition:transform .15s ease,opacity .2s}
+.go:active{transform:scale(.98)}.go[disabled]{opacity:.55;cursor:progress}
+#result{margin-top:28px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px;animation:rise .35s ease both}
+.card.refused{border-color:#6b5534}.card.error{border-color:#6b3434}
+.kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin:0 0 10px}
+.answer{font-size:19px;line-height:1.55;margin:0}
+.cite{display:inline-block;font-size:12px;border:1px solid var(--line);border-radius:6px;padding:0 5px;margin-left:3px;color:var(--accent);text-decoration:none;vertical-align:2px}
+.sources{margin:18px 0 0;padding:0;list-style:none;display:grid;gap:10px}
+.sources li{border-top:1px solid var(--line);padding-top:10px;font-size:14px;color:var(--ink2)}
+.sources strong{color:var(--ink);font-weight:600}
+.meta{font-size:12px;color:var(--ink3);margin-top:14px;font-variant-numeric:tabular-nums}
+footer{margin-top:48px;font-size:13px;color:var(--ink3)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+@keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+  <div class="top">
+    <span class="brand">Grounded answers</span>
+    <span class="badges"><span class="badge" id="runtime">runtime</span><span class="badge" id="mode">checking</span></span>
+  </div>
+  <h1>Every sentence cites a passage, or nothing is said.</h1>
+  <p class="lead">A reference service for the AI Architect answer contract. It searches a small bundled corpus, asks the model to write only from what it found, and withholds any sentence it cannot ground.</p>
+  <form id="ask">
+    <label for="q">Question</label>
+    <textarea id="q" name="question" maxlength="1000" required placeholder="When should I use coordinated agents?"></textarea>
+    <div class="row">
+      <div class="chips" aria-label="Sample questions">
+        <button type="button" class="chip">When should I use coordinated agents?</button>
+        <button type="button" class="chip">Can a generated image be my architecture diagram?</button>
+        <button type="button" class="chip">How do I compare cloud providers fairly?</button>
+      </div>
+      <button class="go" type="submit" id="go">Ask</button>
+    </div>
+  </form>
+  <section id="result" aria-live="polite"></section>
+  <footer>Contract <code>ai-architect-answer/v1</code>. In fixture mode the answer is a deterministic extract of the best passage, not model output. Source: <a href="https://github.com/frankxai/ai-architect">frankxai/ai-architect</a>.</footer>
+</main>
+<script>
+const $ = s => document.querySelector(s);
+const esc = v => String(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+fetch('/health').then(r => r.json()).then(h => {
+  $('#runtime').textContent = h.runtime;
+  $('#mode').textContent = h.mode === 'live' ? `live · ${h.model}` : 'fixture';
+  $('#mode').dataset.mode = h.mode;
+}).catch(() => { $('#mode').textContent = 'health unavailable'; });
+document.querySelectorAll('.chip').forEach(b => b.addEventListener('click', () => { $('#q').value = b.textContent; $('#q').focus(); }));
+$('#ask').addEventListener('submit', async e => {
+  e.preventDefault();
+  const question = $('#q').value.trim();
+  if (!question) return;
+  $('#go').disabled = true; $('#go').textContent = 'Searching';
+  try {
+    const res = await fetch('/v1/answer', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ question }) });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || data.error || res.statusText);
+    const text = esc(data.answer).replace(/\[(P\d+)\]/g, (m, id) => `<a class="cite" href="#src-${id}">${id}</a>`);
+    $('#result').innerHTML = `<article class="card ${data.refused ? 'refused' : ''}">
+      <p class="kicker">${data.refused ? 'Refused' : 'Grounded answer'}</p>
+      <p class="answer">${text}</p>
+      ${data.citations.length ? `<ul class="sources">${data.citations.map(c => `<li id="src-${esc(c.id)}"><strong>${esc(c.id)} · ${esc(c.title)}</strong><br>${esc(c.quote)}</li>`).join('')}</ul>` : ''}
+      <p class="meta">${esc(data.runtime)} · ${esc(data.mode)}${data.model ? ' · ' + esc(data.model) : ''} · ${data.latency_ms} ms${data.usage ? ` · ${data.usage.input_tokens ?? '?'} in / ${data.usage.output_tokens ?? '?'} out tokens` : ''} · trace ${esc(data.trace_id)}</p>
+    </article>`;
+  } catch (err) {
+    $('#result').innerHTML = `<article class="card error"><p class="kicker">Error</p><p class="answer">${esc(err.message)}</p></article>`;
+  } finally {
+    $('#go').disabled = false; $('#go').textContent = 'Ask';
+  }
+});
+</script>
+</body>
+</html>

@@ -11,6 +11,9 @@
 //   architect_next_stage        — returns the router hint, does not run agents
 //   architect_init              — copies SOP/WORKFLOW once via the conductor
 //   architect_card              — dispatch card JSON, does not spawn a model
+//   catalog_patterns            — list the multi-cloud workload patterns
+//   catalog_realization         — one pattern resolved onto one provider
+//   catalog_view                — Mermaid, sequence, React Flow, Structurizr or diagrams.net text
 //
 // Configure as a local stdio server. Do not host this.
 // Caller-supplied `root` is a local filesystem path. This server does not
@@ -21,6 +24,7 @@ import { existsSync, readFileSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { nextIncomplete, parseWorkflow } from '../scripts/parse-workflow.mjs';
+import { load, validate, resolve, mermaidFlow, mermaidSequence, reactFlow, structurizr, drawio, deployUrl } from '../catalog/compile.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const pluginRoot = path.resolve(__dirname, '..');
@@ -83,6 +87,33 @@ const TOOLS = [
       type: 'object',
       properties: {
         root: { type: 'string' },
+      },
+    },
+  },
+  {
+    name: 'catalog_patterns',
+    description: 'List the multi-cloud workload patterns: id, title, customer job, sophistication and the mean judgement score per provider. Reads the bundled catalog only.',
+    inputSchema: { type: 'object', properties: {} },
+  },
+  {
+    name: 'catalog_realization',
+    description: 'Resolve one pattern onto one provider: service per component, scores with rationale, consumption drivers, services to confirm, and the one-click template when one exists.',
+    inputSchema: {
+      type: 'object',
+      required: ['pattern', 'provider'],
+      properties: { pattern: { type: 'string' }, provider: { type: 'string' } },
+    },
+  },
+  {
+    name: 'catalog_view',
+    description: 'Return a generated view as text: mermaid (flowchart), sequence (journey and handoffs), reactflow (JSON), structurizr (C4 DSL with every provider as a deployment environment) or drawio (XML).',
+    inputSchema: {
+      type: 'object',
+      required: ['pattern', 'format'],
+      properties: {
+        pattern: { type: 'string' },
+        provider: { type: 'string', description: 'Required for mermaid, reactflow and drawio.' },
+        format: { type: 'string', enum: ['mermaid', 'sequence', 'reactflow', 'structurizr', 'drawio'] },
       },
     },
   },
@@ -170,7 +201,58 @@ function runConductor(root, command) {
   };
 }
 
+let catalogCache = null;
+function catalog() {
+  if (catalogCache) return catalogCache;
+  const cat = load();
+  // Read with the latest check date so an overdue review does not hide the data;
+  // overdue sources are reported with every answer instead.
+  validate(cat, cat.sources.map((s) => s.checked_on).sort().at(-1));
+  const today = new Date().toISOString().slice(0, 10);
+  catalogCache = { cat, patterns: resolve(cat), stale: cat.sources.filter((s) => s.review_by < today).map((s) => s.id) };
+  return catalogCache;
+}
+
+function handleCatalog(name, args) {
+  const allowed = { catalog_patterns: [], catalog_realization: ['pattern', 'provider'], catalog_view: ['pattern', 'provider', 'format'] }[name];
+  if (!args || typeof args !== 'object' || Array.isArray(args) || Object.keys(args).some((k) => !allowed.includes(k))
+    || Object.values(args).some((v) => typeof v !== 'string' || !v)) {
+    throw new Error(`arguments must be an object with string fields from: ${allowed.join(', ') || 'none'}`);
+  }
+  const { cat, patterns, stale } = catalog();
+  const notice = { state: 'designed architectures; no provider deployment receipts', stale_sources: stale };
+  if (name === 'catalog_patterns') {
+    return { ...notice, patterns: patterns.map((p) => ({ id: p.id, title: p.title, sophistication: p.sophistication, customer_job: p.customer_job, accepted_result: p.accepted_result, scores: Object.fromEntries(Object.entries(p.realizations).map(([k, r]) => [k, r.mean_score])) })) };
+  }
+  const pat = patterns.find((p) => p.id === args.pattern);
+  if (!pat) throw new Error(`unknown pattern; choose one of: ${patterns.map((p) => p.id).join(', ')}`);
+  const providers = cat.providers.providers.map((p) => p.id);
+  if (args.provider !== undefined && !providers.includes(args.provider)) throw new Error(`unknown provider; choose one of: ${providers.join(', ')}`);
+  if (name === 'catalog_realization') {
+    if (!args.provider) throw new Error('provider is required');
+    const r = pat.realizations[args.provider];
+    const template = r.template ? cat.templates.find((t) => t.id === r.template) : null;
+    return {
+      ...notice, pattern: pat.id, provider: args.provider, headline: r.headline, notes: r.notes, scores: r.scores, rationale: r.rationale,
+      components: pat.components.map((c) => ({ id: c.id, role: c.role, label: c.label, service: r.bindings[c.id] })),
+      consumption_drivers: r.consumption_drivers, confirm_before_use: r.caution, economics: pat.economics.computed,
+      template: template ? { id: template.id, deploy_url: deployUrl(template), evidence: template.evidence, not_verified: template.not_verified } : null,
+    };
+  }
+  if (['mermaid', 'reactflow', 'drawio'].includes(args.format) && !args.provider) throw new Error(`${args.format} needs a provider`);
+  const text = {
+    mermaid: () => mermaidFlow(cat, pat, args.provider),
+    sequence: () => mermaidSequence(pat),
+    reactflow: () => JSON.stringify(reactFlow(pat, args.provider), null, 2),
+    structurizr: () => structurizr(cat, pat),
+    drawio: () => drawio(cat, pat, args.provider),
+  }[args.format];
+  if (!text) throw new Error('format must be mermaid, sequence, reactflow, structurizr or drawio');
+  return { ...notice, pattern: pat.id, provider: args.provider ?? null, format: args.format, text: text() };
+}
+
 function handleTool(name, args = {}) {
+  if (name.startsWith('catalog_')) return handleCatalog(name, args);
   if (!args || typeof args !== 'object' || Array.isArray(args)
     || (args.root !== undefined && (typeof args.root !== 'string' || !args.root))
     || Object.keys(args).some((key) => key !== 'root')) {

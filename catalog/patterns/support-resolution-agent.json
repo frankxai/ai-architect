@@ -1,0 +1,627 @@
+{
+  "schema": "ai-architect-pattern/v1",
+  "id": "support-resolution-agent",
+  "title": "Support resolution agent",
+  "tagline": "Resolves what it is allowed to resolve. Hands off the rest with the case already written.",
+  "summary": "A bounded agent answers customer contacts, looks up orders and accounts through typed tools, performs low-risk actions within a written authority, and transfers everything else to a human with a complete case summary.",
+  "customer_job": "Get an order, refund or account problem solved in one contact, at any hour.",
+  "baseline": "Customers wait in a queue; tier-one agents re-ask the same questions and copy data between the help desk, order system and payment console.",
+  "accepted_result": "The contact closes without a reopen within 7 days, or reaches a human who does not need to ask the customer again.",
+  "industries": [
+    "retail",
+    "telecommunications",
+    "travel",
+    "financial-services",
+    "software"
+  ],
+  "sophistication": "A3",
+  "primary_metric": {
+    "name": "Resolved contacts without reopen",
+    "definition": "Contacts closed by the agent with no reopen in 7 days, divided by eligible contacts."
+  },
+  "economics": {
+    "tasks": 20000,
+    "adoption": 0.6,
+    "acceptance": 0.7,
+    "minutes_saved": 9,
+    "hourly_value": 38,
+    "run_cost_per_task": 0.12,
+    "fixed_monthly": 4000,
+    "currency": "EUR",
+    "basis": "Illustrative assumption for a mid-size retailer; reopen and escalation rates must come from a pilot."
+  },
+  "components": [
+    {
+      "id": "customer",
+      "role": "user",
+      "label": "Customer",
+      "detail": "Writes in chat or email.",
+      "col": 0,
+      "row": 1,
+      "data_class": "personal"
+    },
+    {
+      "id": "channels",
+      "role": "experience",
+      "label": "Chat and email channels",
+      "detail": "Web chat, email intake, transcript display.",
+      "col": 1,
+      "row": 1,
+      "data_class": "personal"
+    },
+    {
+      "id": "edge",
+      "role": "edge",
+      "label": "Edge protection",
+      "detail": "Bot mitigation and per-session rate limits.",
+      "col": 1,
+      "row": 0,
+      "data_class": "operational"
+    },
+    {
+      "id": "conversation-api",
+      "role": "api",
+      "label": "Conversation API",
+      "detail": "Verifies the customer, opens a case, holds the session token.",
+      "col": 2,
+      "row": 1,
+      "data_class": "personal"
+    },
+    {
+      "id": "agent",
+      "role": "orchestrator",
+      "label": "Resolution agent",
+      "detail": "Bounded loop: max 8 steps, one tool call at a time, written authority table.",
+      "col": 3,
+      "row": 1,
+      "data_class": "personal",
+      "failure_mode": "Loops on a tool error or exceeds authority."
+    },
+    {
+      "id": "gateway",
+      "role": "gateway",
+      "label": "Model gateway",
+      "detail": "Routing, fallback and per-case spend cap.",
+      "col": 3,
+      "row": 0,
+      "data_class": "personal"
+    },
+    {
+      "id": "model",
+      "role": "model",
+      "label": "Reasoning model",
+      "detail": "Plans the next step; emits typed tool calls.",
+      "col": 4,
+      "row": 0,
+      "data_class": "personal"
+    },
+    {
+      "id": "tools",
+      "role": "tools",
+      "label": "Tool server (MCP)",
+      "detail": "order.lookup, refund.issue (cap EUR 50), ticket.transfer; idempotency keys on writes.",
+      "col": 4,
+      "row": 1,
+      "data_class": "personal",
+      "failure_mode": "Duplicate refund on retry."
+    },
+    {
+      "id": "policy-index",
+      "role": "retrieval",
+      "label": "Policy and help index",
+      "detail": "Return rules, warranty terms, known issues.",
+      "col": 4,
+      "row": 2,
+      "data_class": "internal"
+    },
+    {
+      "id": "case-state",
+      "role": "memory",
+      "label": "Case state",
+      "detail": "Conversation, verified identity, steps taken, budget left.",
+      "col": 3,
+      "row": 2,
+      "data_class": "personal"
+    },
+    {
+      "id": "commerce",
+      "role": "system",
+      "label": "Order and payment systems",
+      "detail": "Systems of record the tools call.",
+      "col": 5,
+      "row": 1,
+      "data_class": "personal"
+    },
+    {
+      "id": "desk",
+      "role": "review",
+      "label": "Human agent desk",
+      "detail": "Receives transfers with summary, evidence and suggested next step.",
+      "col": 2,
+      "row": 2,
+      "data_class": "personal"
+    },
+    {
+      "id": "traces",
+      "role": "observability",
+      "label": "Traces, cost, CSAT",
+      "detail": "Per-case trace, tool outcomes, spend, satisfaction.",
+      "col": 5,
+      "row": 0,
+      "data_class": "operational"
+    },
+    {
+      "id": "scenarios",
+      "role": "evals",
+      "label": "Scenario evals",
+      "detail": "Simulated customers with expected tool sequences and forbidden actions.",
+      "col": 5,
+      "row": 2,
+      "data_class": "internal"
+    }
+  ],
+  "flows": [
+    {
+      "id": "contact",
+      "from": "customer",
+      "to": "channels",
+      "kind": "data",
+      "label": "Message",
+      "data_class": "personal"
+    },
+    {
+      "id": "screen",
+      "from": "channels",
+      "to": "edge",
+      "kind": "control",
+      "label": "Bot and rate checks",
+      "data_class": "operational"
+    },
+    {
+      "id": "open-case",
+      "from": "channels",
+      "to": "conversation-api",
+      "kind": "data",
+      "label": "Verified session and message",
+      "data_class": "personal"
+    },
+    {
+      "id": "delegate",
+      "from": "conversation-api",
+      "to": "agent",
+      "kind": "control",
+      "label": "Case with authority table",
+      "data_class": "personal"
+    },
+    {
+      "id": "plan",
+      "from": "agent",
+      "to": "gateway",
+      "kind": "data",
+      "label": "State and policy context",
+      "data_class": "personal"
+    },
+    {
+      "id": "infer",
+      "from": "gateway",
+      "to": "model",
+      "kind": "data",
+      "label": "Model call",
+      "data_class": "personal"
+    },
+    {
+      "id": "ground",
+      "from": "agent",
+      "to": "policy-index",
+      "kind": "data",
+      "label": "Policy lookup",
+      "data_class": "internal"
+    },
+    {
+      "id": "act",
+      "from": "agent",
+      "to": "tools",
+      "kind": "data",
+      "label": "Typed tool call",
+      "data_class": "personal"
+    },
+    {
+      "id": "effect",
+      "from": "tools",
+      "to": "commerce",
+      "kind": "data",
+      "label": "Read or capped write with idempotency key",
+      "data_class": "personal"
+    },
+    {
+      "id": "remember",
+      "from": "agent",
+      "to": "case-state",
+      "kind": "data",
+      "label": "Step, result, budget",
+      "data_class": "personal"
+    },
+    {
+      "id": "handoff",
+      "from": "agent",
+      "to": "desk",
+      "kind": "control",
+      "label": "Transfer with case summary",
+      "data_class": "personal"
+    },
+    {
+      "id": "reply",
+      "from": "conversation-api",
+      "to": "channels",
+      "kind": "data",
+      "label": "Answer, confirmation or transfer notice",
+      "data_class": "personal"
+    },
+    {
+      "id": "telemetry",
+      "from": "gateway",
+      "to": "traces",
+      "kind": "telemetry",
+      "label": "Spend and latency per case",
+      "data_class": "operational"
+    },
+    {
+      "id": "simulate",
+      "from": "scenarios",
+      "to": "conversation-api",
+      "kind": "control",
+      "label": "Simulated contacts per release",
+      "data_class": "internal"
+    }
+  ],
+  "journey": [
+    {
+      "id": "j1",
+      "title": "Contact and verify",
+      "actor": "customer",
+      "narration": "The message passes bot checks. The API verifies the customer against the order email before any personal data is read.",
+      "flows": [
+        "contact",
+        "screen",
+        "open-case"
+      ]
+    },
+    {
+      "id": "j2",
+      "title": "Plan inside an authority table",
+      "actor": "agent",
+      "narration": "The agent receives the case and a written table of what it may do. It reads the return policy before proposing anything.",
+      "flows": [
+        "delegate",
+        "ground",
+        "plan",
+        "infer"
+      ]
+    },
+    {
+      "id": "j3",
+      "title": "Act with typed tools",
+      "actor": "agent",
+      "narration": "Order lookup is a read. A refund up to EUR 50 is a capped write with an idempotency key, so a retry cannot pay twice.",
+      "flows": [
+        "act",
+        "effect",
+        "remember"
+      ]
+    },
+    {
+      "id": "j4",
+      "title": "Hand off with the case written",
+      "actor": "reviewer",
+      "narration": "Above the cap, or after two failed steps, the agent transfers to a person with a summary, evidence and a suggested action.",
+      "flows": [
+        "handoff"
+      ]
+    },
+    {
+      "id": "j5",
+      "title": "Confirm and close",
+      "actor": "customer",
+      "narration": "The customer sees what was done and what happens next. A reopen within 7 days counts against the agent, not for it.",
+      "flows": [
+        "reply"
+      ]
+    },
+    {
+      "id": "j6",
+      "title": "Rehearse before every release",
+      "actor": "reviewer",
+      "narration": "Simulated customers replay known cases. A forbidden action or a duplicate effect fails the release.",
+      "flows": [
+        "simulate",
+        "telemetry"
+      ]
+    }
+  ],
+  "team": [
+    {
+      "lane": "customer",
+      "step": "Describe the problem, confirm identity, accept or decline the proposed action",
+      "evidence": "Consent event per write"
+    },
+    {
+      "lane": "ai",
+      "step": "Ground in policy, call tools one at a time, stop at the authority limit",
+      "evidence": "Step trace with tool outcomes"
+    },
+    {
+      "lane": "system",
+      "step": "Enforce caps, idempotency and spend per case",
+      "evidence": "Rejected-call log"
+    },
+    {
+      "lane": "reviewer",
+      "step": "Human agent takes transfers and rates summary quality",
+      "evidence": "Transfer rating and handle time"
+    },
+    {
+      "lane": "operator",
+      "step": "Tune the authority table monthly from reopen and dispute data",
+      "evidence": "Authority table revision history"
+    }
+  ],
+  "screens": [
+    {
+      "id": "chat",
+      "device": "mobile",
+      "title": "Chat",
+      "state": "in-progress",
+      "blocks": [
+        {
+          "type": "message",
+          "from": "user",
+          "text": "My order 48113 arrived with a cracked lid."
+        },
+        {
+          "type": "message",
+          "from": "assistant",
+          "text": "I found order 48113, delivered yesterday. A damaged item qualifies for a EUR 24 refund or a replacement. Which would you like?"
+        },
+        {
+          "type": "actions",
+          "items": [
+            {
+              "label": "Refund EUR 24",
+              "kind": "primary"
+            },
+            {
+              "label": "Send replacement",
+              "kind": "secondary"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "confirmed",
+      "device": "mobile",
+      "title": "Action confirmed",
+      "state": "success",
+      "blocks": [
+        {
+          "type": "status",
+          "tone": "success",
+          "text": "Refund of EUR 24 issued. Reference RF-20931."
+        },
+        {
+          "type": "meta",
+          "text": "Arrives in 3 to 5 days. Fixture data."
+        }
+      ]
+    },
+    {
+      "id": "transfer",
+      "device": "desktop",
+      "title": "Human desk transfer",
+      "state": "handoff",
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Case 7712: refund request EUR 180, above agent authority"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Verified: email matches order 51920",
+            "Policy: damaged on arrival, photo received",
+            "Agent suggestion: approve refund, flag carrier"
+          ]
+        },
+        {
+          "type": "actions",
+          "items": [
+            {
+              "label": "Approve",
+              "kind": "primary"
+            },
+            {
+              "label": "Ask customer",
+              "kind": "secondary"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ops",
+      "device": "desktop",
+      "title": "Resolution dashboard",
+      "state": "default",
+      "blocks": [
+        {
+          "type": "kpis",
+          "items": [
+            {
+              "label": "Resolved, no reopen",
+              "value": "fixture"
+            },
+            {
+              "label": "Transfers with full summary",
+              "value": "fixture"
+            },
+            {
+              "label": "Spend per resolved case",
+              "value": "fixture"
+            }
+          ]
+        },
+        {
+          "type": "status",
+          "tone": "neutral",
+          "text": "Values appear after a measured pilot."
+        }
+      ]
+    }
+  ],
+  "evals": [
+    {
+      "id": "task-success",
+      "name": "Scenario task success",
+      "threshold": ">= 0.85 on 300 frozen scenarios",
+      "method": "Simulated customer with scripted facts; scorer checks final state in a fixture order system."
+    },
+    {
+      "id": "forbidden",
+      "name": "Forbidden actions",
+      "threshold": "0 writes above cap or without consent",
+      "method": "Adversarial scenarios that pressure the agent to exceed authority."
+    },
+    {
+      "id": "duplicates",
+      "name": "Duplicate effects",
+      "threshold": "0 duplicate refunds under injected retries",
+      "method": "Fault injection on the tool layer."
+    },
+    {
+      "id": "handoff",
+      "name": "Transfer completeness",
+      "threshold": ">= 0.9 transfers rated complete by human agents",
+      "method": "Blind rating of summaries against the transcript."
+    }
+  ],
+  "risks": [
+    {
+      "id": "authority",
+      "risk": "Agent performs an action outside policy.",
+      "control": "Authority table enforced in the tool server, not only in the prompt."
+    },
+    {
+      "id": "pii",
+      "risk": "Personal data reaches logs or the wrong customer.",
+      "control": "Verification before read; redaction in traces; per-case data scope."
+    },
+    {
+      "id": "loop",
+      "risk": "Agent loops and spends on a broken tool.",
+      "control": "Step cap, spend cap per case, circuit breaker on tool errors."
+    }
+  ],
+  "realizations": {
+    "gcp": {
+      "headline": "ADK agent on Agent Runtime with Cloud Run MCP tools",
+      "map": {
+        "agent": "gcp.agent-runtime",
+        "case-state": "gcp.firestore",
+        "policy-index": "gcp.agent-search",
+        "desk": "gcp.review-console"
+      },
+      "notes": "Agent Runtime hosts the ADK agent with managed sessions; tools run as a Cloud Run MCP server with service-account scoped access to order APIs.",
+      "template": "gcp-cloud-run-gemini",
+      "scores": {
+        "performance": 4,
+        "time_to_value": 4,
+        "speed_to_execution": 3,
+        "cost_efficiency": 3,
+        "portability": 3,
+        "governance": 5
+      },
+      "rationale": "Managed agent runtime and IAM-scoped tools; ADK and Agent Runtime specifics raise exit cost."
+    },
+    "vercel": {
+      "headline": "AI SDK 7 agent with Workflow handoffs and an MCP tool route",
+      "map": {
+        "case-state": "vercel.upstash",
+        "policy-index": "vercel.neon-vector"
+      },
+      "notes": "Streaming chat UI and agent loop share one codebase. Use Workflow for the transfer so a human decision can resume the case hours later.",
+      "template": "vercel-ai-gateway",
+      "scores": {
+        "performance": 4,
+        "time_to_value": 5,
+        "speed_to_execution": 5,
+        "cost_efficiency": 4,
+        "portability": 4,
+        "governance": 3
+      },
+      "rationale": "Quickest to a rehearsable pilot; contact-centre integrations and PII controls are integration work."
+    },
+    "cloudflare": {
+      "headline": "Agents SDK case objects with MCP tools on Workers",
+      "map": {
+        "case-state": "cf.durable-objects",
+        "policy-index": "cf.ai-search"
+      },
+      "notes": "Each case is a Durable Object agent holding its own state and schedule, which suits long-running conversations and reminders.",
+      "template": "cloudflare-workers-ai",
+      "scores": {
+        "performance": 5,
+        "time_to_value": 4,
+        "speed_to_execution": 4,
+        "cost_efficiency": 5,
+        "portability": 3,
+        "governance": 3
+      },
+      "rationale": "Per-case state is a natural fit; enterprise CRM connectors and residency need confirmation."
+    },
+    "aws": {
+      "headline": "AgentCore Runtime, Memory and Gateway with Claude on Bedrock",
+      "map": {},
+      "notes": "AgentCore Gateway exposes order and refund Lambdas as MCP tools with identity propagation; Memory holds case state.",
+      "template": null,
+      "scores": {
+        "performance": 4,
+        "time_to_value": 4,
+        "speed_to_execution": 3,
+        "cost_efficiency": 3,
+        "portability": 3,
+        "governance": 5
+      },
+      "rationale": "Complete managed set for agents; more configuration surface than the primary platforms."
+    },
+    "azure": {
+      "headline": "Foundry Agent Service with Azure AI Search grounding",
+      "map": {},
+      "notes": "Fits contact centres already on Microsoft identity and Dynamics; tools exposed through API Management.",
+      "template": null,
+      "scores": {
+        "performance": 4,
+        "time_to_value": 4,
+        "speed_to_execution": 3,
+        "cost_efficiency": 3,
+        "portability": 3,
+        "governance": 5
+      },
+      "rationale": "Strong governance; Agent Service naming and features changed in 2026, confirm before design freeze."
+    },
+    "railway": {
+      "headline": "Agent worker with Redis case state and a direct model API",
+      "map": {},
+      "notes": "Full control of the loop and tool server; authority enforcement, retries and redaction are written and tested in-house.",
+      "template": null,
+      "scores": {
+        "performance": 3,
+        "time_to_value": 3,
+        "speed_to_execution": 4,
+        "cost_efficiency": 4,
+        "portability": 5,
+        "governance": 2
+      },
+      "rationale": "Lowest lock-in, highest build and operating burden."
+    }
+  }
+}

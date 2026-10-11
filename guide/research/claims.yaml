@@ -536,3 +536,52 @@ claims:
     location: manuscript/19-the-living-architecture-practice.md
     status: proposed
     review_by: 2026-10-18
+  - id: C078
+    class: fact
+    statement: "Google renamed Vertex AI to Gemini Enterprise Agent Platform; Vertex AI Search maps to Agent Search and Agent Engine to Agent Runtime, while RAG Engine keeps its name."
+    sources: [ S53 ]
+    location: manuscript/20-multi-cloud-realization.md
+    status: source-supported
+    review_by: 2026-11-11
+  - id: C079
+    class: prescription
+    statement: "Model a workload as provider-neutral roles and typed flows, then realize it per provider through a service registry, so a provider change replaces bindings rather than the design."
+    sources: [ S53, S57 ]
+    location: manuscript/20-multi-cloud-realization.md
+    status: proposed
+    review_by: 2026-11-11
+  - id: C080
+    class: prescription
+    statement: "Remove infeasible providers with hard constraints before scoring, record each score with its rationale, and present provider consumption drivers only after the customer choice."
+    sources: [ S31, S36 ]
+    location: manuscript/20-multi-cloud-realization.md
+    status: proposed
+    review_by: 2026-11-11
+  - id: C081
+    class: fact
+    statement: "Deploy to Cloudflare buttons accept a repository subdirectory that must be self-contained, and provision resources such as Workers AI, KV, D1, R2 and Queues automatically."
+    sources: [ S54 ]
+    location: manuscript/20-multi-cloud-realization.md
+    status: source-supported
+    review_by: 2026-11-11
+  - id: C082
+    class: prescription
+    statement: "Emit every architecture view from one specification with shared component and flow identifiers, and validate each view with the tool that consumes it."
+    sources: [ S57 ]
+    location: manuscript/20-multi-cloud-realization.md
+    status: proposed
+    review_by: 2026-11-11
+  - id: C083
+    class: prescription
+    statement: "Demonstrate portability by passing one conformance suite against every runtime adapter; a one-click deploy path is a reproducible start, not provider-tested maturity."
+    sources: [ S54, S55, S56 ]
+    location: manuscript/20-multi-cloud-realization.md
+    status: proposed
+    review_by: 2026-11-11
+  - id: C084
+    class: fact
+    statement: "On Vercel, AI SDK 7 calls routed through AI Gateway can authenticate with the project's OIDC token instead of a stored gateway key."
+    sources: [ S56 ]
+    location: manuscript/20-multi-cloud-realization.md
+    status: source-supported
+    review_by: 2026-10-18

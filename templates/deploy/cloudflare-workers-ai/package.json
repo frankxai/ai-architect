@@ -1,0 +1,24 @@
+{
+  "name": "ai-architect-answer-cloudflare",
+  "private": true,
+  "type": "module",
+  "description": "Grounded answer service on Cloudflare Workers with Workers AI through AI Gateway. Contract ai-architect-answer/v1.",
+  "license": "Apache-2.0",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "check": "wrangler deploy --dry-run --outdir dist",
+    "test": "node --test test/*.test.mjs"
+  },
+  "devDependencies": {
+    "wrangler": "4.149.0"
+  },
+  "cloudflare": {
+    "bindings": {
+      "ANSWER_TOKEN": {
+        "description": "Optional. Set a long random string to require 'Authorization: Bearer <token>' on /v1/answer. Leave unset for a public demo."
+      }
+    }
+  }
+}

@@ -1,7 +1,7 @@
 schema: ai-architect-guide-edition/v1
 title: AI Architect Guide 2026
 subtitle: Build systems that can change their models without losing control
-edition: 2026.0.6-working
+edition: 2026.0.7-working
 status: draft
 publication_state: public-working-edition
 canonical_repository: https://github.com/frankxai/ai-architect
@@ -19,7 +19,7 @@ reader_action: Adopt the four-decision and seven-plane method in a production ar
 verified_on: 2026-09-04
 next_source_review_on: 2026-10-15
 last_partial_source_review_on: 2026-10-11
-source_review_receipt: releases/2026-10-11-living-practice.md
+source_review_receipt: releases/2026-10-11-multi-cloud-catalog.md
 source_policy: primary-first
 publication_contract:
   canonical_source: github

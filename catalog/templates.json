@@ -1,0 +1,38 @@
+[
+  {
+    "id": "vercel-ai-gateway",
+    "provider": "vercel",
+    "title": "Grounded answers on Vercel Functions with AI SDK 7 and AI Gateway",
+    "path": "templates/deploy/vercel-ai-gateway",
+    "button": "vercel",
+    "contract": "ai-architect-answer/v1",
+    "model": "anthropic/claude-sonnet-5.5 with gateway fallbacks",
+    "auth": "Project OIDC token on Vercel; AI_GATEWAY_API_KEY elsewhere",
+    "evidence": "local-tested: conformance suite and real AI SDK 7 generateText with a mock model",
+    "not_verified": "No Vercel deployment receipt or live gateway call"
+  },
+  {
+    "id": "cloudflare-workers-ai",
+    "provider": "cloudflare",
+    "title": "Grounded answers on Cloudflare Workers with Workers AI through AI Gateway",
+    "path": "templates/deploy/cloudflare-workers-ai",
+    "button": "cloudflare",
+    "contract": "ai-architect-answer/v1",
+    "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+    "auth": "AI binding; no provider key in the Worker",
+    "evidence": "local-tested: conformance suite, wrangler dry-run bundle and a local workerd run in fixture mode",
+    "not_verified": "No Cloudflare deployment receipt or live Workers AI call"
+  },
+  {
+    "id": "gcp-cloud-run-gemini",
+    "provider": "gcp",
+    "title": "Grounded answers on Cloud Run with Gemini 3.8 Flash on Agent Platform",
+    "path": "templates/deploy/gcp-cloud-run-gemini",
+    "button": "cloud-run",
+    "contract": "ai-architect-answer/v1",
+    "model": "gemini-3.8-flash on the global endpoint",
+    "auth": "Service account Application Default Credentials",
+    "evidence": "local-tested: conformance suite, installed @google/genai client options and a local server run in fixture mode",
+    "not_verified": "Container build, Cloud Run Button flow and a live Gemini call"
+  }
+]

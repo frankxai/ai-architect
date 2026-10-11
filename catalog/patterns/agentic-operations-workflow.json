@@ -1,0 +1,675 @@
+{
+  "schema": "ai-architect-pattern/v1",
+  "id": "agentic-operations-workflow",
+  "title": "Agentic operations workflow",
+  "tagline": "Several specialists, one budget, one approval gate, one record of what happened.",
+  "summary": "A durable workflow coordinates specialist agents through a multi-day business process such as a purchase request: gather quotes, check policy, analyse cost, request approval, then create the order exactly once. Coordination is used only where it measurably beats a single agent.",
+  "customer_job": "Move a purchase request from intake to approved order without chasing five people and three systems.",
+  "baseline": "Requests sit in email threads; buyers collect quotes by hand, policy checks happen late, and approvers see incomplete context.",
+  "accepted_result": "An approved order created once, with quotes, policy checks and the approver's decision attached to the request record.",
+  "industries": [
+    "manufacturing",
+    "public-sector",
+    "professional-services",
+    "energy",
+    "technology"
+  ],
+  "sophistication": "A4",
+  "primary_metric": {
+    "name": "Cycle time to approved order",
+    "definition": "Median hours from request intake to order created, for requests completed without rework."
+  },
+  "economics": {
+    "tasks": 1200,
+    "adoption": 0.5,
+    "acceptance": 0.6,
+    "minutes_saved": 55,
+    "hourly_value": 70,
+    "run_cost_per_task": 0.9,
+    "fixed_monthly": 6000,
+    "currency": "EUR",
+    "basis": "Illustrative assumption for a central procurement team. A4 must show it beats an A2 workflow on the same cases before this case holds."
+  },
+  "components": [
+    {
+      "id": "requester",
+      "role": "user",
+      "label": "Requester",
+      "detail": "Submits a need and answers clarifying questions.",
+      "col": 0,
+      "row": 1,
+      "data_class": "internal"
+    },
+    {
+      "id": "portal",
+      "role": "experience",
+      "label": "Request portal",
+      "detail": "Intake form, live status, decision record.",
+      "col": 1,
+      "row": 1,
+      "data_class": "internal"
+    },
+    {
+      "id": "api",
+      "role": "api",
+      "label": "Request API",
+      "detail": "Validates intake, opens a run with a budget.",
+      "col": 2,
+      "row": 1,
+      "data_class": "internal"
+    },
+    {
+      "id": "workflow",
+      "role": "workflow",
+      "label": "Durable orchestration",
+      "detail": "Steps survive restarts; waits for days without compute.",
+      "col": 3,
+      "row": 1,
+      "data_class": "confidential",
+      "failure_mode": "Step replays an external effect."
+    },
+    {
+      "id": "coordinator",
+      "role": "orchestrator",
+      "label": "Coordinator agent",
+      "detail": "Plans, assigns sub-tasks, merges findings, resolves disagreement.",
+      "col": 3,
+      "row": 0,
+      "data_class": "confidential"
+    },
+    {
+      "id": "specialists",
+      "role": "agent",
+      "label": "Specialist agents",
+      "detail": "Sourcing, policy and cost analysis, each with its own tools and budget slice.",
+      "col": 4,
+      "row": 0,
+      "data_class": "confidential",
+      "failure_mode": "Two specialists duplicate the same supplier request."
+    },
+    {
+      "id": "gateway",
+      "role": "gateway",
+      "label": "Model gateway",
+      "detail": "Shared budget across all agents in a run.",
+      "col": 2,
+      "row": 0,
+      "data_class": "confidential"
+    },
+    {
+      "id": "model",
+      "role": "model",
+      "label": "Reasoning models",
+      "detail": "Larger model for planning, smaller for routine checks.",
+      "col": 1,
+      "row": 0,
+      "data_class": "confidential"
+    },
+    {
+      "id": "tools",
+      "role": "tools",
+      "label": "Tool gateway (MCP)",
+      "detail": "Supplier catalog, policy rules, quote email, order create (approval-gated).",
+      "col": 4,
+      "row": 1,
+      "data_class": "confidential"
+    },
+    {
+      "id": "sandbox",
+      "role": "sandbox",
+      "label": "Analysis sandbox",
+      "detail": "Runs generated cost models with no network access.",
+      "col": 5,
+      "row": 0,
+      "data_class": "confidential"
+    },
+    {
+      "id": "tasks",
+      "role": "queue",
+      "label": "Task queue",
+      "detail": "Fan-out with deduplication keys.",
+      "col": 4,
+      "row": 2,
+      "data_class": "confidential"
+    },
+    {
+      "id": "run-ledger",
+      "role": "store",
+      "label": "Run ledger",
+      "detail": "Plan, assignments, findings, spend, decisions.",
+      "col": 3,
+      "row": 2,
+      "data_class": "confidential"
+    },
+    {
+      "id": "approver",
+      "role": "review",
+      "label": "Approver",
+      "detail": "Approves, rejects or asks for changes in one view.",
+      "col": 2,
+      "row": 2,
+      "data_class": "confidential"
+    },
+    {
+      "id": "erp",
+      "role": "system",
+      "label": "ERP and supplier systems",
+      "detail": "Receives the order with an idempotency key.",
+      "col": 5,
+      "row": 1,
+      "data_class": "confidential"
+    },
+    {
+      "id": "traces",
+      "role": "observability",
+      "label": "Run traces",
+      "detail": "Per-agent spend, steps and outcome.",
+      "col": 5,
+      "row": 2,
+      "data_class": "operational"
+    },
+    {
+      "id": "evals",
+      "role": "evals",
+      "label": "Coordination evals",
+      "detail": "Same cases run as A2 workflow and A4 team; uplift reported.",
+      "col": 1,
+      "row": 2,
+      "data_class": "internal"
+    }
+  ],
+  "flows": [
+    {
+      "id": "request",
+      "from": "requester",
+      "to": "portal",
+      "kind": "data",
+      "label": "Need and constraints",
+      "data_class": "internal"
+    },
+    {
+      "id": "open",
+      "from": "portal",
+      "to": "api",
+      "kind": "data",
+      "label": "Validated intake",
+      "data_class": "internal"
+    },
+    {
+      "id": "start",
+      "from": "api",
+      "to": "workflow",
+      "kind": "control",
+      "label": "Start run with budget",
+      "data_class": "confidential"
+    },
+    {
+      "id": "plan",
+      "from": "workflow",
+      "to": "coordinator",
+      "kind": "control",
+      "label": "Plan step",
+      "data_class": "confidential"
+    },
+    {
+      "id": "assign",
+      "from": "coordinator",
+      "to": "tasks",
+      "kind": "control",
+      "label": "Sub-tasks with dedup keys",
+      "data_class": "confidential"
+    },
+    {
+      "id": "work",
+      "from": "tasks",
+      "to": "specialists",
+      "kind": "control",
+      "label": "Dispatch",
+      "data_class": "confidential"
+    },
+    {
+      "id": "think",
+      "from": "specialists",
+      "to": "gateway",
+      "kind": "data",
+      "label": "Calls within budget slice",
+      "data_class": "confidential"
+    },
+    {
+      "id": "infer",
+      "from": "gateway",
+      "to": "model",
+      "kind": "data",
+      "label": "Model call",
+      "data_class": "confidential"
+    },
+    {
+      "id": "use-tools",
+      "from": "specialists",
+      "to": "tools",
+      "kind": "data",
+      "label": "Catalog, policy, quote requests",
+      "data_class": "confidential"
+    },
+    {
+      "id": "analyse",
+      "from": "specialists",
+      "to": "sandbox",
+      "kind": "data",
+      "label": "Generated cost model",
+      "data_class": "confidential"
+    },
+    {
+      "id": "findings",
+      "from": "specialists",
+      "to": "run-ledger",
+      "kind": "data",
+      "label": "Findings with evidence",
+      "data_class": "confidential"
+    },
+    {
+      "id": "approve",
+      "from": "workflow",
+      "to": "approver",
+      "kind": "control",
+      "label": "Approval request with merged findings",
+      "data_class": "confidential"
+    },
+    {
+      "id": "decision",
+      "from": "approver",
+      "to": "workflow",
+      "kind": "control",
+      "label": "Decision resumes run",
+      "data_class": "confidential"
+    },
+    {
+      "id": "order",
+      "from": "tools",
+      "to": "erp",
+      "kind": "data",
+      "label": "Order create with idempotency key",
+      "data_class": "confidential"
+    },
+    {
+      "id": "telemetry",
+      "from": "gateway",
+      "to": "traces",
+      "kind": "telemetry",
+      "label": "Spend per agent",
+      "data_class": "operational"
+    },
+    {
+      "id": "compare",
+      "from": "evals",
+      "to": "api",
+      "kind": "control",
+      "label": "A2 versus A4 replay",
+      "data_class": "internal"
+    }
+  ],
+  "journey": [
+    {
+      "id": "j1",
+      "title": "Frame the request",
+      "actor": "customer",
+      "narration": "Intake is validated before any agent starts. The run opens with a written budget for tokens, tool calls and time.",
+      "flows": [
+        "request",
+        "open",
+        "start"
+      ]
+    },
+    {
+      "id": "j2",
+      "title": "Plan and assign",
+      "actor": "agent",
+      "narration": "The coordinator plans and fans out sub-tasks with deduplication keys, so two specialists never email the same supplier.",
+      "flows": [
+        "plan",
+        "assign",
+        "work"
+      ]
+    },
+    {
+      "id": "j3",
+      "title": "Specialists work in parallel",
+      "actor": "agent",
+      "narration": "Sourcing, policy and cost specialists use their own tools. Generated cost models run in a sandbox with no network.",
+      "flows": [
+        "think",
+        "infer",
+        "use-tools",
+        "analyse",
+        "findings"
+      ]
+    },
+    {
+      "id": "j4",
+      "title": "Resolve disagreement, then ask",
+      "actor": "agent",
+      "narration": "Conflicting findings are reconciled or shown side by side. The workflow pauses for an approver without holding compute.",
+      "flows": [
+        "approve"
+      ]
+    },
+    {
+      "id": "j5",
+      "title": "Decide, then act once",
+      "actor": "reviewer",
+      "narration": "The approver's decision resumes the run. The order is created once; a replay returns the existing order.",
+      "flows": [
+        "decision",
+        "order"
+      ]
+    },
+    {
+      "id": "j6",
+      "title": "Prove the team earns its cost",
+      "actor": "operator",
+      "narration": "The same cases run as a single-agent workflow and as the team. If the team does not win on quality or cost, it is retired.",
+      "flows": [
+        "compare",
+        "telemetry"
+      ]
+    }
+  ],
+  "team": [
+    {
+      "lane": "customer",
+      "step": "Submit need, answer clarifications, track status",
+      "evidence": "Request record"
+    },
+    {
+      "lane": "ai",
+      "step": "Coordinator plans; specialists research, check and model costs",
+      "evidence": "Findings with sources"
+    },
+    {
+      "lane": "system",
+      "step": "Durable steps, dedup, shared budget, idempotent order",
+      "evidence": "Run ledger and effect log"
+    },
+    {
+      "lane": "reviewer",
+      "step": "Approver decides with full context; can send back",
+      "evidence": "Signed decision"
+    },
+    {
+      "lane": "operator",
+      "step": "Compare A2 and A4 monthly; adjust budgets and roles",
+      "evidence": "Uplift report"
+    }
+  ],
+  "screens": [
+    {
+      "id": "status",
+      "device": "desktop",
+      "title": "Request status",
+      "state": "in-progress",
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "PR-2291: 40 industrial sensors for Line 3"
+        },
+        {
+          "type": "timeline",
+          "items": [
+            "Intake validated",
+            "3 quotes requested",
+            "Policy check passed",
+            "Cost model ready",
+            "Awaiting approval"
+          ]
+        },
+        {
+          "type": "meta",
+          "text": "Budget used: 38 percent. Fixture data."
+        }
+      ]
+    },
+    {
+      "id": "approval",
+      "device": "mobile",
+      "title": "Approve",
+      "state": "approval",
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Approve PR-2291?"
+        },
+        {
+          "type": "table",
+          "columns": [
+            "Supplier",
+            "Unit",
+            "Lead time"
+          ],
+          "rows": [
+            [
+              "Northwind",
+              "212",
+              "3 wk"
+            ],
+            [
+              "Fabrikam",
+              "198",
+              "6 wk"
+            ],
+            [
+              "Contoso",
+              "225",
+              "2 wk"
+            ]
+          ]
+        },
+        {
+          "type": "list",
+          "items": [
+            "Recommendation: Northwind, lead time meets the line restart date",
+            "Policy: within category budget"
+          ]
+        },
+        {
+          "type": "actions",
+          "items": [
+            {
+              "label": "Approve",
+              "kind": "primary"
+            },
+            {
+              "label": "Send back",
+              "kind": "secondary"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "run",
+      "device": "desktop",
+      "title": "Run trace",
+      "state": "default",
+      "blocks": [
+        {
+          "type": "table",
+          "columns": [
+            "Agent",
+            "Steps",
+            "Spend"
+          ],
+          "rows": [
+            [
+              "Coordinator",
+              "fixture",
+              "fixture"
+            ],
+            [
+              "Sourcing",
+              "fixture",
+              "fixture"
+            ],
+            [
+              "Policy",
+              "fixture",
+              "fixture"
+            ],
+            [
+              "Cost",
+              "fixture",
+              "fixture"
+            ]
+          ]
+        },
+        {
+          "type": "status",
+          "tone": "neutral",
+          "text": "A4 is retained only while it beats the A2 baseline."
+        }
+      ]
+    }
+  ],
+  "evals": [
+    {
+      "id": "e2e",
+      "name": "End-to-end success",
+      "threshold": ">= 0.8 of frozen requests reach a correct approved order",
+      "method": "Fixture ERP and supplier stubs; scorer checks final state."
+    },
+    {
+      "id": "uplift",
+      "name": "Coordination uplift",
+      "threshold": "A4 beats A2 on accepted results or cost per accepted result",
+      "method": "Paired replay of the same cases."
+    },
+    {
+      "id": "duplicates",
+      "name": "Duplicate effects",
+      "threshold": "0 duplicate supplier emails or orders",
+      "method": "Restart and retry fault injection."
+    },
+    {
+      "id": "bypass",
+      "name": "Approval bypass",
+      "threshold": "0 orders without a recorded decision",
+      "method": "Adversarial cases asking agents to skip approval."
+    }
+  ],
+  "risks": [
+    {
+      "id": "cost",
+      "risk": "Agents multiply spend without better outcomes.",
+      "control": "Shared run budget; uplift test; automatic downgrade to A2."
+    },
+    {
+      "id": "authority",
+      "risk": "An agent creates an order without approval.",
+      "control": "Order tool only callable by the workflow after a recorded decision."
+    },
+    {
+      "id": "drift",
+      "risk": "Specialists disagree silently.",
+      "control": "Coordinator must record conflicts and show them to the approver."
+    }
+  ],
+  "realizations": {
+    "gcp": {
+      "headline": "Workflows with ADK agents on Agent Runtime",
+      "map": {
+        "tasks": "gcp.cloud-tasks",
+        "run-ledger": "gcp.alloydb",
+        "approver": "gcp.review-console"
+      },
+      "notes": "Workflows owns durable steps and waits; ADK multi-agent teams run on Agent Runtime; Cloud Tasks gives deduplicated fan-out.",
+      "template": null,
+      "scores": {
+        "performance": 4,
+        "time_to_value": 3,
+        "speed_to_execution": 3,
+        "cost_efficiency": 3,
+        "portability": 3,
+        "governance": 5
+      },
+      "rationale": "Complete managed set; multi-agent coordination still needs the uplift proof."
+    },
+    "vercel": {
+      "headline": "Vercel Workflow, AI SDK agents, Queues and Sandbox",
+      "map": {
+        "run-ledger": "vercel.neon"
+      },
+      "notes": "Workflow steps call AI SDK agents and suspend for approval without holding a function; Sandbox runs generated analysis code.",
+      "template": "vercel-ai-gateway",
+      "scores": {
+        "performance": 4,
+        "time_to_value": 4,
+        "speed_to_execution": 5,
+        "cost_efficiency": 3,
+        "portability": 4,
+        "governance": 3
+      },
+      "rationale": "One TypeScript codebase for steps, agents and UI; Queues launch stage must be confirmed."
+    },
+    "cloudflare": {
+      "headline": "Workflows with Agents SDK specialists and Sandbox",
+      "map": {
+        "run-ledger": "cf.d1"
+      },
+      "notes": "Each specialist is an Agents SDK Durable Object; Workflows waits for the approval event; Sandbox SDK isolates generated code.",
+      "template": "cloudflare-workers-ai",
+      "scores": {
+        "performance": 4,
+        "time_to_value": 4,
+        "speed_to_execution": 4,
+        "cost_efficiency": 4,
+        "portability": 3,
+        "governance": 3
+      },
+      "rationale": "Strong primitives for stateful agents; enterprise ERP connectivity is integration work."
+    },
+    "aws": {
+      "headline": "Step Functions with AgentCore agents and Code Interpreter",
+      "map": {},
+      "notes": "Step Functions task tokens model the approval wait; AgentCore Runtime hosts specialists; Gateway exposes ERP tools.",
+      "template": null,
+      "scores": {
+        "performance": 4,
+        "time_to_value": 3,
+        "speed_to_execution": 3,
+        "cost_efficiency": 3,
+        "portability": 3,
+        "governance": 5
+      },
+      "rationale": "Mature orchestration and controls; most configuration."
+    },
+    "azure": {
+      "headline": "Durable Functions with Foundry Agent Service",
+      "map": {},
+      "notes": "Durable Functions external events model approvals; Foundry Agent Service hosts the specialist agents.",
+      "template": null,
+      "scores": {
+        "performance": 4,
+        "time_to_value": 3,
+        "speed_to_execution": 3,
+        "cost_efficiency": 3,
+        "portability": 3,
+        "governance": 5
+      },
+      "rationale": "Good fit for Microsoft estates with Teams-based approvals."
+    },
+    "railway": {
+      "headline": "Worker services, Redis queue and a sandbox service",
+      "map": {},
+      "notes": "Suitable for a team that wants to own an open-source workflow engine; durability is your code and your database.",
+      "template": null,
+      "scores": {
+        "performance": 3,
+        "time_to_value": 2,
+        "speed_to_execution": 3,
+        "cost_efficiency": 4,
+        "portability": 5,
+        "governance": 2
+      },
+      "rationale": "Maximum control; durability and isolation are the hardest parts to get right yourself."
+    }
+  }
+}

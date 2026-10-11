@@ -1,0 +1,635 @@
+{
+  "schema": "ai-architect-pattern/v1",
+  "id": "enterprise-mcp-tool-hub",
+  "title": "Enterprise MCP tool hub",
+  "tagline": "Company tools for Claude and every other agent, behind one door with scopes and a log.",
+  "summary": "Domain teams publish typed MCP servers for their systems. Agent clients reach them only through an authorization server and a policy gateway that binds tokens to an audience, enforces per-tool scopes and rate limits, brokers backend credentials and records every call.",
+  "customer_job": "Let employees use Claude, coding agents and internal agents against company systems without handing out API keys.",
+  "baseline": "Teams paste API tokens into local configs; nobody can say which agent called which system with whose authority.",
+  "accepted_result": "An agent action that the security team can attribute to a person, a client and a scope, and that the tool owner approved.",
+  "industries": [
+    "technology",
+    "financial-services",
+    "healthcare",
+    "public-sector",
+    "professional-services"
+  ],
+  "sophistication": "A2",
+  "primary_metric": {
+    "name": "Governed tool calls",
+    "definition": "Share of agent-to-system calls that pass through the hub with a bound token, scope check and audit record."
+  },
+  "economics": {
+    "tasks": 8000,
+    "adoption": 0.6,
+    "acceptance": 0.85,
+    "minutes_saved": 7,
+    "hourly_value": 80,
+    "run_cost_per_task": 0.01,
+    "fixed_monthly": 2500,
+    "currency": "EUR",
+    "basis": "Illustrative assumption; value counted per agent task that completes using a governed tool instead of manual lookup."
+  },
+  "components": [
+    {
+      "id": "clients",
+      "role": "user",
+      "label": "Agent clients",
+      "detail": "Claude, coding agents, internal agents acting for a person.",
+      "col": 0,
+      "row": 1,
+      "data_class": "internal"
+    },
+    {
+      "id": "catalog-ui",
+      "role": "experience",
+      "label": "Tool catalog and consent",
+      "detail": "Browse tools, see scopes, grant or revoke access.",
+      "col": 1,
+      "row": 2,
+      "data_class": "internal"
+    },
+    {
+      "id": "authz",
+      "role": "identity",
+      "label": "Authorization server",
+      "detail": "OAuth 2.1 with audience-bound tokens and short lifetimes.",
+      "col": 1,
+      "row": 0,
+      "data_class": "identity",
+      "failure_mode": "Token accepted by a server it was not issued for."
+    },
+    {
+      "id": "edge",
+      "role": "edge",
+      "label": "Edge protection",
+      "detail": "TLS, rate limits, anomaly blocking.",
+      "col": 1,
+      "row": 1,
+      "data_class": "operational"
+    },
+    {
+      "id": "mcp-gateway",
+      "role": "gateway",
+      "label": "MCP policy gateway",
+      "detail": "Per-tool scopes, input schema checks, quotas, kill switch.",
+      "col": 2,
+      "row": 1,
+      "data_class": "confidential"
+    },
+    {
+      "id": "guardrail",
+      "role": "guardrail",
+      "label": "Content guardrail",
+      "detail": "Detects secrets and injection text in tool inputs and outputs.",
+      "col": 2,
+      "row": 0,
+      "data_class": "confidential"
+    },
+    {
+      "id": "servers",
+      "role": "tools",
+      "label": "Domain MCP servers",
+      "detail": "CRM, tickets, docs, HR read-only; owned by domain teams.",
+      "col": 3,
+      "row": 1,
+      "data_class": "confidential"
+    },
+    {
+      "id": "broker",
+      "role": "secrets",
+      "label": "Credential broker",
+      "detail": "Exchanges the user token for a short-lived backend credential.",
+      "col": 3,
+      "row": 0,
+      "data_class": "secret"
+    },
+    {
+      "id": "systems",
+      "role": "system",
+      "label": "Systems of record",
+      "detail": "Unchanged backends with their own permissions.",
+      "col": 4,
+      "row": 1,
+      "data_class": "confidential"
+    },
+    {
+      "id": "registry",
+      "role": "store",
+      "label": "Tool registry",
+      "detail": "Tool versions, owners, scopes, approval state.",
+      "col": 2,
+      "row": 2,
+      "data_class": "internal"
+    },
+    {
+      "id": "audit",
+      "role": "analytics",
+      "label": "Audit ledger",
+      "detail": "Who, which client, which tool, which scope, result.",
+      "col": 4,
+      "row": 2,
+      "data_class": "confidential"
+    },
+    {
+      "id": "owners",
+      "role": "review",
+      "label": "Tool owners",
+      "detail": "Approve new tools and scope changes.",
+      "col": 3,
+      "row": 2,
+      "data_class": "internal"
+    },
+    {
+      "id": "traces",
+      "role": "observability",
+      "label": "Traces and alerts",
+      "detail": "Latency, errors, unusual call patterns.",
+      "col": 4,
+      "row": 0,
+      "data_class": "operational"
+    },
+    {
+      "id": "contracts",
+      "role": "evals",
+      "label": "Tool contract tests",
+      "detail": "Schema, permission and denial tests per tool version.",
+      "col": 5,
+      "row": 1,
+      "data_class": "internal"
+    }
+  ],
+  "flows": [
+    {
+      "id": "discover",
+      "from": "clients",
+      "to": "mcp-gateway",
+      "kind": "data",
+      "label": "List tools",
+      "data_class": "internal"
+    },
+    {
+      "id": "authorize",
+      "from": "clients",
+      "to": "authz",
+      "kind": "control",
+      "label": "OAuth consent, audience-bound token",
+      "data_class": "identity"
+    },
+    {
+      "id": "consent",
+      "from": "catalog-ui",
+      "to": "authz",
+      "kind": "control",
+      "label": "Grant or revoke scopes",
+      "data_class": "identity"
+    },
+    {
+      "id": "call",
+      "from": "clients",
+      "to": "edge",
+      "kind": "data",
+      "label": "Tool call with token",
+      "data_class": "confidential"
+    },
+    {
+      "id": "admit",
+      "from": "edge",
+      "to": "mcp-gateway",
+      "kind": "data",
+      "label": "Rate-checked call",
+      "data_class": "confidential"
+    },
+    {
+      "id": "inspect",
+      "from": "mcp-gateway",
+      "to": "guardrail",
+      "kind": "control",
+      "label": "Input and output scan",
+      "data_class": "confidential"
+    },
+    {
+      "id": "policy",
+      "from": "mcp-gateway",
+      "to": "registry",
+      "kind": "control",
+      "label": "Scope and version lookup",
+      "data_class": "internal"
+    },
+    {
+      "id": "forward",
+      "from": "mcp-gateway",
+      "to": "servers",
+      "kind": "data",
+      "label": "Authorized call",
+      "data_class": "confidential"
+    },
+    {
+      "id": "exchange",
+      "from": "servers",
+      "to": "broker",
+      "kind": "control",
+      "label": "Token exchange",
+      "data_class": "secret"
+    },
+    {
+      "id": "execute",
+      "from": "servers",
+      "to": "systems",
+      "kind": "data",
+      "label": "Backend call as the user",
+      "data_class": "confidential"
+    },
+    {
+      "id": "log",
+      "from": "mcp-gateway",
+      "to": "audit",
+      "kind": "data",
+      "label": "Call record",
+      "data_class": "confidential"
+    },
+    {
+      "id": "approve",
+      "from": "owners",
+      "to": "registry",
+      "kind": "control",
+      "label": "Approve tool or scope change",
+      "data_class": "internal"
+    },
+    {
+      "id": "telemetry",
+      "from": "mcp-gateway",
+      "to": "traces",
+      "kind": "telemetry",
+      "label": "Latency and errors",
+      "data_class": "operational"
+    },
+    {
+      "id": "verify",
+      "from": "contracts",
+      "to": "servers",
+      "kind": "control",
+      "label": "Contract tests per version",
+      "data_class": "internal"
+    }
+  ],
+  "journey": [
+    {
+      "id": "j1",
+      "title": "Discover and consent",
+      "actor": "customer",
+      "narration": "A client lists tools, then the person grants specific scopes. The token names the hub as its only audience.",
+      "flows": [
+        "discover",
+        "authorize",
+        "consent"
+      ]
+    },
+    {
+      "id": "j2",
+      "title": "Admit the call",
+      "actor": "system",
+      "narration": "Edge rate limits apply first. The gateway checks scope, tool version and input schema against the registry.",
+      "flows": [
+        "call",
+        "admit",
+        "policy"
+      ]
+    },
+    {
+      "id": "j3",
+      "title": "Scan what goes in and out",
+      "actor": "system",
+      "narration": "Inputs and outputs are scanned for secrets and instruction-shaped text before they reach a system or a model.",
+      "flows": [
+        "inspect"
+      ]
+    },
+    {
+      "id": "j4",
+      "title": "Act as the person, not as a robot",
+      "actor": "agent",
+      "narration": "The server exchanges the token for a short-lived backend credential, so the system of record applies its own permissions.",
+      "flows": [
+        "forward",
+        "exchange",
+        "execute"
+      ]
+    },
+    {
+      "id": "j5",
+      "title": "Record and govern",
+      "actor": "reviewer",
+      "narration": "Every call is attributable. Tool owners approve new tools and scope changes in the registry.",
+      "flows": [
+        "log",
+        "approve",
+        "telemetry"
+      ]
+    },
+    {
+      "id": "j6",
+      "title": "Test every tool version",
+      "actor": "operator",
+      "narration": "Contract tests prove schemas, denials and scopes before a version is published.",
+      "flows": [
+        "verify"
+      ]
+    }
+  ],
+  "team": [
+    {
+      "lane": "customer",
+      "step": "Employee grants scopes to a client and uses tools through it",
+      "evidence": "Consent record"
+    },
+    {
+      "lane": "ai",
+      "step": "Agent calls tools; never sees backend credentials",
+      "evidence": "Call record with scope"
+    },
+    {
+      "lane": "system",
+      "step": "Gateway enforces scopes, quotas and the kill switch",
+      "evidence": "Denied-call log"
+    },
+    {
+      "lane": "reviewer",
+      "step": "Tool owners approve tools and scope changes",
+      "evidence": "Registry approval history"
+    },
+    {
+      "lane": "operator",
+      "step": "Security reviews anomalies and revokes tokens",
+      "evidence": "Revocation log"
+    }
+  ],
+  "screens": [
+    {
+      "id": "catalog",
+      "device": "desktop",
+      "title": "Tool catalog",
+      "state": "default",
+      "blocks": [
+        {
+          "type": "table",
+          "columns": [
+            "Tool",
+            "Owner",
+            "Scopes",
+            "State"
+          ],
+          "rows": [
+            [
+              "crm.account.read",
+              "Sales Ops",
+              "crm:read",
+              "Approved"
+            ],
+            [
+              "tickets.create",
+              "Support",
+              "tickets:write",
+              "Approved"
+            ],
+            [
+              "hr.directory.read",
+              "People",
+              "hr:read",
+              "Review"
+            ]
+          ]
+        },
+        {
+          "type": "actions",
+          "items": [
+            {
+              "label": "Request access",
+              "kind": "primary"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "consent",
+      "device": "mobile",
+      "title": "Consent",
+      "state": "approval",
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Claude wants to use 2 company tools"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Read CRM accounts you can see",
+            "Create support tickets as you"
+          ]
+        },
+        {
+          "type": "actions",
+          "items": [
+            {
+              "label": "Allow for 8 hours",
+              "kind": "primary"
+            },
+            {
+              "label": "Deny",
+              "kind": "secondary"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "audit",
+      "device": "desktop",
+      "title": "Audit view",
+      "state": "default",
+      "blocks": [
+        {
+          "type": "table",
+          "columns": [
+            "Time",
+            "Person",
+            "Client",
+            "Tool",
+            "Result"
+          ],
+          "rows": [
+            [
+              "fixture",
+              "fixture",
+              "fixture",
+              "tickets.create",
+              "allowed"
+            ],
+            [
+              "fixture",
+              "fixture",
+              "fixture",
+              "hr.directory.read",
+              "denied: scope"
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "evals": [
+    {
+      "id": "unauthorized",
+      "name": "Unauthorized calls",
+      "threshold": "0 calls succeed without the required scope",
+      "method": "Scope-matrix tests per tool and client."
+    },
+    {
+      "id": "audience",
+      "name": "Token audience binding",
+      "threshold": "100 percent of foreign-audience tokens rejected",
+      "method": "Replay tokens minted for other servers."
+    },
+    {
+      "id": "schema",
+      "name": "Schema conformance",
+      "threshold": "100 percent of published tools pass contract tests",
+      "method": "Generated cases from each tool's input schema."
+    },
+    {
+      "id": "latency",
+      "name": "Gateway overhead",
+      "threshold": "p95 added latency <= 50 ms",
+      "method": "Synthetic load in staging."
+    }
+  ],
+  "risks": [
+    {
+      "id": "confused-deputy",
+      "risk": "A server acts with its own broad credentials instead of the user's.",
+      "control": "Token exchange per call; no static backend keys in servers."
+    },
+    {
+      "id": "injection",
+      "risk": "Tool output carries instructions into the agent.",
+      "control": "Output scanning and labelling of tool results as data."
+    },
+    {
+      "id": "sprawl",
+      "risk": "Unreviewed servers bypass the hub.",
+      "control": "Network policy allows backend access only from registered servers."
+    }
+  ],
+  "realizations": {
+    "gcp": {
+      "headline": "Apigee in front of Cloud Run MCP servers",
+      "map": {
+        "authz": "gcp.identity-platform",
+        "catalog-ui": "gcp.cloud-run",
+        "registry": "gcp.firestore",
+        "audit": "gcp.bigquery"
+      },
+      "notes": "Apigee enforces OAuth, quotas and policies; servers run on Cloud Run with workload identity; BigQuery holds the audit trail.",
+      "template": null,
+      "scores": {
+        "performance": 4,
+        "time_to_value": 3,
+        "speed_to_execution": 3,
+        "cost_efficiency": 3,
+        "portability": 4,
+        "governance": 5
+      },
+      "rationale": "Enterprise API governance already in place for many estates; MCP-specific policy is configuration work."
+    },
+    "vercel": {
+      "headline": "MCP routes on Vercel Functions with an external authorization server",
+      "map": {
+        "registry": "vercel.edge-config",
+        "audit": "vercel.neon"
+      },
+      "notes": "MCP servers deploy as functions; Edge Config holds the tool allowlist and kill switch so policy changes apply without a redeploy.",
+      "template": null,
+      "scores": {
+        "performance": 4,
+        "time_to_value": 4,
+        "speed_to_execution": 5,
+        "cost_efficiency": 4,
+        "portability": 4,
+        "governance": 3
+      },
+      "rationale": "Fast for product teams; enterprise authorization and credential brokering come from partners."
+    },
+    "cloudflare": {
+      "headline": "MCP servers on Workers with OAuth and Access",
+      "map": {
+        "authz": "cf.access",
+        "registry": "cf.kv",
+        "audit": "cf.analytics-engine"
+      },
+      "notes": "Workers host remote MCP servers with an OAuth provider library; Access applies workforce identity; AI Gateway guardrails can scan model-bound content.",
+      "template": null,
+      "scores": {
+        "performance": 5,
+        "time_to_value": 4,
+        "speed_to_execution": 4,
+        "cost_efficiency": 5,
+        "portability": 4,
+        "governance": 4
+      },
+      "rationale": "Strong edge controls and low cost per call; credential brokering to legacy systems is custom."
+    },
+    "aws": {
+      "headline": "AgentCore Gateway and Identity with Lambda targets",
+      "map": {
+        "authz": "aws.agentcore-identity",
+        "registry": "aws.dynamodb",
+        "audit": "aws.cloudwatch"
+      },
+      "notes": "AgentCore Gateway turns Lambda functions and APIs into MCP tools with identity propagation.",
+      "template": null,
+      "scores": {
+        "performance": 4,
+        "time_to_value": 4,
+        "speed_to_execution": 4,
+        "cost_efficiency": 3,
+        "portability": 3,
+        "governance": 5
+      },
+      "rationale": "Purpose-built managed path on AWS."
+    },
+    "azure": {
+      "headline": "API Management exposing MCP with Entra ID",
+      "map": {
+        "servers": "azure.functions",
+        "registry": "azure.cosmos"
+      },
+      "notes": "API Management can front MCP servers and existing APIs with Entra-issued tokens and per-product quotas.",
+      "template": null,
+      "scores": {
+        "performance": 4,
+        "time_to_value": 4,
+        "speed_to_execution": 4,
+        "cost_efficiency": 3,
+        "portability": 3,
+        "governance": 5
+      },
+      "rationale": "Natural for Entra estates; confirm MCP feature support for the API Management tier."
+    },
+    "railway": {
+      "headline": "MCP server services behind a self-run gateway",
+      "map": {},
+      "notes": "Each domain server is a service; the gateway and authorization server are open-source components you operate.",
+      "template": null,
+      "scores": {
+        "performance": 3,
+        "time_to_value": 3,
+        "speed_to_execution": 3,
+        "cost_efficiency": 4,
+        "portability": 5,
+        "governance": 2
+      },
+      "rationale": "Control without managed security services."
+    }
+  }
+}

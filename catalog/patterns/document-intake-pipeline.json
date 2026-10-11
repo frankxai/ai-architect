@@ -1,0 +1,624 @@
+{
+  "schema": "ai-architect-pattern/v1",
+  "id": "document-intake-pipeline",
+  "title": "Document intake pipeline",
+  "tagline": "Invoices, claims and forms become validated records. Exceptions reach a person with the reason attached.",
+  "summary": "Incoming documents are parsed, extracted to a typed schema, validated against master data and business rules, and posted to the system of record exactly once. Anything that fails validation goes to an exception queue with the failing field and evidence.",
+  "customer_job": "Turn a stream of supplier invoices or claim forms into correct records without manual keying.",
+  "baseline": "Clerks key fields from PDFs and email attachments; errors surface weeks later in reconciliation.",
+  "accepted_result": "A record posted to the system of record that matches the document and passes every validation rule, or an exception a clerk clears in under two minutes.",
+  "industries": [
+    "financial-services",
+    "insurance",
+    "logistics",
+    "public-sector",
+    "healthcare-administration"
+  ],
+  "sophistication": "A2",
+  "primary_metric": {
+    "name": "Straight-through rate at target accuracy",
+    "definition": "Documents posted without human touch whose key fields match a sampled human check, divided by documents received."
+  },
+  "economics": {
+    "tasks": 15000,
+    "adoption": 0.9,
+    "acceptance": 0.65,
+    "minutes_saved": 6,
+    "hourly_value": 45,
+    "run_cost_per_task": 0.05,
+    "fixed_monthly": 3000,
+    "currency": "EUR",
+    "basis": "Illustrative assumption for an accounts-payable team; acceptance is the straight-through share, measured in a pilot."
+  },
+  "components": [
+    {
+      "id": "senders",
+      "role": "user",
+      "label": "Suppliers and claimants",
+      "detail": "Upload or email documents.",
+      "col": 0,
+      "row": 1,
+      "data_class": "confidential"
+    },
+    {
+      "id": "intake",
+      "role": "experience",
+      "label": "Upload portal and inbox",
+      "detail": "Accepts PDF, image and email; returns a receipt ID.",
+      "col": 1,
+      "row": 1,
+      "data_class": "confidential"
+    },
+    {
+      "id": "landing",
+      "role": "objects",
+      "label": "Landing bucket",
+      "detail": "Immutable original, content hash as key.",
+      "col": 2,
+      "row": 1,
+      "data_class": "confidential"
+    },
+    {
+      "id": "queue",
+      "role": "queue",
+      "label": "Intake queue",
+      "detail": "One message per document; dead-letter after 3 attempts.",
+      "col": 2,
+      "row": 0,
+      "data_class": "confidential"
+    },
+    {
+      "id": "pipeline",
+      "role": "workflow",
+      "label": "Extraction workflow",
+      "detail": "Durable steps: parse, extract, validate, decide, post.",
+      "col": 3,
+      "row": 1,
+      "data_class": "confidential",
+      "failure_mode": "Step retried after a partial post."
+    },
+    {
+      "id": "parser",
+      "role": "ingest",
+      "label": "Layout and OCR parser",
+      "detail": "Text, tables and coordinates per page.",
+      "col": 3,
+      "row": 0,
+      "data_class": "confidential"
+    },
+    {
+      "id": "gateway",
+      "role": "gateway",
+      "label": "Model gateway",
+      "detail": "Routing and per-document spend cap.",
+      "col": 4,
+      "row": 0,
+      "data_class": "confidential"
+    },
+    {
+      "id": "model",
+      "role": "model",
+      "label": "Extraction model",
+      "detail": "Structured output against the document schema, with page coordinates per field.",
+      "col": 5,
+      "row": 0,
+      "data_class": "confidential",
+      "failure_mode": "Plausible but wrong total."
+    },
+    {
+      "id": "rules",
+      "role": "tools",
+      "label": "Validation and master data",
+      "detail": "Supplier lookup, VAT check, PO match, arithmetic.",
+      "col": 4,
+      "row": 1,
+      "data_class": "confidential"
+    },
+    {
+      "id": "ledger",
+      "role": "store",
+      "label": "Case and field ledger",
+      "detail": "Every field, its source coordinates, confidence and rule results.",
+      "col": 4,
+      "row": 2,
+      "data_class": "confidential"
+    },
+    {
+      "id": "exceptions",
+      "role": "review",
+      "label": "Exception console",
+      "detail": "Shows the failing field beside the document region.",
+      "col": 3,
+      "row": 2,
+      "data_class": "confidential"
+    },
+    {
+      "id": "erp",
+      "role": "system",
+      "label": "ERP or claims system",
+      "detail": "Receives posts with an idempotency key.",
+      "col": 5,
+      "row": 1,
+      "data_class": "confidential"
+    },
+    {
+      "id": "traces",
+      "role": "observability",
+      "label": "Pipeline telemetry",
+      "detail": "Throughput, queue age, cost per document.",
+      "col": 1,
+      "row": 0,
+      "data_class": "operational"
+    },
+    {
+      "id": "evals",
+      "role": "evals",
+      "label": "Field-level eval set",
+      "detail": "Labelled documents per supplier layout.",
+      "col": 5,
+      "row": 2,
+      "data_class": "confidential"
+    }
+  ],
+  "flows": [
+    {
+      "id": "submit",
+      "from": "senders",
+      "to": "intake",
+      "kind": "data",
+      "label": "Document",
+      "data_class": "confidential"
+    },
+    {
+      "id": "store-original",
+      "from": "intake",
+      "to": "landing",
+      "kind": "data",
+      "label": "Original with content hash",
+      "data_class": "confidential"
+    },
+    {
+      "id": "enqueue",
+      "from": "landing",
+      "to": "queue",
+      "kind": "control",
+      "label": "Object created event",
+      "data_class": "confidential"
+    },
+    {
+      "id": "start",
+      "from": "queue",
+      "to": "pipeline",
+      "kind": "control",
+      "label": "Start run keyed by hash",
+      "data_class": "confidential"
+    },
+    {
+      "id": "parse",
+      "from": "pipeline",
+      "to": "parser",
+      "kind": "data",
+      "label": "Pages",
+      "data_class": "confidential"
+    },
+    {
+      "id": "extract",
+      "from": "pipeline",
+      "to": "gateway",
+      "kind": "data",
+      "label": "Layout text and schema",
+      "data_class": "confidential"
+    },
+    {
+      "id": "infer",
+      "from": "gateway",
+      "to": "model",
+      "kind": "data",
+      "label": "Model call",
+      "data_class": "confidential"
+    },
+    {
+      "id": "validate",
+      "from": "pipeline",
+      "to": "rules",
+      "kind": "data",
+      "label": "Fields to check",
+      "data_class": "confidential"
+    },
+    {
+      "id": "record",
+      "from": "pipeline",
+      "to": "ledger",
+      "kind": "data",
+      "label": "Fields, coordinates, rule results",
+      "data_class": "confidential"
+    },
+    {
+      "id": "post",
+      "from": "pipeline",
+      "to": "erp",
+      "kind": "data",
+      "label": "Post with idempotency key",
+      "data_class": "confidential"
+    },
+    {
+      "id": "except",
+      "from": "pipeline",
+      "to": "exceptions",
+      "kind": "control",
+      "label": "Exception with failing field",
+      "data_class": "confidential"
+    },
+    {
+      "id": "resolve",
+      "from": "exceptions",
+      "to": "pipeline",
+      "kind": "control",
+      "label": "Corrected field resumes run",
+      "data_class": "confidential"
+    },
+    {
+      "id": "telemetry",
+      "from": "pipeline",
+      "to": "traces",
+      "kind": "telemetry",
+      "label": "Step timings and cost",
+      "data_class": "operational"
+    },
+    {
+      "id": "score",
+      "from": "evals",
+      "to": "pipeline",
+      "kind": "control",
+      "label": "Replay labelled set per release",
+      "data_class": "confidential"
+    }
+  ],
+  "journey": [
+    {
+      "id": "j1",
+      "title": "Receive and keep the original",
+      "actor": "customer",
+      "narration": "The original is stored once under its content hash, so a re-sent invoice cannot create a second case.",
+      "flows": [
+        "submit",
+        "store-original",
+        "enqueue"
+      ]
+    },
+    {
+      "id": "j2",
+      "title": "Parse the layout",
+      "actor": "system",
+      "narration": "A durable run starts per document. The parser returns text, tables and page coordinates.",
+      "flows": [
+        "start",
+        "parse"
+      ]
+    },
+    {
+      "id": "j3",
+      "title": "Extract to a schema",
+      "actor": "agent",
+      "narration": "The model returns each field with the page region it came from. A field without a region is treated as missing.",
+      "flows": [
+        "extract",
+        "infer"
+      ]
+    },
+    {
+      "id": "j4",
+      "title": "Validate against the business",
+      "actor": "system",
+      "narration": "Supplier, VAT, purchase order and arithmetic checks run as code. The model never decides whether a total is correct.",
+      "flows": [
+        "validate",
+        "record"
+      ]
+    },
+    {
+      "id": "j5",
+      "title": "Post once, or ask a person",
+      "actor": "reviewer",
+      "narration": "Clean documents post with an idempotency key. An exception opens with the failing field beside the document region; the correction resumes the same run.",
+      "flows": [
+        "post",
+        "except",
+        "resolve"
+      ]
+    },
+    {
+      "id": "j6",
+      "title": "Measure per supplier layout",
+      "actor": "operator",
+      "narration": "Labelled documents replay per release; accuracy is reported per field and per supplier, not as one average.",
+      "flows": [
+        "score",
+        "telemetry"
+      ]
+    }
+  ],
+  "team": [
+    {
+      "lane": "customer",
+      "step": "Submit the document and receive a receipt ID",
+      "evidence": "Receipt and hash"
+    },
+    {
+      "lane": "ai",
+      "step": "Extract fields with source coordinates",
+      "evidence": "Field confidence and region"
+    },
+    {
+      "lane": "system",
+      "step": "Validate, post once, route exceptions",
+      "evidence": "Rule results and idempotency key"
+    },
+    {
+      "lane": "reviewer",
+      "step": "Clerk clears exceptions; corrections become labelled data",
+      "evidence": "Correction log"
+    },
+    {
+      "lane": "operator",
+      "step": "Watch queue age, straight-through rate and per-supplier accuracy",
+      "evidence": "Daily pipeline report"
+    }
+  ],
+  "screens": [
+    {
+      "id": "exception",
+      "device": "desktop",
+      "title": "Exception console",
+      "state": "exception",
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "INV-55203, Contoso Packaging: total does not match line items"
+        },
+        {
+          "type": "table",
+          "columns": [
+            "Field",
+            "Extracted",
+            "Rule"
+          ],
+          "rows": [
+            [
+              "Net total",
+              "4,180.00",
+              "Lines sum to 4,108.00"
+            ],
+            [
+              "VAT",
+              "794.20",
+              "Pass"
+            ],
+            [
+              "PO",
+              "PO-11842",
+              "Pass"
+            ]
+          ]
+        },
+        {
+          "type": "actions",
+          "items": [
+            {
+              "label": "Use line sum",
+              "kind": "primary"
+            },
+            {
+              "label": "Reject document",
+              "kind": "secondary"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "receipt",
+      "device": "mobile",
+      "title": "Upload receipt",
+      "state": "success",
+      "blocks": [
+        {
+          "type": "status",
+          "tone": "success",
+          "text": "Received. Reference DOC-8F2A."
+        },
+        {
+          "type": "list",
+          "items": [
+            "Parsing",
+            "Checking against your purchase order",
+            "You will be emailed if anything is missing"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pipeline",
+      "device": "desktop",
+      "title": "Pipeline board",
+      "state": "default",
+      "blocks": [
+        {
+          "type": "kpis",
+          "items": [
+            {
+              "label": "Straight-through",
+              "value": "fixture"
+            },
+            {
+              "label": "Exceptions open",
+              "value": "fixture"
+            },
+            {
+              "label": "Oldest in queue",
+              "value": "fixture"
+            }
+          ]
+        },
+        {
+          "type": "timeline",
+          "items": [
+            "Received",
+            "Parsed",
+            "Extracted",
+            "Validated",
+            "Posted"
+          ]
+        }
+      ]
+    }
+  ],
+  "evals": [
+    {
+      "id": "field-accuracy",
+      "name": "Key-field accuracy",
+      "threshold": ">= 0.98 on total, supplier, date, PO",
+      "method": "Labelled set per supplier layout; exact match after normalisation."
+    },
+    {
+      "id": "stp",
+      "name": "Straight-through rate",
+      "threshold": "Reported per supplier; no global target until baseline",
+      "method": "Pilot week with sampled human audit."
+    },
+    {
+      "id": "duplicates",
+      "name": "Duplicate posting",
+      "threshold": "0 under replayed events and retries",
+      "method": "Fault injection on post step."
+    },
+    {
+      "id": "exception-age",
+      "name": "Exception age",
+      "threshold": "p90 cleared within one business day",
+      "method": "Queue telemetry."
+    }
+  ],
+  "risks": [
+    {
+      "id": "silent-error",
+      "risk": "A plausible but wrong amount posts without review.",
+      "control": "Arithmetic and PO rules in code; low-confidence fields force exception."
+    },
+    {
+      "id": "double-post",
+      "risk": "Retries post twice.",
+      "control": "Content hash run key and ERP idempotency key."
+    },
+    {
+      "id": "residency",
+      "risk": "Documents leave the required region.",
+      "control": "Regional model endpoints and storage; verified per provider."
+    }
+  ],
+  "realizations": {
+    "gcp": {
+      "headline": "Workflows, Document AI and Gemini structured output",
+      "map": {
+        "queue": "gcp.eventarc",
+        "exceptions": "gcp.review-console",
+        "ledger": "gcp.alloydb"
+      },
+      "notes": "Eventarc starts a Workflows run per object; Document AI parses layout, Gemini 3.8 Flash extracts to a JSON schema, validation runs on Cloud Run.",
+      "template": null,
+      "scores": {
+        "performance": 4,
+        "time_to_value": 4,
+        "speed_to_execution": 4,
+        "cost_efficiency": 4,
+        "portability": 3,
+        "governance": 5
+      },
+      "rationale": "Mature document parsing and regional controls; several managed services to operate."
+    },
+    "vercel": {
+      "headline": "Blob, Queues and Workflow with vision extraction via AI Gateway",
+      "map": {
+        "landing": "vercel.blob",
+        "parser": "vercel.gateway-models"
+      },
+      "notes": "Vision-capable models read the PDF directly; Workflow gives durable steps and a resumable human correction. Queues was beta at last check.",
+      "template": "vercel-ai-gateway",
+      "scores": {
+        "performance": 4,
+        "time_to_value": 5,
+        "speed_to_execution": 5,
+        "cost_efficiency": 3,
+        "portability": 4,
+        "governance": 3
+      },
+      "rationale": "Quick to build; no dedicated layout parser, so cost per page depends on vision tokens."
+    },
+    "cloudflare": {
+      "headline": "R2 events, Queues and Workflows with AI Gateway",
+      "map": {
+        "parser": "cf.workers-ai"
+      },
+      "notes": "R2 event notifications feed Queues, which start a Workflow per document. Extraction can call vendor vision models through AI Gateway.",
+      "template": "cloudflare-workers-ai",
+      "scores": {
+        "performance": 4,
+        "time_to_value": 4,
+        "speed_to_execution": 4,
+        "cost_efficiency": 5,
+        "portability": 3,
+        "governance": 3
+      },
+      "rationale": "Low unit cost and durable steps; layout parsing quality must be measured on the customer's documents."
+    },
+    "aws": {
+      "headline": "Step Functions, Textract and Claude on Bedrock",
+      "map": {
+        "queue": "aws.eventbridge"
+      },
+      "notes": "A common production shape: EventBridge starts Step Functions; Textract returns layout, Claude extracts to schema, DynamoDB holds the ledger.",
+      "template": null,
+      "scores": {
+        "performance": 4,
+        "time_to_value": 4,
+        "speed_to_execution": 4,
+        "cost_efficiency": 4,
+        "portability": 3,
+        "governance": 5
+      },
+      "rationale": "Well-trodden services with strong controls; more IAM wiring."
+    },
+    "azure": {
+      "headline": "Durable Functions with Document Intelligence and Foundry Models",
+      "map": {
+        "queue": "azure.event-grid"
+      },
+      "notes": "Document Intelligence prebuilt invoice models give a strong baseline before any generative extraction.",
+      "template": null,
+      "scores": {
+        "performance": 4,
+        "time_to_value": 4,
+        "speed_to_execution": 4,
+        "cost_efficiency": 4,
+        "portability": 3,
+        "governance": 5
+      },
+      "rationale": "Prebuilt models shorten the path for common documents."
+    },
+    "railway": {
+      "headline": "Worker service with a Redis queue and a direct vision model",
+      "map": {},
+      "notes": "Simple to reason about; durable step state, retries and idempotency live in Postgres and code.",
+      "template": null,
+      "scores": {
+        "performance": 3,
+        "time_to_value": 3,
+        "speed_to_execution": 4,
+        "cost_efficiency": 4,
+        "portability": 5,
+        "governance": 2
+      },
+      "rationale": "Full control, all reliability engineering in-house."
+    }
+  }
+}

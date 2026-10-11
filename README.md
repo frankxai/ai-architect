@@ -15,6 +15,18 @@ Maintained at [frankx.ai/ai-architect](https://www.frankx.ai/ai-architect).
 
 The [AI Architect Guide 2026](guide/README.md) turns the four hard-to-reverse decisions and seven operating planes into a researched field guide, claim ledger, reusable labs, and a versioned publishing system. Its [status and roadmap](guide/strategy/roadmap.md) shows coverage progress and the open task board.
 
+## Multi-cloud catalog and one-click templates
+
+The [catalog](catalog/README.md) holds seven workload patterns realized on Google Cloud, Vercel, Cloudflare, AWS, Azure and Railway, compiled into React Flow, Mermaid, C4/Structurizr, diagrams.net and SVG views that share component IDs. Three [deploy templates](templates/deploy/answer-core/README.md) implement one grounded-answer contract and pass one conformance suite:
+
+| Runtime | Deploy |
+|---|---|
+| Vercel Functions, AI SDK 7, AI Gateway | [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Ffrankxai%2Fai-architect%2Ftree%2Fmain%2Ftemplates%2Fdeploy%2Fvercel-ai-gateway&project-name=vercel-ai-gateway&repository-name=vercel-ai-gateway) |
+| Cloudflare Workers, Workers AI, AI Gateway | [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https%3A%2F%2Fgithub.com%2Ffrankxai%2Fai-architect%2Ftree%2Fmain%2Ftemplates%2Fdeploy%2Fcloudflare-workers-ai) |
+| Cloud Run, Gemini 3.8 Flash on Agent Platform | [![Run on Google Cloud](https://deploy.cloud.run/button.svg)](https://deploy.cloud.run/?git_repo=https%3A%2F%2Fgithub.com%2Ffrankxai%2Fai-architect.git&dir=templates%2Fdeploy%2Fgcp-cloud-run-gemini&revision=main) |
+
+Templates are local-tested; no provider deployment receipt exists yet. In Claude Code, `/architect-visualize` writes a chosen pattern's views into `docs/architecture/views/`.
+
 ## Install
 
 Four paths in, depending on your harness. Every one of them runs on your own model keys,

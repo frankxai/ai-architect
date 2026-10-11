@@ -1,0 +1,608 @@
+{
+  "schema": "ai-architect-pattern/v1",
+  "id": "grounded-research-desk",
+  "title": "Grounded research desk",
+  "tagline": "Answers that cite the exact passage, or say they cannot.",
+  "summary": "Analysts ask questions of a governed corpus and receive answers in which every claim links to a retrieved passage the asker is allowed to read. Unsupported questions are refused, not guessed.",
+  "customer_job": "Find a defensible answer in policies, research reports and filings without reading forty documents.",
+  "baseline": "Analysts search shared drives and intranet pages, read in full, and paste excerpts into notes; answers vary by analyst and sources are rarely recorded.",
+  "accepted_result": "An answer the analyst forwards without rework, with each claim traceable to a passage they are permitted to see.",
+  "industries": [
+    "professional-services",
+    "life-sciences",
+    "public-sector",
+    "financial-services",
+    "manufacturing"
+  ],
+  "sophistication": "A1",
+  "primary_metric": {
+    "name": "Accepted cited answers per analyst hour",
+    "definition": "Answers marked forwarded or reused without edit, divided by analyst hours spent in the workspace."
+  },
+  "economics": {
+    "tasks": 6000,
+    "adoption": 0.5,
+    "acceptance": 0.8,
+    "minutes_saved": 15,
+    "hourly_value": 90,
+    "run_cost_per_task": 0.06,
+    "fixed_monthly": 2500,
+    "currency": "EUR",
+    "basis": "Illustrative assumption for a 120-analyst team; replace with measured volume and baseline time before any business case."
+  },
+  "components": [
+    {
+      "id": "analyst",
+      "role": "user",
+      "label": "Analyst",
+      "detail": "Asks, reads, forwards or flags.",
+      "col": 0,
+      "row": 1,
+      "data_class": "internal"
+    },
+    {
+      "id": "workspace",
+      "role": "experience",
+      "label": "Research workspace",
+      "detail": "Ask box, cited answer, passage viewer, flag action.",
+      "col": 1,
+      "row": 1,
+      "data_class": "internal",
+      "failure_mode": "Answer shown without visible citations."
+    },
+    {
+      "id": "sso",
+      "role": "identity",
+      "label": "Workforce sign-in",
+      "detail": "SSO with group claims mapped to document permissions.",
+      "col": 1,
+      "row": 0,
+      "data_class": "identity"
+    },
+    {
+      "id": "answer-api",
+      "role": "api",
+      "label": "Answer API",
+      "detail": "Authorizes, scopes the corpus by permission, enforces a per-question budget.",
+      "col": 2,
+      "row": 1,
+      "data_class": "confidential",
+      "failure_mode": "Retrieval runs without the caller's permission filter."
+    },
+    {
+      "id": "gateway",
+      "role": "gateway",
+      "label": "Model gateway",
+      "detail": "Routing, fallback, budget, cache and token logs.",
+      "col": 3,
+      "row": 0,
+      "data_class": "confidential"
+    },
+    {
+      "id": "model",
+      "role": "model",
+      "label": "Generation model",
+      "detail": "Writes only from supplied passages and returns passage IDs per claim.",
+      "col": 4,
+      "row": 0,
+      "data_class": "confidential",
+      "failure_mode": "Claims a fact with no passage ID."
+    },
+    {
+      "id": "index",
+      "role": "retrieval",
+      "label": "Hybrid retrieval index",
+      "detail": "Keyword and vector search with permission tags on every chunk.",
+      "col": 3,
+      "row": 2,
+      "data_class": "confidential",
+      "failure_mode": "Stale chunk served after the source changed."
+    },
+    {
+      "id": "ingest",
+      "role": "ingest",
+      "label": "Ingestion pipeline",
+      "detail": "Parse, chunk, embed and copy source permissions to each chunk.",
+      "col": 4,
+      "row": 2,
+      "data_class": "confidential"
+    },
+    {
+      "id": "corpus",
+      "role": "objects",
+      "label": "Source corpus",
+      "detail": "Versioned documents with owners and review dates.",
+      "col": 5,
+      "row": 2,
+      "data_class": "confidential"
+    },
+    {
+      "id": "ledger",
+      "role": "store",
+      "label": "Answer ledger",
+      "detail": "Question, answer, passage IDs, model, cost and feedback.",
+      "col": 2,
+      "row": 2,
+      "data_class": "confidential"
+    },
+    {
+      "id": "traces",
+      "role": "observability",
+      "label": "Traces and cost",
+      "detail": "Latency, tokens, cache hits and refusals per team.",
+      "col": 5,
+      "row": 0,
+      "data_class": "operational"
+    },
+    {
+      "id": "evals",
+      "role": "evals",
+      "label": "Eval harness",
+      "detail": "Frozen question set with expected passages and must-refuse cases.",
+      "col": 5,
+      "row": 1,
+      "data_class": "internal"
+    }
+  ],
+  "flows": [
+    {
+      "id": "ask",
+      "from": "analyst",
+      "to": "workspace",
+      "kind": "data",
+      "label": "Question",
+      "data_class": "internal"
+    },
+    {
+      "id": "signin",
+      "from": "workspace",
+      "to": "sso",
+      "kind": "control",
+      "label": "SSO and group claims",
+      "data_class": "identity"
+    },
+    {
+      "id": "request",
+      "from": "workspace",
+      "to": "answer-api",
+      "kind": "data",
+      "label": "Question with scope token",
+      "data_class": "internal"
+    },
+    {
+      "id": "retrieve",
+      "from": "answer-api",
+      "to": "index",
+      "kind": "data",
+      "label": "Permission-filtered query",
+      "data_class": "confidential"
+    },
+    {
+      "id": "generate",
+      "from": "answer-api",
+      "to": "gateway",
+      "kind": "data",
+      "label": "Prompt with top passages",
+      "data_class": "confidential"
+    },
+    {
+      "id": "route",
+      "from": "gateway",
+      "to": "model",
+      "kind": "data",
+      "label": "Model call",
+      "data_class": "confidential"
+    },
+    {
+      "id": "record",
+      "from": "answer-api",
+      "to": "ledger",
+      "kind": "data",
+      "label": "Answer, citations, trace ID",
+      "data_class": "confidential"
+    },
+    {
+      "id": "respond",
+      "from": "answer-api",
+      "to": "workspace",
+      "kind": "data",
+      "label": "Cited answer or refusal",
+      "data_class": "confidential"
+    },
+    {
+      "id": "source-change",
+      "from": "corpus",
+      "to": "ingest",
+      "kind": "data",
+      "label": "New or changed document",
+      "data_class": "confidential"
+    },
+    {
+      "id": "index-write",
+      "from": "ingest",
+      "to": "index",
+      "kind": "data",
+      "label": "Chunks, embeddings, permission tags",
+      "data_class": "confidential"
+    },
+    {
+      "id": "telemetry",
+      "from": "gateway",
+      "to": "traces",
+      "kind": "telemetry",
+      "label": "Tokens, latency, cost",
+      "data_class": "operational"
+    },
+    {
+      "id": "replay",
+      "from": "evals",
+      "to": "answer-api",
+      "kind": "control",
+      "label": "Replay frozen questions per release",
+      "data_class": "internal"
+    }
+  ],
+  "journey": [
+    {
+      "id": "j1",
+      "title": "Ask under your own identity",
+      "actor": "customer",
+      "narration": "The analyst signs in once. The workspace sends the question with a scope token derived from their groups.",
+      "flows": [
+        "ask",
+        "signin",
+        "request"
+      ]
+    },
+    {
+      "id": "j2",
+      "title": "Retrieve only what they may read",
+      "actor": "system",
+      "narration": "The API filters the index by the caller's permissions before ranking. A passage the analyst cannot open never reaches the model.",
+      "flows": [
+        "retrieve"
+      ]
+    },
+    {
+      "id": "j3",
+      "title": "Write from passages, not memory",
+      "actor": "agent",
+      "narration": "The gateway routes a prompt that contains only retrieved passages. The model must return a passage ID for every claim.",
+      "flows": [
+        "generate",
+        "route"
+      ]
+    },
+    {
+      "id": "j4",
+      "title": "Answer, or refuse plainly",
+      "actor": "agent",
+      "narration": "Claims without a passage are removed. If nothing survives, the workspace shows a refusal with the closest documents to read.",
+      "flows": [
+        "respond",
+        "record"
+      ]
+    },
+    {
+      "id": "j5",
+      "title": "Keep the corpus current",
+      "actor": "system",
+      "narration": "A changed document is re-parsed and re-indexed with its permissions. Answers that cited the old version are marked for review.",
+      "flows": [
+        "source-change",
+        "index-write"
+      ]
+    },
+    {
+      "id": "j6",
+      "title": "Prove it on every release",
+      "actor": "reviewer",
+      "narration": "The harness replays frozen questions and must-refuse cases. Cost and latency are read from gateway telemetry, not estimated.",
+      "flows": [
+        "replay",
+        "telemetry"
+      ]
+    }
+  ],
+  "team": [
+    {
+      "lane": "customer",
+      "step": "Ask, read the cited answer, forward or flag it",
+      "evidence": "Forward and flag events in the ledger"
+    },
+    {
+      "lane": "ai",
+      "step": "Draft from passages; return passage IDs per claim",
+      "evidence": "Citation coverage per answer"
+    },
+    {
+      "lane": "system",
+      "step": "Filter by permission, enforce budget, log every call",
+      "evidence": "Trace with scope and token count"
+    },
+    {
+      "lane": "reviewer",
+      "step": "Knowledge owner reviews flagged answers weekly and fixes the source",
+      "evidence": "Closed flags with source revision"
+    },
+    {
+      "lane": "operator",
+      "step": "Watch refusal rate, cost per accepted answer and stale-source alerts",
+      "evidence": "Weekly dashboard export"
+    }
+  ],
+  "screens": [
+    {
+      "id": "ask",
+      "device": "desktop",
+      "title": "Ask",
+      "state": "default",
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "What do you need to know?"
+        },
+        {
+          "type": "input",
+          "text": "Which supplier contracts allow termination for convenience with less than 60 days notice?"
+        },
+        {
+          "type": "chips",
+          "items": [
+            "Contracts library",
+            "Procurement policy 2026",
+            "My permissions: Legal, Procurement"
+          ]
+        },
+        {
+          "type": "status",
+          "tone": "neutral",
+          "text": "Searches only documents you can open."
+        }
+      ]
+    },
+    {
+      "id": "answer",
+      "device": "desktop",
+      "title": "Cited answer",
+      "state": "success",
+      "blocks": [
+        {
+          "type": "answer",
+          "text": "Three active contracts allow termination for convenience below 60 days: Northwind Logistics (30 days) [1], Contoso Packaging (45 days) [2], and Fabrikam Metals (30 days, only after year one) [3].",
+          "citations": [
+            "MSA Northwind s.14.2",
+            "Contoso SoW-7 s.9",
+            "Fabrikam MSA s.11.1"
+          ]
+        },
+        {
+          "type": "actions",
+          "items": [
+            {
+              "label": "Open passage",
+              "kind": "secondary"
+            },
+            {
+              "label": "Forward",
+              "kind": "primary"
+            },
+            {
+              "label": "Flag",
+              "kind": "quiet"
+            }
+          ]
+        },
+        {
+          "type": "meta",
+          "text": "3 claims, 3 passages, 2.8 s. Fixture data."
+        }
+      ]
+    },
+    {
+      "id": "refusal",
+      "device": "desktop",
+      "title": "Not in the corpus",
+      "state": "refusal",
+      "blocks": [
+        {
+          "type": "status",
+          "tone": "warning",
+          "text": "No passage you can access answers this question."
+        },
+        {
+          "type": "list",
+          "items": [
+            "Closest: Procurement policy 2026, section 4 (termination rules)",
+            "Ask the contracts team to add the 2024 amendments"
+          ]
+        },
+        {
+          "type": "actions",
+          "items": [
+            {
+              "label": "Request a source",
+              "kind": "primary"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mobile",
+      "device": "mobile",
+      "title": "Answer on the move",
+      "state": "success",
+      "blocks": [
+        {
+          "type": "message",
+          "from": "user",
+          "text": "Notice period in the Northwind MSA?"
+        },
+        {
+          "type": "message",
+          "from": "assistant",
+          "text": "30 days for convenience, 10 days for cause [1]."
+        },
+        {
+          "type": "chips",
+          "items": [
+            "[1] MSA Northwind s.14.2"
+          ]
+        }
+      ]
+    }
+  ],
+  "evals": [
+    {
+      "id": "citation-precision",
+      "name": "Citation precision",
+      "threshold": ">= 0.95 of claims map to a retrieved passage that supports them",
+      "method": "Frozen set of 200 questions with expected passages; scorer checks each claim span."
+    },
+    {
+      "id": "refusal",
+      "name": "Must-refuse accuracy",
+      "threshold": ">= 0.90 refusal on 50 out-of-corpus questions",
+      "method": "Negative set built from questions owners confirmed are unanswerable."
+    },
+    {
+      "id": "permission-leak",
+      "name": "Permission leak",
+      "threshold": "0 passages returned outside the caller's permissions",
+      "method": "Adversarial personas with restricted groups."
+    },
+    {
+      "id": "latency",
+      "name": "Answer latency",
+      "threshold": "p95 <= 6 s end to end",
+      "method": "Gateway telemetry over the frozen set."
+    }
+  ],
+  "risks": [
+    {
+      "id": "stale",
+      "risk": "Answers cite superseded document versions.",
+      "control": "Source revision stored per citation; re-index triggers review of affected answers."
+    },
+    {
+      "id": "injection",
+      "risk": "Instructions hidden in a document steer the model.",
+      "control": "Passages are quoted as data; tool use disabled; output limited to passage-backed claims."
+    },
+    {
+      "id": "leak",
+      "risk": "Retrieval bypasses permissions.",
+      "control": "Permission filter applied in the index query, tested with adversarial personas."
+    }
+  ],
+  "realizations": {
+    "gcp": {
+      "headline": "Agent Search with Gemini 3.8 Flash on Cloud Run",
+      "map": {
+        "sso": "gcp.iap",
+        "index": "gcp.agent-search",
+        "ingest": "gcp.rag-engine",
+        "ledger": "gcp.firestore"
+      },
+      "notes": "Agent Search handles hybrid retrieval and permission-aware indexing; RAG Engine covers custom chunking. Keep the corpus in Cloud Storage with object-level IAM mirrored into index metadata.",
+      "template": "gcp-cloud-run-gemini",
+      "scores": {
+        "performance": 4,
+        "time_to_value": 4,
+        "speed_to_execution": 4,
+        "cost_efficiency": 3,
+        "portability": 3,
+        "governance": 5
+      },
+      "rationale": "Managed retrieval with permission controls and residency options; index and model tie the workload to Agent Platform, which raises exit cost."
+    },
+    "vercel": {
+      "headline": "Next.js, AI Gateway and Neon pgvector",
+      "map": {
+        "index": "vercel.neon-vector",
+        "ingest": "vercel.workflow",
+        "corpus": "vercel.blob"
+      },
+      "notes": "Fastest route to a working desk. Retrieval is yours to build on pgvector with row-level permission filters; AI Gateway gives model choice and fallbacks without a second SDK.",
+      "template": "vercel-ai-gateway",
+      "scores": {
+        "performance": 4,
+        "time_to_value": 5,
+        "speed_to_execution": 5,
+        "cost_efficiency": 4,
+        "portability": 5,
+        "governance": 3
+      },
+      "rationale": "Model and data layers stay swappable; enterprise identity, residency and audit depend on the chosen Marketplace partners."
+    },
+    "cloudflare": {
+      "headline": "Workers, AI Search and AI Gateway behind Access",
+      "map": {
+        "index": "cf.ai-search",
+        "ingest": "cf.ai-search",
+        "corpus": "cf.r2",
+        "ledger": "cf.d1"
+      },
+      "notes": "AI Search indexes R2 and serves hybrid retrieval through a binding; Access supplies SSO in front of the workspace. Permission filters need metadata on each indexed item.",
+      "template": "cloudflare-workers-ai",
+      "scores": {
+        "performance": 5,
+        "time_to_value": 4,
+        "speed_to_execution": 4,
+        "cost_efficiency": 5,
+        "portability": 3,
+        "governance": 4
+      },
+      "rationale": "Edge latency and low request cost; AI Search is remote-only in development and its permission model must be validated per corpus."
+    },
+    "aws": {
+      "headline": "Bedrock Knowledge Bases with Claude on Bedrock",
+      "map": {
+        "sso": "aws.identity-center",
+        "ingest": "aws.bedrock-kb"
+      },
+      "notes": "Managed knowledge base handles ingestion and retrieval; metadata filters carry permissions. Claude on Bedrock keeps traffic inside the account boundary.",
+      "template": null,
+      "scores": {
+        "performance": 4,
+        "time_to_value": 4,
+        "speed_to_execution": 3,
+        "cost_efficiency": 3,
+        "portability": 3,
+        "governance": 5
+      },
+      "rationale": "Strong account-level controls; more services to wire than the primary platforms."
+    },
+    "azure": {
+      "headline": "Azure AI Search with Foundry Models",
+      "map": {},
+      "notes": "Security trimming in Azure AI Search with Entra groups is the natural permission model for Microsoft 365 estates.",
+      "template": null,
+      "scores": {
+        "performance": 4,
+        "time_to_value": 4,
+        "speed_to_execution": 3,
+        "cost_efficiency": 3,
+        "portability": 3,
+        "governance": 5
+      },
+      "rationale": "Best fit where documents already live in SharePoint and identity is Entra; search unit pricing is step-shaped."
+    },
+    "railway": {
+      "headline": "Containers, Postgres pgvector and a direct model API",
+      "map": {},
+      "notes": "All parts are yours: chunking, permission filters, budgets and retries. Suits a small team that wants full control and one bill per vendor.",
+      "template": null,
+      "scores": {
+        "performance": 3,
+        "time_to_value": 3,
+        "speed_to_execution": 4,
+        "cost_efficiency": 4,
+        "portability": 5,
+        "governance": 2
+      },
+      "rationale": "Lowest lock-in; identity, audit and guardrails are custom work."
+    }
+  }
+}

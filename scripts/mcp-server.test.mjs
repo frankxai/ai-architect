@@ -122,3 +122,25 @@ test('initialization rejects symlink paths without writing outside the repositor
     rmSync(outside, { recursive: true, force: true });
   }
 });
+
+test('catalog tools list patterns, resolve a realization and return views', () => {
+  const call = (id, name, args) => ({ jsonrpc: '2.0', id, method: 'tools/call', params: { name, arguments: args } });
+  const result = rpc([
+    { jsonrpc: '2.0', id: 1, method: 'initialize', params: { protocolVersion: '2025-03-26', capabilities: {}, clientInfo: { name: 'test', version: '0' } } },
+    call(2, 'catalog_patterns', {}),
+    call(3, 'catalog_realization', { pattern: 'grounded-research-desk', provider: 'cloudflare' }),
+    call(4, 'catalog_view', { pattern: 'support-resolution-agent', format: 'structurizr' }),
+    call(5, 'catalog_view', { pattern: 'support-resolution-agent', format: 'mermaid' }),
+    call(6, 'catalog_realization', { pattern: 'nope', provider: 'gcp' }),
+  ]);
+  assert.equal(result.status, 0);
+  const byId = Object.fromEntries(parseLines(result.stdout).map((m) => [m.id, m]));
+  const list = JSON.parse(byId[2].result.content[0].text);
+  assert.equal(list.patterns.length, 7);
+  const real = JSON.parse(byId[3].result.content[0].text);
+  assert.equal(real.components.find((c) => c.id === 'index').service.id, 'cf.ai-search');
+  assert.match(real.template.deploy_url, /^https:\/\/deploy\.workers\.cloudflare\.com\//);
+  assert.match(JSON.parse(byId[4].result.content[0].text).text, /deploymentEnvironment "Google Cloud"/);
+  assert.equal(byId[5].result.isError, true);
+  assert.equal(byId[6].result.isError, true);
+});

@@ -1,0 +1,15 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "ai-architect-answer",
+  "main": "src/worker.mjs",
+  "compatibility_date": "2026-10-01",
+  "observability": { "enabled": true },
+  // Workers AI is provisioned automatically by the Deploy to Cloudflare button.
+  "ai": { "binding": "AI" },
+  "assets": { "directory": "./public", "binding": "ASSETS" },
+  "vars": {
+    "ANSWER_MODE": "auto",
+    "AI_MODEL": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+    "AI_GATEWAY_ID": "default"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "name": "ai-architect-answer",
+  "env": {
+    "GEMINI_MODEL": {
+      "description": "Gemini model ID on Gemini Enterprise Agent Platform.",
+      "value": "gemini-3.8-flash",
+      "required": false
+    },
+    "GOOGLE_CLOUD_LOCATION": {
+      "description": "Model endpoint location. gemini-3.8-flash is served on the global endpoint.",
+      "value": "global",
+      "required": false
+    }
+  },
+  "hooks": {
+    "prebuild": {
+      "commands": [
+        "gcloud services enable aiplatform.googleapis.com --project=$GOOGLE_CLOUD_PROJECT"
+      ]
+    }
+  },
+  "options": {
+    "memory": "512Mi",
+    "cpu": "1",
+    "concurrency": 40,
+    "max-instances": 5
+  }
+}

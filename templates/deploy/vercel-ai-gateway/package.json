@@ -1,0 +1,14 @@
+{
+  "name": "ai-architect-answer-vercel",
+  "private": true,
+  "type": "module",
+  "description": "Grounded answer service on Vercel Functions with AI SDK 7 and AI Gateway. Contract ai-architect-answer/v1.",
+  "license": "Apache-2.0",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "dependencies": {
+    "ai": "7.0.137"
+  }
+}

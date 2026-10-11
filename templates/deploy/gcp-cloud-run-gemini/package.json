@@ -1,0 +1,15 @@
+{
+  "name": "ai-architect-answer-cloud-run",
+  "private": true,
+  "type": "module",
+  "description": "Grounded answer service on Cloud Run with Gemini on Gemini Enterprise Agent Platform. Contract ai-architect-answer/v1.",
+  "license": "Apache-2.0",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test test/*.test.mjs"
+  },
+  "dependencies": {
+    "@google/genai": "2.28.0"
+  }
+}

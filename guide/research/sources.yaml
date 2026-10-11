@@ -463,3 +463,63 @@ sources:
     accessed_on: 2026-10-11
     review_by: 2026-10-18
     review_receipt: releases/2026-10-11-living-practice.md
+  - id: S53
+    title: Gemini Enterprise Agent Platform name changes
+    publisher: Google
+    kind: vendor-documentation
+    url: https://docs.cloud.google.com/gemini-enterprise-agent-platform/vertex-ai-name-changes
+    supports: Mapping from Vertex AI feature names to Gemini Enterprise Agent Platform names, including Agent Search, Agent Retrieval, Agent Runtime and RAG Engine.
+    volatility: medium
+    accessed_on: 2026-10-11
+    review_by: 2026-11-11
+    review_receipt: releases/2026-10-11-multi-cloud-catalog.md
+  - id: S54
+    title: Deploy to Cloudflare buttons
+    publisher: Cloudflare
+    kind: vendor-documentation
+    url: https://developers.cloudflare.com/workers/platform/deploy-buttons/
+    supports: Button URL format, self-contained subdirectory requirement and automatically provisioned resources.
+    volatility: medium
+    accessed_on: 2026-10-11
+    review_by: 2026-11-11
+    review_receipt: releases/2026-10-11-multi-cloud-catalog.md
+  - id: S55
+    title: Cloud Run Button
+    publisher: Google Cloud Platform
+    kind: vendor-source-repository
+    url: https://github.com/GoogleCloudPlatform/cloud-run-button
+    supports: git_repo, revision and dir parameters, app.json environment prompts, options and build hooks.
+    volatility: low
+    accessed_on: 2026-10-11
+    review_by: 2026-11-11
+    review_receipt: releases/2026-10-11-multi-cloud-catalog.md
+  - id: S56
+    title: AI Gateway SDKs and APIs
+    publisher: Vercel
+    kind: vendor-documentation
+    url: https://vercel.com/docs/ai-gateway/sdks-and-apis
+    supports: AI SDK 7 routing of provider/model strings through AI Gateway, gateway fallbacks and OIDC authentication on Vercel.
+    volatility: high
+    accessed_on: 2026-10-11
+    review_by: 2026-10-18
+    review_receipt: releases/2026-10-11-multi-cloud-catalog.md
+  - id: S57
+    title: Structurizr DSL
+    publisher: Structurizr
+    kind: open-source-documentation
+    url: https://docs.structurizr.com/dsl
+    supports: C4 model, deployment environments and views expressed as text.
+    volatility: low
+    accessed_on: 2026-10-11
+    review_by: 2027-01-11
+    review_receipt: releases/2026-10-11-multi-cloud-catalog.md
+  - id: S58
+    title: AI Gateway Workers binding
+    publisher: Cloudflare
+    kind: vendor-documentation
+    url: https://developers.cloudflare.com/ai-gateway/usage/worker-binding-methods/
+    supports: env.AI.run with a gateway ID for Workers AI and supported third-party models; default gateway created on first use.
+    volatility: high
+    accessed_on: 2026-10-11
+    review_by: 2026-10-18
+    review_receipt: releases/2026-10-11-multi-cloud-catalog.md

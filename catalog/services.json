@@ -1,0 +1,1286 @@
+{
+  "schema": "ai-architect-services/v1",
+  "note": "verification: 'source' = backed by an entry in sources.json checked on 2026-10-11; 'prior' = long-standing product name not re-read this edition; 'inferred' = name derived from a documented rename, confirm before customer use. status reflects the last known launch stage, not a support commitment.",
+  "services": [
+    {
+      "id": "gcp.cloud-run",
+      "provider": "gcp",
+      "name": "Cloud Run",
+      "docs": "https://cloud.google.com/run",
+      "icon": "cloud_run",
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "gcp.cloud-run-mcp",
+      "provider": "gcp",
+      "name": "MCP server on Cloud Run",
+      "docs": "https://cloud.google.com/run/docs/host-mcp-servers",
+      "icon": "cloud_run",
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "gcp.cloud-run-jobs",
+      "provider": "gcp",
+      "name": "Cloud Run jobs (sandboxed)",
+      "docs": "https://cloud.google.com/run/docs/create-jobs",
+      "icon": "cloud_run",
+      "status": "ga",
+      "verification": "prior",
+      "note": "Isolated per execution; restrict egress with VPC and firewall rules."
+    },
+    {
+      "id": "gcp.review-console",
+      "provider": "gcp",
+      "name": "Review console on Cloud Run",
+      "docs": "https://cloud.google.com/run",
+      "icon": "cloud_run",
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "gcp.identity-platform",
+      "provider": "gcp",
+      "name": "Identity Platform",
+      "docs": "https://cloud.google.com/security/products/identity-platform",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "gcp.iap",
+      "provider": "gcp",
+      "name": "Identity-Aware Proxy",
+      "docs": "https://cloud.google.com/security/products/iap",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "gcp.cloud-armor",
+      "provider": "gcp",
+      "name": "Cloud Armor + Load Balancing",
+      "docs": "https://cloud.google.com/security/products/armor",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "gcp.apigee",
+      "provider": "gcp",
+      "name": "Apigee (AI gateway policies)",
+      "docs": "https://cloud.google.com/apigee",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior",
+      "note": "Token quotas, routing and semantic cache are policy work on Apigee; confirm feature availability per region."
+    },
+    {
+      "id": "gcp.model-armor",
+      "provider": "gcp",
+      "name": "Model Armor",
+      "docs": "https://cloud.google.com/security/products/model-armor",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "gcp.secret-manager",
+      "provider": "gcp",
+      "name": "Secret Manager",
+      "docs": "https://cloud.google.com/security/products/secret-manager",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "gcp.agent-runtime",
+      "provider": "gcp",
+      "name": "Agent Runtime (Agent Platform)",
+      "docs": "https://docs.cloud.google.com/gemini-enterprise-agent-platform",
+      "icon": "vertexai",
+      "status": "ga",
+      "verification": "source",
+      "sources": [
+        "gcp-name-changes"
+      ],
+      "note": "Formerly Vertex AI Agent Engine. Icon is the official legacy Vertex AI console icon."
+    },
+    {
+      "id": "gcp.adk-agents",
+      "provider": "gcp",
+      "name": "ADK agents on Agent Runtime",
+      "docs": "https://google.github.io/adk-docs/",
+      "icon": "vertexai",
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "gcp.gemini",
+      "provider": "gcp",
+      "name": "Gemini 3.8 Flash (Agent Platform)",
+      "docs": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/guides/gemini-3-8-flash",
+      "icon": "vertexai",
+      "status": "ga",
+      "verification": "source",
+      "sources": [
+        "gcp-gemini-38-flash"
+      ],
+      "note": "Model ID gemini-3.8-flash on the global endpoint. Claude and open models are available through Model Garden where enabled."
+    },
+    {
+      "id": "gcp.agent-search",
+      "provider": "gcp",
+      "name": "Agent Search",
+      "docs": "https://cloud.google.com/products/gemini-enterprise-agent-platform/agent-search",
+      "icon": null,
+      "status": "ga",
+      "verification": "source",
+      "sources": [
+        "gcp-name-changes"
+      ],
+      "note": "Formerly Vertex AI Search."
+    },
+    {
+      "id": "gcp.rag-engine",
+      "provider": "gcp",
+      "name": "RAG Engine (Agent Platform)",
+      "docs": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/rag-engine/use-vertexai-search",
+      "icon": null,
+      "status": "ga",
+      "verification": "source",
+      "sources": [
+        "gcp-name-changes"
+      ]
+    },
+    {
+      "id": "gcp.agent-retrieval",
+      "provider": "gcp",
+      "name": "Agent Retrieval",
+      "docs": "https://docs.cloud.google.com/gemini-enterprise-agent-platform",
+      "icon": null,
+      "status": "ga",
+      "verification": "source",
+      "sources": [
+        "gcp-name-changes"
+      ],
+      "note": "Formerly Vector Search 2.0."
+    },
+    {
+      "id": "gcp.evaluation",
+      "provider": "gcp",
+      "name": "Evaluation service (Agent Platform)",
+      "docs": "https://docs.cloud.google.com/gemini-enterprise-agent-platform",
+      "icon": "vertexai",
+      "status": "ga",
+      "verification": "inferred",
+      "note": "Formerly Gen AI evaluation service on Vertex AI; confirm the current product name."
+    },
+    {
+      "id": "gcp.workflows",
+      "provider": "gcp",
+      "name": "Workflows",
+      "docs": "https://cloud.google.com/workflows",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "gcp.cloud-tasks",
+      "provider": "gcp",
+      "name": "Cloud Tasks",
+      "docs": "https://cloud.google.com/tasks",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "gcp.pubsub",
+      "provider": "gcp",
+      "name": "Pub/Sub",
+      "docs": "https://cloud.google.com/pubsub",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "gcp.eventarc",
+      "provider": "gcp",
+      "name": "Eventarc",
+      "docs": "https://cloud.google.com/eventarc",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "gcp.firestore",
+      "provider": "gcp",
+      "name": "Firestore",
+      "docs": "https://cloud.google.com/firestore",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "gcp.document-ai",
+      "provider": "gcp",
+      "name": "Document AI",
+      "docs": "https://cloud.google.com/document-ai",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "gcp.alloydb",
+      "provider": "gcp",
+      "name": "AlloyDB for PostgreSQL",
+      "docs": "https://cloud.google.com/alloydb",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "gcp.cloud-sql",
+      "provider": "gcp",
+      "name": "Cloud SQL",
+      "docs": "https://cloud.google.com/sql",
+      "icon": "cloud_sql",
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "gcp.cloud-storage",
+      "provider": "gcp",
+      "name": "Cloud Storage",
+      "docs": "https://cloud.google.com/storage",
+      "icon": "cloud_storage",
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "gcp.bigquery",
+      "provider": "gcp",
+      "name": "BigQuery + Looker Studio",
+      "docs": "https://cloud.google.com/bigquery",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "gcp.observability",
+      "provider": "gcp",
+      "name": "Cloud Logging, Monitoring, Trace",
+      "docs": "https://cloud.google.com/products/observability",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "vercel.nextjs",
+      "provider": "vercel",
+      "name": "Next.js on Vercel",
+      "docs": "https://vercel.com/docs/frameworks/nextjs",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "vercel.functions",
+      "provider": "vercel",
+      "name": "Vercel Functions (Fluid compute)",
+      "docs": "https://vercel.com/docs/functions",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "vercel.firewall",
+      "provider": "vercel",
+      "name": "Vercel Firewall + BotID",
+      "docs": "https://vercel.com/docs/vercel-firewall",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "vercel.auth",
+      "provider": "vercel",
+      "name": "Identity provider via Marketplace",
+      "docs": "https://vercel.com/marketplace",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior",
+      "note": "Choose the identity vendor the customer already operates."
+    },
+    {
+      "id": "vercel.ai-gateway",
+      "provider": "vercel",
+      "name": "AI Gateway",
+      "docs": "https://vercel.com/docs/ai-gateway",
+      "icon": null,
+      "status": "ga",
+      "verification": "source",
+      "sources": [
+        "vercel-ai-gateway-sdk",
+        "vercel-ai-gateway-oidc"
+      ]
+    },
+    {
+      "id": "vercel.gateway-models",
+      "provider": "vercel",
+      "name": "Claude Sonnet 5 via AI Gateway",
+      "docs": "https://vercel.com/docs/ai-gateway/sdks-and-apis",
+      "icon": null,
+      "status": "ga",
+      "verification": "source",
+      "sources": [
+        "vercel-ai-gateway-sdk"
+      ],
+      "note": "Model string anthropic/claude-sonnet-5; any gateway model can be substituted with a fallback list."
+    },
+    {
+      "id": "vercel.guardrail",
+      "provider": "vercel",
+      "name": "Guardrail middleware (AI SDK)",
+      "docs": "https://ai-sdk.dev/docs/ai-sdk-core/middleware",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "vercel.env-oidc",
+      "provider": "vercel",
+      "name": "Sensitive env vars + OIDC",
+      "docs": "https://vercel.com/docs/oidc",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "vercel.ai-sdk-agent",
+      "provider": "vercel",
+      "name": "AI SDK 7 agent loop (Fluid compute)",
+      "docs": "https://ai-sdk.dev/docs/agents/overview",
+      "icon": null,
+      "status": "ga",
+      "verification": "source",
+      "sources": [
+        "npm-registry"
+      ]
+    },
+    {
+      "id": "vercel.mcp",
+      "provider": "vercel",
+      "name": "MCP server on Vercel Functions",
+      "docs": "https://vercel.com/docs/mcp",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "vercel.sandbox",
+      "provider": "vercel",
+      "name": "Vercel Sandbox",
+      "docs": "https://vercel.com/docs/sandbox",
+      "icon": null,
+      "status": "ga",
+      "verification": "source",
+      "sources": [
+        "vercel-sandbox"
+      ]
+    },
+    {
+      "id": "vercel.workflow",
+      "provider": "vercel",
+      "name": "Vercel Workflow",
+      "docs": "https://vercel.com/docs/workflow",
+      "icon": null,
+      "status": "ga",
+      "verification": "source",
+      "sources": [
+        "vercel-workflow"
+      ]
+    },
+    {
+      "id": "vercel.queues",
+      "provider": "vercel",
+      "name": "Vercel Queues",
+      "docs": "https://vercel.com/docs/queues",
+      "icon": null,
+      "status": "beta",
+      "verification": "inferred",
+      "note": "Reported as beta in May 2026; confirm launch stage before production use."
+    },
+    {
+      "id": "vercel.upstash",
+      "provider": "vercel",
+      "name": "Upstash Redis via Marketplace",
+      "docs": "https://vercel.com/marketplace/upstash",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "vercel.neon",
+      "provider": "vercel",
+      "name": "Neon Postgres via Marketplace",
+      "docs": "https://vercel.com/marketplace/neon",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "vercel.neon-vector",
+      "provider": "vercel",
+      "name": "Neon Postgres + pgvector",
+      "docs": "https://vercel.com/marketplace/neon",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "vercel.blob",
+      "provider": "vercel",
+      "name": "Vercel Blob",
+      "docs": "https://vercel.com/docs/vercel-blob",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "vercel.edge-config",
+      "provider": "vercel",
+      "name": "Edge Config",
+      "docs": "https://vercel.com/docs/edge-config",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "vercel.observability",
+      "provider": "vercel",
+      "name": "Vercel Observability + drains",
+      "docs": "https://vercel.com/docs/observability",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "cf.workers-assets",
+      "provider": "cloudflare",
+      "name": "Workers static assets",
+      "docs": "https://developers.cloudflare.com/workers/static-assets/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "cf.workers",
+      "provider": "cloudflare",
+      "name": "Workers",
+      "docs": "https://developers.cloudflare.com/workers/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "cf.waf",
+      "provider": "cloudflare",
+      "name": "WAF, Bot Management, Turnstile",
+      "docs": "https://developers.cloudflare.com/waf/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "cf.access",
+      "provider": "cloudflare",
+      "name": "Cloudflare Access",
+      "docs": "https://developers.cloudflare.com/cloudflare-one/policies/access/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "cf.ai-gateway",
+      "provider": "cloudflare",
+      "name": "AI Gateway",
+      "docs": "https://developers.cloudflare.com/ai-gateway/",
+      "icon": null,
+      "status": "ga",
+      "verification": "source",
+      "sources": [
+        "cf-ai-gateway-binding"
+      ]
+    },
+    {
+      "id": "cf.guardrails",
+      "provider": "cloudflare",
+      "name": "AI Gateway guardrails",
+      "docs": "https://developers.cloudflare.com/ai-gateway/features/guardrails/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "cf.workers-ai",
+      "provider": "cloudflare",
+      "name": "Workers AI models",
+      "docs": "https://developers.cloudflare.com/workers-ai/",
+      "icon": null,
+      "status": "ga",
+      "verification": "source",
+      "sources": [
+        "cf-ai-gateway-binding",
+        "cf-agents-models"
+      ],
+      "note": "Run @cf/ models, or vendor models through the same AI binding and AI Gateway."
+    },
+    {
+      "id": "cf.agents",
+      "provider": "cloudflare",
+      "name": "Agents SDK (Durable Objects)",
+      "docs": "https://developers.cloudflare.com/agents/",
+      "icon": null,
+      "status": "ga",
+      "verification": "source",
+      "sources": [
+        "cf-agents-models"
+      ]
+    },
+    {
+      "id": "cf.durable-objects",
+      "provider": "cloudflare",
+      "name": "Durable Objects (SQLite state)",
+      "docs": "https://developers.cloudflare.com/durable-objects/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "cf.workflows",
+      "provider": "cloudflare",
+      "name": "Workflows",
+      "docs": "https://developers.cloudflare.com/workflows/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "cf.queues",
+      "provider": "cloudflare",
+      "name": "Queues",
+      "docs": "https://developers.cloudflare.com/queues/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "cf.sandbox",
+      "provider": "cloudflare",
+      "name": "Sandbox SDK (Containers)",
+      "docs": "https://developers.cloudflare.com/sandbox/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "cf.mcp",
+      "provider": "cloudflare",
+      "name": "MCP server on Workers",
+      "docs": "https://developers.cloudflare.com/agents/model-context-protocol/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "cf.ai-search",
+      "provider": "cloudflare",
+      "name": "AI Search",
+      "docs": "https://developers.cloudflare.com/ai-search/",
+      "icon": null,
+      "status": "ga",
+      "verification": "source",
+      "sources": [
+        "cf-ai-search"
+      ],
+      "note": "Formerly AutoRAG. Does not run locally; bind with remote: true for development."
+    },
+    {
+      "id": "cf.vectorize",
+      "provider": "cloudflare",
+      "name": "Vectorize",
+      "docs": "https://developers.cloudflare.com/vectorize/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "cf.d1",
+      "provider": "cloudflare",
+      "name": "D1",
+      "docs": "https://developers.cloudflare.com/d1/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "cf.r2",
+      "provider": "cloudflare",
+      "name": "R2",
+      "docs": "https://developers.cloudflare.com/r2/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "cf.kv",
+      "provider": "cloudflare",
+      "name": "Workers KV",
+      "docs": "https://developers.cloudflare.com/kv/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "cf.secrets-store",
+      "provider": "cloudflare",
+      "name": "Secrets Store",
+      "docs": "https://developers.cloudflare.com/secrets-store/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "cf.analytics-engine",
+      "provider": "cloudflare",
+      "name": "Workers Analytics Engine",
+      "docs": "https://developers.cloudflare.com/analytics/analytics-engine/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "cf.observability",
+      "provider": "cloudflare",
+      "name": "Workers Observability + AI Gateway logs",
+      "docs": "https://developers.cloudflare.com/workers/observability/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "cf.review",
+      "provider": "cloudflare",
+      "name": "Review app behind Access",
+      "docs": "https://developers.cloudflare.com/cloudflare-one/policies/access/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "aws.amplify",
+      "provider": "aws",
+      "name": "Amplify Hosting",
+      "docs": "https://aws.amazon.com/amplify/hosting/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "aws.cloudfront-waf",
+      "provider": "aws",
+      "name": "CloudFront + AWS WAF",
+      "docs": "https://aws.amazon.com/waf/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "aws.cognito",
+      "provider": "aws",
+      "name": "Amazon Cognito",
+      "docs": "https://aws.amazon.com/cognito/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "aws.identity-center",
+      "provider": "aws",
+      "name": "IAM Identity Center",
+      "docs": "https://aws.amazon.com/iam/identity-center/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "aws.api-lambda",
+      "provider": "aws",
+      "name": "API Gateway + Lambda",
+      "docs": "https://aws.amazon.com/api-gateway/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "aws.lambda",
+      "provider": "aws",
+      "name": "AWS Lambda",
+      "docs": "https://aws.amazon.com/lambda/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "aws.bedrock-routing",
+      "provider": "aws",
+      "name": "Bedrock inference profiles + usage plans",
+      "docs": "https://aws.amazon.com/bedrock/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior",
+      "note": "Cost allocation through application inference profiles; quotas at the API layer."
+    },
+    {
+      "id": "aws.bedrock-guardrails",
+      "provider": "aws",
+      "name": "Bedrock Guardrails",
+      "docs": "https://aws.amazon.com/bedrock/guardrails/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "aws.bedrock-claude",
+      "provider": "aws",
+      "name": "Claude on Amazon Bedrock",
+      "docs": "https://aws.amazon.com/bedrock/anthropic/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "aws.agentcore-runtime",
+      "provider": "aws",
+      "name": "AgentCore Runtime",
+      "docs": "https://aws.amazon.com/bedrock/agentcore/",
+      "icon": null,
+      "status": "ga",
+      "verification": "source",
+      "sources": [
+        "aws-agentcore"
+      ]
+    },
+    {
+      "id": "aws.agentcore-memory",
+      "provider": "aws",
+      "name": "AgentCore Memory",
+      "docs": "https://aws.amazon.com/bedrock/agentcore/",
+      "icon": null,
+      "status": "ga",
+      "verification": "source",
+      "sources": [
+        "aws-agentcore"
+      ]
+    },
+    {
+      "id": "aws.agentcore-gateway",
+      "provider": "aws",
+      "name": "AgentCore Gateway (MCP)",
+      "docs": "https://aws.amazon.com/bedrock/agentcore/",
+      "icon": null,
+      "status": "ga",
+      "verification": "source",
+      "sources": [
+        "aws-agentcore"
+      ]
+    },
+    {
+      "id": "aws.agentcore-code",
+      "provider": "aws",
+      "name": "AgentCore Code Interpreter",
+      "docs": "https://aws.amazon.com/bedrock/agentcore/",
+      "icon": null,
+      "status": "ga",
+      "verification": "source",
+      "sources": [
+        "aws-agentcore"
+      ]
+    },
+    {
+      "id": "aws.agentcore-identity",
+      "provider": "aws",
+      "name": "AgentCore Identity",
+      "docs": "https://aws.amazon.com/bedrock/agentcore/",
+      "icon": null,
+      "status": "ga",
+      "verification": "source",
+      "sources": [
+        "aws-agentcore"
+      ]
+    },
+    {
+      "id": "aws.step-functions",
+      "provider": "aws",
+      "name": "Step Functions",
+      "docs": "https://aws.amazon.com/step-functions/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "aws.sqs",
+      "provider": "aws",
+      "name": "Amazon SQS",
+      "docs": "https://aws.amazon.com/sqs/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "aws.eventbridge",
+      "provider": "aws",
+      "name": "Amazon EventBridge",
+      "docs": "https://aws.amazon.com/eventbridge/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "aws.bedrock-kb",
+      "provider": "aws",
+      "name": "Bedrock Knowledge Bases",
+      "docs": "https://aws.amazon.com/bedrock/knowledge-bases/",
+      "icon": null,
+      "status": "ga",
+      "verification": "source",
+      "sources": [
+        "aws-bedrock-managed-kb"
+      ]
+    },
+    {
+      "id": "aws.textract",
+      "provider": "aws",
+      "name": "Amazon Textract",
+      "docs": "https://aws.amazon.com/textract/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "aws.s3",
+      "provider": "aws",
+      "name": "Amazon S3",
+      "docs": "https://aws.amazon.com/s3/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "aws.dynamodb",
+      "provider": "aws",
+      "name": "Amazon DynamoDB",
+      "docs": "https://aws.amazon.com/dynamodb/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "aws.aurora",
+      "provider": "aws",
+      "name": "Aurora PostgreSQL",
+      "docs": "https://aws.amazon.com/rds/aurora/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "aws.secrets-manager",
+      "provider": "aws",
+      "name": "AWS Secrets Manager",
+      "docs": "https://aws.amazon.com/secrets-manager/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "aws.cloudwatch",
+      "provider": "aws",
+      "name": "CloudWatch + X-Ray",
+      "docs": "https://aws.amazon.com/cloudwatch/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "aws.bedrock-evaluations",
+      "provider": "aws",
+      "name": "Bedrock Evaluations",
+      "docs": "https://aws.amazon.com/bedrock/evaluations/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "aws.cur",
+      "provider": "aws",
+      "name": "Cost and Usage Reports + QuickSight",
+      "docs": "https://aws.amazon.com/aws-cost-management/aws-cost-and-usage-reporting/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "azure.static-web-apps",
+      "provider": "azure",
+      "name": "Azure Static Web Apps",
+      "docs": "https://azure.microsoft.com/products/app-service/static",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "azure.front-door",
+      "provider": "azure",
+      "name": "Azure Front Door + WAF",
+      "docs": "https://azure.microsoft.com/products/frontdoor",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "azure.entra",
+      "provider": "azure",
+      "name": "Microsoft Entra ID",
+      "docs": "https://www.microsoft.com/security/business/identity-access/microsoft-entra-id",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "azure.container-apps",
+      "provider": "azure",
+      "name": "Azure Container Apps",
+      "docs": "https://azure.microsoft.com/products/container-apps",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "azure.mcp-container-apps",
+      "provider": "azure",
+      "name": "MCP server on Container Apps",
+      "docs": "https://azure.microsoft.com/products/container-apps",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "azure.dynamic-sessions",
+      "provider": "azure",
+      "name": "Container Apps dynamic sessions",
+      "docs": "https://learn.microsoft.com/azure/container-apps/sessions",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "azure.functions",
+      "provider": "azure",
+      "name": "Azure Functions",
+      "docs": "https://azure.microsoft.com/products/functions",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "azure.durable-functions",
+      "provider": "azure",
+      "name": "Durable Functions",
+      "docs": "https://learn.microsoft.com/azure/azure-functions/durable/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "azure.apim",
+      "provider": "azure",
+      "name": "API Management AI gateway",
+      "docs": "https://learn.microsoft.com/azure/api-management/genai-gateway-capabilities",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "azure.content-safety",
+      "provider": "azure",
+      "name": "Azure AI Content Safety",
+      "docs": "https://azure.microsoft.com/products/ai-services/ai-content-safety",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "azure.key-vault",
+      "provider": "azure",
+      "name": "Azure Key Vault",
+      "docs": "https://azure.microsoft.com/products/key-vault",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "azure.foundry-models",
+      "provider": "azure",
+      "name": "Foundry Models (Microsoft Foundry)",
+      "docs": "https://learn.microsoft.com/en-us/azure/ai-foundry/",
+      "icon": null,
+      "status": "ga",
+      "verification": "source",
+      "sources": [
+        "azure-foundry"
+      ]
+    },
+    {
+      "id": "azure.foundry-agents",
+      "provider": "azure",
+      "name": "Foundry Agent Service",
+      "docs": "https://learn.microsoft.com/en-us/azure/ai-foundry/",
+      "icon": null,
+      "status": "ga",
+      "verification": "inferred",
+      "note": "Product formerly branded Azure AI Foundry Agent Service; confirm current naming."
+    },
+    {
+      "id": "azure.foundry-evaluations",
+      "provider": "azure",
+      "name": "Foundry evaluations",
+      "docs": "https://learn.microsoft.com/en-us/azure/ai-foundry/",
+      "icon": null,
+      "status": "ga",
+      "verification": "inferred"
+    },
+    {
+      "id": "azure.service-bus",
+      "provider": "azure",
+      "name": "Azure Service Bus",
+      "docs": "https://azure.microsoft.com/products/service-bus",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "azure.event-grid",
+      "provider": "azure",
+      "name": "Azure Event Grid",
+      "docs": "https://azure.microsoft.com/products/event-grid",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "azure.cosmos",
+      "provider": "azure",
+      "name": "Azure Cosmos DB",
+      "docs": "https://azure.microsoft.com/products/cosmos-db",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "azure.ai-search",
+      "provider": "azure",
+      "name": "Azure AI Search",
+      "docs": "https://azure.microsoft.com/products/ai-services/ai-search",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "azure.document-intelligence",
+      "provider": "azure",
+      "name": "Document Intelligence",
+      "docs": "https://azure.microsoft.com/products/ai-services/ai-document-intelligence",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "azure.blob",
+      "provider": "azure",
+      "name": "Azure Blob Storage",
+      "docs": "https://azure.microsoft.com/products/storage/blobs",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "azure.monitor",
+      "provider": "azure",
+      "name": "Azure Monitor + Application Insights",
+      "docs": "https://azure.microsoft.com/products/monitor",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "azure.cost-powerbi",
+      "provider": "azure",
+      "name": "Cost Management exports + Power BI",
+      "docs": "https://azure.microsoft.com/products/cost-management",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "railway.service",
+      "provider": "railway",
+      "name": "Railway service (container)",
+      "docs": "https://docs.railway.com/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "railway.worker",
+      "provider": "railway",
+      "name": "Railway worker service",
+      "docs": "https://docs.railway.com/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "railway.edge",
+      "provider": "railway",
+      "name": "Railway public networking + external WAF",
+      "docs": "https://docs.railway.com/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior",
+      "note": "Bot and WAF controls come from a fronting provider."
+    },
+    {
+      "id": "railway.auth",
+      "provider": "railway",
+      "name": "App-managed OIDC sign-in",
+      "docs": "https://docs.railway.com/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "railway.gateway",
+      "provider": "railway",
+      "name": "Self-hosted model gateway service",
+      "docs": "https://docs.railway.com/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior",
+      "note": "Budgets, retries and routing are owned in code or an open-source proxy you operate."
+    },
+    {
+      "id": "railway.guardrail",
+      "provider": "railway",
+      "name": "Guardrail middleware in the API",
+      "docs": "https://docs.railway.com/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "railway.variables",
+      "provider": "railway",
+      "name": "Sealed variables",
+      "docs": "https://docs.railway.com/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "railway.model-api",
+      "provider": "railway",
+      "name": "Model provider API (Claude, Gemini)",
+      "docs": "https://docs.railway.com/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "railway.sandbox",
+      "provider": "railway",
+      "name": "Isolated sandbox service",
+      "docs": "https://docs.railway.com/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior",
+      "note": "Network egress restrictions must be designed and tested; isolation is per service."
+    },
+    {
+      "id": "railway.redis",
+      "provider": "railway",
+      "name": "Railway Redis",
+      "docs": "https://docs.railway.com/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "railway.postgres",
+      "provider": "railway",
+      "name": "Railway Postgres",
+      "docs": "https://docs.railway.com/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "railway.postgres-vector",
+      "provider": "railway",
+      "name": "Railway Postgres + pgvector",
+      "docs": "https://docs.railway.com/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "railway.objects",
+      "provider": "railway",
+      "name": "S3-compatible object storage",
+      "docs": "https://docs.railway.com/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "railway.observability",
+      "provider": "railway",
+      "name": "Railway logs + OpenTelemetry export",
+      "docs": "https://docs.railway.com/",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    },
+    {
+      "id": "portable.evals",
+      "provider": "portable",
+      "name": "Eval harness in CI",
+      "docs": "https://github.com/frankxai/ai-architect/tree/main/evals",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior",
+      "note": "Frozen cases, scorer, exit code that fails the release."
+    },
+    {
+      "id": "portable.review",
+      "provider": "portable",
+      "name": "Review console (app route)",
+      "docs": "https://github.com/frankxai/ai-architect",
+      "icon": null,
+      "status": "ga",
+      "verification": "prior"
+    }
+  ]
+}

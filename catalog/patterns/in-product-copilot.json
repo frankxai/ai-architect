@@ -1,0 +1,584 @@
+{
+  "schema": "ai-architect-pattern/v1",
+  "id": "in-product-copilot",
+  "title": "In-product copilot",
+  "tagline": "Help inside the product, scoped to one tenant, metered to the cent.",
+  "summary": "A SaaS product embeds an assistant that answers from the tenant's own data and proposes typed, reversible actions the user confirms. Every call carries the tenant ID through retrieval, the model gateway and the usage meter, so isolation and billing are provable.",
+  "customer_job": "Get a task done in the product without leaving the screen or reading the docs.",
+  "baseline": "Users open support tickets or abandon the feature; the product team cannot price AI features because usage is not attributed.",
+  "accepted_result": "A suggestion the user applies, inside their tenant, with cost attributed to that tenant.",
+  "industries": [
+    "software",
+    "financial-services",
+    "healthcare",
+    "education",
+    "retail"
+  ],
+  "sophistication": "A2",
+  "primary_metric": {
+    "name": "Applied suggestions per active tenant",
+    "definition": "Suggestions applied without undo within 24 hours, per active tenant per week."
+  },
+  "economics": {
+    "tasks": 50000,
+    "adoption": 0.35,
+    "acceptance": 0.55,
+    "minutes_saved": 4,
+    "hourly_value": 60,
+    "run_cost_per_task": 0.02,
+    "fixed_monthly": 3500,
+    "currency": "EUR",
+    "basis": "Illustrative assumption measured as user time saved; revenue from pricing the feature is a separate ledger."
+  },
+  "components": [
+    {
+      "id": "tenant-user",
+      "role": "user",
+      "label": "Tenant user",
+      "detail": "Works in the product; opens the copilot in context.",
+      "col": 0,
+      "row": 1,
+      "data_class": "tenant"
+    },
+    {
+      "id": "product",
+      "role": "experience",
+      "label": "Product UI with copilot panel",
+      "detail": "Streams answers; shows proposed actions with a diff.",
+      "col": 1,
+      "row": 1,
+      "data_class": "tenant"
+    },
+    {
+      "id": "edge",
+      "role": "edge",
+      "label": "Edge protection",
+      "detail": "Per-tenant rate limits and abuse controls.",
+      "col": 1,
+      "row": 0,
+      "data_class": "operational"
+    },
+    {
+      "id": "identity",
+      "role": "identity",
+      "label": "Tenant identity",
+      "detail": "Session with tenant ID and role claims.",
+      "col": 2,
+      "row": 0,
+      "data_class": "identity"
+    },
+    {
+      "id": "copilot-api",
+      "role": "api",
+      "label": "Copilot API",
+      "detail": "Resolves tenant scope; refuses calls without it.",
+      "col": 2,
+      "row": 1,
+      "data_class": "tenant",
+      "failure_mode": "Tenant ID taken from the request body instead of the session."
+    },
+    {
+      "id": "gateway",
+      "role": "gateway",
+      "label": "Model gateway",
+      "detail": "Per-tenant budget, cache key includes tenant ID.",
+      "col": 3,
+      "row": 0,
+      "data_class": "tenant",
+      "failure_mode": "Shared cache returns another tenant's answer."
+    },
+    {
+      "id": "model",
+      "role": "model",
+      "label": "Assistant model",
+      "detail": "Fast model for answers; larger model for complex actions.",
+      "col": 4,
+      "row": 0,
+      "data_class": "tenant"
+    },
+    {
+      "id": "tenant-index",
+      "role": "retrieval",
+      "label": "Tenant-partitioned index",
+      "detail": "Namespace per tenant; no cross-tenant query path.",
+      "col": 3,
+      "row": 2,
+      "data_class": "tenant"
+    },
+    {
+      "id": "actions",
+      "role": "tools",
+      "label": "Product actions",
+      "detail": "Typed, reversible operations; writes need user confirmation.",
+      "col": 3,
+      "row": 1,
+      "data_class": "tenant"
+    },
+    {
+      "id": "app-db",
+      "role": "store",
+      "label": "Product database",
+      "detail": "Tenant data with row-level security.",
+      "col": 4,
+      "row": 1,
+      "data_class": "tenant"
+    },
+    {
+      "id": "meter",
+      "role": "analytics",
+      "label": "Usage meter",
+      "detail": "Tokens and actions per tenant, exported to billing.",
+      "col": 4,
+      "row": 2,
+      "data_class": "operational"
+    },
+    {
+      "id": "traces",
+      "role": "observability",
+      "label": "Traces",
+      "detail": "Per-tenant latency, errors, refusals.",
+      "col": 5,
+      "row": 0,
+      "data_class": "operational"
+    },
+    {
+      "id": "evals",
+      "role": "evals",
+      "label": "Release evals",
+      "detail": "Task set per feature plus cross-tenant probes.",
+      "col": 5,
+      "row": 1,
+      "data_class": "internal"
+    }
+  ],
+  "flows": [
+    {
+      "id": "open",
+      "from": "tenant-user",
+      "to": "product",
+      "kind": "data",
+      "label": "Question in context",
+      "data_class": "tenant"
+    },
+    {
+      "id": "protect",
+      "from": "product",
+      "to": "edge",
+      "kind": "control",
+      "label": "Tenant rate limits",
+      "data_class": "operational"
+    },
+    {
+      "id": "send",
+      "from": "product",
+      "to": "copilot-api",
+      "kind": "data",
+      "label": "Question and screen context",
+      "data_class": "tenant"
+    },
+    {
+      "id": "scope",
+      "from": "copilot-api",
+      "to": "identity",
+      "kind": "control",
+      "label": "Resolve tenant from session",
+      "data_class": "identity"
+    },
+    {
+      "id": "retrieve",
+      "from": "copilot-api",
+      "to": "tenant-index",
+      "kind": "data",
+      "label": "Tenant namespace query",
+      "data_class": "tenant"
+    },
+    {
+      "id": "ask-model",
+      "from": "copilot-api",
+      "to": "gateway",
+      "kind": "data",
+      "label": "Prompt tagged with tenant",
+      "data_class": "tenant"
+    },
+    {
+      "id": "infer",
+      "from": "gateway",
+      "to": "model",
+      "kind": "data",
+      "label": "Model call",
+      "data_class": "tenant"
+    },
+    {
+      "id": "propose",
+      "from": "copilot-api",
+      "to": "actions",
+      "kind": "data",
+      "label": "Proposed action (dry run)",
+      "data_class": "tenant"
+    },
+    {
+      "id": "apply",
+      "from": "actions",
+      "to": "app-db",
+      "kind": "data",
+      "label": "Confirmed write with undo token",
+      "data_class": "tenant"
+    },
+    {
+      "id": "meter-usage",
+      "from": "gateway",
+      "to": "meter",
+      "kind": "telemetry",
+      "label": "Tokens per tenant",
+      "data_class": "operational"
+    },
+    {
+      "id": "telemetry",
+      "from": "copilot-api",
+      "to": "traces",
+      "kind": "telemetry",
+      "label": "Latency and refusals",
+      "data_class": "operational"
+    },
+    {
+      "id": "probe",
+      "from": "evals",
+      "to": "copilot-api",
+      "kind": "control",
+      "label": "Cross-tenant probes per release",
+      "data_class": "internal"
+    }
+  ],
+  "journey": [
+    {
+      "id": "j1",
+      "title": "Ask in context",
+      "actor": "customer",
+      "narration": "The user asks from the screen they are on. The panel sends the question with the current view, never with a tenant ID the client chose.",
+      "flows": [
+        "open",
+        "protect",
+        "send"
+      ]
+    },
+    {
+      "id": "j2",
+      "title": "Resolve the tenant",
+      "actor": "system",
+      "narration": "The API takes the tenant from the session. Retrieval can only address that tenant's namespace.",
+      "flows": [
+        "scope",
+        "retrieve"
+      ]
+    },
+    {
+      "id": "j3",
+      "title": "Answer with a metered call",
+      "actor": "agent",
+      "narration": "The gateway applies the tenant's budget and a cache key that includes the tenant, then meters tokens to that tenant.",
+      "flows": [
+        "ask-model",
+        "infer",
+        "meter-usage"
+      ]
+    },
+    {
+      "id": "j4",
+      "title": "Propose, confirm, apply",
+      "actor": "customer",
+      "narration": "Actions arrive as a dry-run diff. The user confirms; the write returns an undo token.",
+      "flows": [
+        "propose",
+        "apply"
+      ]
+    },
+    {
+      "id": "j5",
+      "title": "Probe isolation every release",
+      "actor": "operator",
+      "narration": "Release evals include requests that try to reach another tenant's data. One success blocks the release.",
+      "flows": [
+        "probe",
+        "telemetry"
+      ]
+    }
+  ],
+  "team": [
+    {
+      "lane": "customer",
+      "step": "Ask, review the diff, confirm or undo",
+      "evidence": "Apply and undo events"
+    },
+    {
+      "lane": "ai",
+      "step": "Answer from tenant data; propose typed actions",
+      "evidence": "Proposal with diff"
+    },
+    {
+      "lane": "system",
+      "step": "Tenant scope, budgets, metering",
+      "evidence": "Per-tenant usage export"
+    },
+    {
+      "lane": "reviewer",
+      "step": "Product manager reviews applied-versus-undone by feature",
+      "evidence": "Weekly feature report"
+    },
+    {
+      "lane": "operator",
+      "step": "Finance prices the feature from metered cost",
+      "evidence": "Cost per tenant"
+    }
+  ],
+  "screens": [
+    {
+      "id": "panel",
+      "device": "desktop",
+      "title": "Copilot panel",
+      "state": "success",
+      "blocks": [
+        {
+          "type": "message",
+          "from": "user",
+          "text": "Why did churn rise in the DACH segment last month?"
+        },
+        {
+          "type": "message",
+          "from": "assistant",
+          "text": "Three enterprise accounts in Germany cancelled after the price change on 1 September; they make up 71 percent of the rise. Fixture data."
+        },
+        {
+          "type": "actions",
+          "items": [
+            {
+              "label": "Create retention task list",
+              "kind": "primary"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "diff",
+      "device": "desktop",
+      "title": "Confirm action",
+      "state": "approval",
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Create 3 tasks in Retention board"
+        },
+        {
+          "type": "list",
+          "items": [
+            "+ Call Fabrikam GmbH owner",
+            "+ Offer annual plan to Northwind AG",
+            "+ Review pricing exception for Contoso DE"
+          ]
+        },
+        {
+          "type": "actions",
+          "items": [
+            {
+              "label": "Apply",
+              "kind": "primary"
+            },
+            {
+              "label": "Cancel",
+              "kind": "secondary"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "usage",
+      "device": "desktop",
+      "title": "Tenant usage",
+      "state": "default",
+      "blocks": [
+        {
+          "type": "kpis",
+          "items": [
+            {
+              "label": "Assists this month",
+              "value": "fixture"
+            },
+            {
+              "label": "Applied",
+              "value": "fixture"
+            },
+            {
+              "label": "Metered cost",
+              "value": "fixture"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mobile",
+      "device": "mobile",
+      "title": "Copilot on mobile",
+      "state": "success",
+      "blocks": [
+        {
+          "type": "message",
+          "from": "user",
+          "text": "Summarise today's open invoices"
+        },
+        {
+          "type": "message",
+          "from": "assistant",
+          "text": "12 open, 3 overdue (EUR 8,420). Fixture data."
+        }
+      ]
+    }
+  ],
+  "evals": [
+    {
+      "id": "isolation",
+      "name": "Cross-tenant leakage",
+      "threshold": "0 responses containing another tenant's data",
+      "method": "Seeded canary records per tenant; adversarial prompts."
+    },
+    {
+      "id": "confirm",
+      "name": "Write confirmation",
+      "threshold": "100 percent of writes preceded by confirmation",
+      "method": "Action-layer audit in staging."
+    },
+    {
+      "id": "applied",
+      "name": "Applied suggestion rate",
+      "threshold": "Tracked per feature; release blocks on a 20 percent drop",
+      "method": "Product analytics."
+    },
+    {
+      "id": "latency",
+      "name": "First token",
+      "threshold": "p95 <= 1.5 s",
+      "method": "Gateway telemetry."
+    }
+  ],
+  "risks": [
+    {
+      "id": "cross-tenant",
+      "risk": "Data from one tenant appears for another.",
+      "control": "Tenant from session only; namespaced index; tenant in cache key; canary probes."
+    },
+    {
+      "id": "runaway-cost",
+      "risk": "One tenant consumes the AI budget.",
+      "control": "Per-tenant budget at the gateway and plan-based limits."
+    },
+    {
+      "id": "silent-write",
+      "risk": "Assistant changes data without consent.",
+      "control": "Dry-run diff and confirmation enforced in the action layer."
+    }
+  ],
+  "realizations": {
+    "gcp": {
+      "headline": "Cloud Run API with Gemini and AlloyDB row-level security",
+      "map": {
+        "tenant-index": "gcp.alloydb",
+        "meter": "gcp.bigquery"
+      },
+      "notes": "Keep vectors beside tenant rows in AlloyDB so row-level security applies to retrieval; meter through BigQuery exports.",
+      "template": "gcp-cloud-run-gemini",
+      "scores": {
+        "performance": 4,
+        "time_to_value": 4,
+        "speed_to_execution": 4,
+        "cost_efficiency": 4,
+        "portability": 4,
+        "governance": 4
+      },
+      "rationale": "Database-enforced isolation; Postgres compatibility keeps exit cost moderate."
+    },
+    "vercel": {
+      "headline": "Next.js panel, AI Gateway per-tenant budgets, Neon row-level security",
+      "map": {
+        "meter": "vercel.neon"
+      },
+      "notes": "AI SDK streaming in the product UI; gateway tags carry the tenant for usage attribution; Neon branches support preview testing with fixture tenants.",
+      "template": "vercel-ai-gateway",
+      "scores": {
+        "performance": 5,
+        "time_to_value": 5,
+        "speed_to_execution": 5,
+        "cost_efficiency": 4,
+        "portability": 4,
+        "governance": 3
+      },
+      "rationale": "The most direct fit for a Next.js SaaS; isolation proof is on the application team."
+    },
+    "cloudflare": {
+      "headline": "Workers API, per-tenant Durable Objects and AI Gateway metering",
+      "map": {
+        "tenant-index": "cf.vectorize",
+        "app-db": "cf.d1"
+      },
+      "notes": "A Durable Object per tenant gives a natural isolation and rate-limit boundary; Vectorize namespaces separate tenant vectors.",
+      "template": "cloudflare-workers-ai",
+      "scores": {
+        "performance": 5,
+        "time_to_value": 4,
+        "speed_to_execution": 4,
+        "cost_efficiency": 5,
+        "portability": 3,
+        "governance": 3
+      },
+      "rationale": "Isolation by construction at low cost; data residency per tenant needs design."
+    },
+    "aws": {
+      "headline": "Lambda API, Bedrock with application inference profiles per tier",
+      "map": {
+        "tenant-index": "aws.aurora",
+        "app-db": "aws.aurora"
+      },
+      "notes": "Inference profiles attribute model cost; Aurora row-level security covers data and vectors.",
+      "template": null,
+      "scores": {
+        "performance": 4,
+        "time_to_value": 3,
+        "speed_to_execution": 3,
+        "cost_efficiency": 4,
+        "portability": 4,
+        "governance": 5
+      },
+      "rationale": "Strong cost attribution; more assembly."
+    },
+    "azure": {
+      "headline": "Container Apps API, Foundry Models, Azure AI Search per-tenant indexes",
+      "map": {},
+      "notes": "Index-per-tenant or filter-per-tenant in Azure AI Search depends on tenant count and size.",
+      "template": null,
+      "scores": {
+        "performance": 4,
+        "time_to_value": 3,
+        "speed_to_execution": 3,
+        "cost_efficiency": 3,
+        "portability": 3,
+        "governance": 5
+      },
+      "rationale": "Good governance; search units make many small tenants expensive."
+    },
+    "railway": {
+      "headline": "API service, Postgres row-level security, direct model API",
+      "map": {},
+      "notes": "Workable for an early SaaS; metering and budgets are application code.",
+      "template": null,
+      "scores": {
+        "performance": 4,
+        "time_to_value": 4,
+        "speed_to_execution": 4,
+        "cost_efficiency": 4,
+        "portability": 5,
+        "governance": 2
+      },
+      "rationale": "Simple and portable; governance is entirely self-built."
+    }
+  }
+}

@@ -1,0 +1,626 @@
+{
+  "schema": "ai-architect-pattern/v1",
+  "id": "ai-governance-plane",
+  "title": "AI governance plane",
+  "tagline": "One gateway, one budget ledger, one release gate for every AI workload in the company.",
+  "summary": "A shared platform sits in front of all model traffic. Product teams get approved models, keys and budgets through a portal; every call is routed, cached, scanned and attributed; releases pass an evaluation gate; finance sees cost per workload and per accepted result.",
+  "customer_job": "Let twenty product teams ship AI features fast while the company can answer what each one costs, which data it sends where, and whether it got worse.",
+  "baseline": "Each team holds its own provider keys; spend appears as one invoice line; nobody can stop a regressed prompt before customers see it.",
+  "accepted_result": "A workload release that passed its evaluation gate, with its traffic attributed and inside its budget.",
+  "industries": [
+    "financial-services",
+    "telecommunications",
+    "public-sector",
+    "retail",
+    "technology"
+  ],
+  "sophistication": "A0",
+  "primary_metric": {
+    "name": "Governed share of model traffic",
+    "definition": "Model calls routed through the plane with workload attribution, divided by all model calls observed on provider invoices."
+  },
+  "economics": {
+    "tasks": 60,
+    "adoption": 0.8,
+    "acceptance": 0.9,
+    "minutes_saved": 240,
+    "hourly_value": 95,
+    "run_cost_per_task": 4,
+    "fixed_monthly": 5000,
+    "currency": "EUR",
+    "basis": "Illustrative assumption: tasks are workload releases per month; minutes saved are setup and review time per release. Model spend savings from caching and routing are a separate measured ledger."
+  },
+  "components": [
+    {
+      "id": "teams",
+      "role": "user",
+      "label": "Product teams",
+      "detail": "Request models, keys and budgets; ship workloads.",
+      "col": 0,
+      "row": 1,
+      "data_class": "internal"
+    },
+    {
+      "id": "portal",
+      "role": "experience",
+      "label": "Developer portal",
+      "detail": "Model catalog, key issuance, budgets, eval results.",
+      "col": 1,
+      "row": 1,
+      "data_class": "internal"
+    },
+    {
+      "id": "identity",
+      "role": "identity",
+      "label": "Workload identity",
+      "detail": "Keys and tokens bound to a workload and environment.",
+      "col": 1,
+      "row": 0,
+      "data_class": "identity"
+    },
+    {
+      "id": "gateway",
+      "role": "gateway",
+      "label": "Central AI gateway",
+      "detail": "Routing, fallback, cache, quotas, attribution tags.",
+      "col": 2,
+      "row": 1,
+      "data_class": "confidential",
+      "failure_mode": "Teams bypass it with direct provider keys."
+    },
+    {
+      "id": "guardrails",
+      "role": "guardrail",
+      "label": "Guardrails",
+      "detail": "PII redaction, injection and secret detection, content policy.",
+      "col": 2,
+      "row": 0,
+      "data_class": "confidential"
+    },
+    {
+      "id": "policy",
+      "role": "store",
+      "label": "Model catalog and routing policy",
+      "detail": "Approved models, regions, data classes, fallbacks per workload.",
+      "col": 2,
+      "row": 2,
+      "data_class": "internal"
+    },
+    {
+      "id": "models",
+      "role": "model",
+      "label": "Approved model pool",
+      "detail": "Several providers and sizes behind one interface.",
+      "col": 3,
+      "row": 1,
+      "data_class": "confidential"
+    },
+    {
+      "id": "keys",
+      "role": "secrets",
+      "label": "Provider keys and BYOK",
+      "detail": "Held by the plane, never by teams.",
+      "col": 3,
+      "row": 0,
+      "data_class": "secret"
+    },
+    {
+      "id": "lake",
+      "role": "observability",
+      "label": "Telemetry and cost lake",
+      "detail": "Every call: workload, model, tokens, latency, cache, cost.",
+      "col": 4,
+      "row": 1,
+      "data_class": "operational"
+    },
+    {
+      "id": "chargeback",
+      "role": "analytics",
+      "label": "Chargeback dashboards",
+      "detail": "Cost per workload, per team and per accepted result.",
+      "col": 5,
+      "row": 1,
+      "data_class": "operational"
+    },
+    {
+      "id": "gate",
+      "role": "evals",
+      "label": "Release eval gate",
+      "detail": "Workload eval suites run in CI; regression blocks deploy.",
+      "col": 4,
+      "row": 2,
+      "data_class": "internal"
+    },
+    {
+      "id": "board",
+      "role": "review",
+      "label": "AI review board",
+      "detail": "Approves new models, data classes and high-risk workloads.",
+      "col": 3,
+      "row": 2,
+      "data_class": "internal"
+    },
+    {
+      "id": "pipelines",
+      "role": "system",
+      "label": "CI/CD pipelines",
+      "detail": "Call the gate before promotion.",
+      "col": 5,
+      "row": 2,
+      "data_class": "internal"
+    }
+  ],
+  "flows": [
+    {
+      "id": "request-access",
+      "from": "teams",
+      "to": "portal",
+      "kind": "data",
+      "label": "Workload registration",
+      "data_class": "internal"
+    },
+    {
+      "id": "issue",
+      "from": "portal",
+      "to": "identity",
+      "kind": "control",
+      "label": "Workload-bound key",
+      "data_class": "identity"
+    },
+    {
+      "id": "register",
+      "from": "portal",
+      "to": "policy",
+      "kind": "data",
+      "label": "Models, budget, data class",
+      "data_class": "internal"
+    },
+    {
+      "id": "approve",
+      "from": "board",
+      "to": "policy",
+      "kind": "control",
+      "label": "Approval for new model or data class",
+      "data_class": "internal"
+    },
+    {
+      "id": "traffic",
+      "from": "teams",
+      "to": "gateway",
+      "kind": "data",
+      "label": "Model calls with workload key",
+      "data_class": "confidential"
+    },
+    {
+      "id": "check",
+      "from": "gateway",
+      "to": "guardrails",
+      "kind": "control",
+      "label": "Scan request and response",
+      "data_class": "confidential"
+    },
+    {
+      "id": "route-policy",
+      "from": "gateway",
+      "to": "policy",
+      "kind": "control",
+      "label": "Routing and budget lookup",
+      "data_class": "internal"
+    },
+    {
+      "id": "route",
+      "from": "gateway",
+      "to": "models",
+      "kind": "data",
+      "label": "Routed call",
+      "data_class": "confidential"
+    },
+    {
+      "id": "authenticate",
+      "from": "models",
+      "to": "keys",
+      "kind": "control",
+      "label": "Provider credential",
+      "data_class": "secret"
+    },
+    {
+      "id": "emit",
+      "from": "gateway",
+      "to": "lake",
+      "kind": "telemetry",
+      "label": "Call record",
+      "data_class": "operational"
+    },
+    {
+      "id": "attribute",
+      "from": "lake",
+      "to": "chargeback",
+      "kind": "data",
+      "label": "Cost per workload",
+      "data_class": "operational"
+    },
+    {
+      "id": "gate-run",
+      "from": "pipelines",
+      "to": "gate",
+      "kind": "control",
+      "label": "Run workload evals",
+      "data_class": "internal"
+    },
+    {
+      "id": "gate-result",
+      "from": "gate",
+      "to": "portal",
+      "kind": "data",
+      "label": "Pass or block with diff",
+      "data_class": "internal"
+    }
+  ],
+  "journey": [
+    {
+      "id": "j1",
+      "title": "Register a workload",
+      "actor": "customer",
+      "narration": "A team registers its workload, data class and budget. It receives a key bound to that workload; provider keys stay in the plane.",
+      "flows": [
+        "request-access",
+        "issue",
+        "register"
+      ]
+    },
+    {
+      "id": "j2",
+      "title": "Approve what is new",
+      "actor": "reviewer",
+      "narration": "A new model, region or data class goes to the review board once; approved choices become policy, not tickets.",
+      "flows": [
+        "approve"
+      ]
+    },
+    {
+      "id": "j3",
+      "title": "Route every call",
+      "actor": "system",
+      "narration": "Calls pass guardrails, policy lookup and routing with fallback. The gateway holds the provider credential.",
+      "flows": [
+        "traffic",
+        "check",
+        "route-policy",
+        "route",
+        "authenticate"
+      ]
+    },
+    {
+      "id": "j4",
+      "title": "Attribute every cent",
+      "actor": "operator",
+      "narration": "Each call lands in the cost lake with its workload tag; dashboards show cost per accepted result, not only per token.",
+      "flows": [
+        "emit",
+        "attribute"
+      ]
+    },
+    {
+      "id": "j5",
+      "title": "Block regressions before customers see them",
+      "actor": "reviewer",
+      "narration": "Pipelines run the workload's eval suite before promotion. A regression blocks the deploy and shows the failing cases.",
+      "flows": [
+        "gate-run",
+        "gate-result"
+      ]
+    }
+  ],
+  "team": [
+    {
+      "lane": "customer",
+      "step": "Product team registers, ships, reads its cost and eval results",
+      "evidence": "Workload record"
+    },
+    {
+      "lane": "ai",
+      "step": "Models serve calls through the plane only",
+      "evidence": "Routed-call share"
+    },
+    {
+      "lane": "system",
+      "step": "Gateway enforces policy, budgets and guardrails",
+      "evidence": "Blocked and redacted call log"
+    },
+    {
+      "lane": "reviewer",
+      "step": "Review board approves models and data classes",
+      "evidence": "Decision records"
+    },
+    {
+      "lane": "operator",
+      "step": "Platform team and finance reconcile invoices against the lake monthly",
+      "evidence": "Reconciliation report"
+    }
+  ],
+  "screens": [
+    {
+      "id": "portal",
+      "device": "desktop",
+      "title": "Developer portal",
+      "state": "default",
+      "blocks": [
+        {
+          "type": "table",
+          "columns": [
+            "Workload",
+            "Models",
+            "Budget",
+            "Gate"
+          ],
+          "rows": [
+            [
+              "support-agent",
+              "claude-sonnet-5, gemini-3.8-flash",
+              "EUR 3,000",
+              "Pass"
+            ],
+            [
+              "invoice-intake",
+              "gemini-3.8-flash",
+              "EUR 1,200",
+              "Pass"
+            ],
+            [
+              "sales-copilot",
+              "claude-sonnet-5",
+              "EUR 2,500",
+              "Blocked"
+            ]
+          ]
+        },
+        {
+          "type": "meta",
+          "text": "Fixture data."
+        }
+      ]
+    },
+    {
+      "id": "chargeback",
+      "device": "desktop",
+      "title": "Chargeback",
+      "state": "default",
+      "blocks": [
+        {
+          "type": "kpis",
+          "items": [
+            {
+              "label": "Governed traffic",
+              "value": "fixture"
+            },
+            {
+              "label": "Cache savings",
+              "value": "fixture"
+            },
+            {
+              "label": "Cost per accepted result",
+              "value": "fixture"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "blocked",
+      "device": "desktop",
+      "title": "Release blocked",
+      "state": "refusal",
+      "blocks": [
+        {
+          "type": "status",
+          "tone": "warning",
+          "text": "sales-copilot v1.8 blocked: citation precision 0.88 (gate 0.95)."
+        },
+        {
+          "type": "list",
+          "items": [
+            "12 failing cases attached",
+            "Previous release remains live"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "budget-alert",
+      "device": "mobile",
+      "title": "Budget alert",
+      "state": "warning",
+      "blocks": [
+        {
+          "type": "status",
+          "tone": "warning",
+          "text": "support-agent reached 80 percent of its monthly model budget."
+        },
+        {
+          "type": "list",
+          "items": [
+            "Cache hit rate fell after the prompt change on Tuesday",
+            "Fallback model handled 12 percent of calls"
+          ]
+        },
+        {
+          "type": "actions",
+          "items": [
+            {
+              "label": "Open workload",
+              "kind": "primary"
+            },
+            {
+              "label": "Raise budget",
+              "kind": "secondary"
+            }
+          ]
+        },
+        {
+          "type": "meta",
+          "text": "Fixture data."
+        }
+      ]
+    }
+  ],
+  "evals": [
+    {
+      "id": "coverage",
+      "name": "Governed traffic share",
+      "threshold": ">= 0.95 of invoiced model spend traced to a workload",
+      "method": "Monthly reconciliation of the lake against provider invoices."
+    },
+    {
+      "id": "gate",
+      "name": "Gate coverage",
+      "threshold": "100 percent of production AI releases ran the gate",
+      "method": "Pipeline audit."
+    },
+    {
+      "id": "guardrail-fp",
+      "name": "Guardrail false positives",
+      "threshold": "<= 1 percent of benign calls blocked",
+      "method": "Labelled benign traffic sample."
+    },
+    {
+      "id": "overhead",
+      "name": "Gateway overhead",
+      "threshold": "p95 added latency <= 30 ms",
+      "method": "Synthetic load."
+    }
+  ],
+  "risks": [
+    {
+      "id": "bypass",
+      "risk": "Teams call providers directly.",
+      "control": "Provider keys exist only in the plane; egress rules; invoice reconciliation."
+    },
+    {
+      "id": "single-point",
+      "risk": "Gateway outage stops all AI features.",
+      "control": "Multi-region deployment, fail-open policy per workload class, tested runbook."
+    },
+    {
+      "id": "metric-gaming",
+      "risk": "Spend growth read as success.",
+      "control": "Report cost per accepted result beside spend; provider consumption is a separate ledger."
+    }
+  ],
+  "realizations": {
+    "gcp": {
+      "headline": "Apigee as AI gateway with Model Armor and BigQuery chargeback",
+      "map": {
+        "portal": "gcp.cloud-run",
+        "policy": "gcp.firestore",
+        "models": "gcp.gemini",
+        "lake": "gcp.bigquery",
+        "chargeback": "gcp.bigquery",
+        "gate": "gcp.evaluation",
+        "board": "gcp.review-console"
+      },
+      "notes": "Apigee policies enforce token quotas and routing; Model Armor screens prompts and responses; BigQuery holds the call lake for Looker Studio chargeback.",
+      "template": null,
+      "scores": {
+        "performance": 4,
+        "time_to_value": 3,
+        "speed_to_execution": 3,
+        "cost_efficiency": 4,
+        "portability": 4,
+        "governance": 5
+      },
+      "rationale": "Enterprise-grade controls; Apigee configuration is a skill the platform team must hold."
+    },
+    "vercel": {
+      "headline": "AI Gateway with budgets, BYOK and observability",
+      "map": {
+        "portal": "vercel.nextjs",
+        "policy": "vercel.edge-config",
+        "lake": "vercel.observability",
+        "chargeback": "vercel.neon",
+        "board": "portable.review"
+      },
+      "notes": "AI Gateway already provides one key for many providers, fallbacks, BYOK and usage views; the plane adds workload registration and the release gate.",
+      "template": "vercel-ai-gateway",
+      "scores": {
+        "performance": 5,
+        "time_to_value": 5,
+        "speed_to_execution": 5,
+        "cost_efficiency": 4,
+        "portability": 4,
+        "governance": 3
+      },
+      "rationale": "Fastest path for teams already on Vercel; enterprise data-residency and audit needs confirmation."
+    },
+    "cloudflare": {
+      "headline": "AI Gateway with guardrails, unified billing and Logpush",
+      "map": {
+        "policy": "cf.kv",
+        "lake": "cf.r2",
+        "chargeback": "cf.analytics-engine",
+        "portal": "cf.workers-assets"
+      },
+      "notes": "AI Gateway handles caching, rate limits, guardrails and unified billing across providers; logs flow to R2 for chargeback.",
+      "template": "cloudflare-workers-ai",
+      "scores": {
+        "performance": 5,
+        "time_to_value": 4,
+        "speed_to_execution": 4,
+        "cost_efficiency": 5,
+        "portability": 4,
+        "governance": 4
+      },
+      "rationale": "Strong edge control plane at low cost; release gating is application work."
+    },
+    "aws": {
+      "headline": "Bedrock inference profiles, Guardrails and CUR-based chargeback",
+      "map": {
+        "policy": "aws.dynamodb",
+        "chargeback": "aws.cur",
+        "gate": "aws.bedrock-evaluations"
+      },
+      "notes": "Application inference profiles tag cost per workload; Guardrails apply per profile; CUR feeds dashboards.",
+      "template": null,
+      "scores": {
+        "performance": 4,
+        "time_to_value": 3,
+        "speed_to_execution": 3,
+        "cost_efficiency": 4,
+        "portability": 3,
+        "governance": 5
+      },
+      "rationale": "Native attribution for Bedrock traffic; non-AWS models need a separate gateway."
+    },
+    "azure": {
+      "headline": "API Management AI gateway with Content Safety and Cost Management",
+      "map": {
+        "policy": "azure.cosmos"
+      },
+      "notes": "API Management token limits, semantic cache and load balancing across Foundry deployments are documented gateway capabilities.",
+      "template": null,
+      "scores": {
+        "performance": 4,
+        "time_to_value": 4,
+        "speed_to_execution": 3,
+        "cost_efficiency": 4,
+        "portability": 3,
+        "governance": 5
+      },
+      "rationale": "Mature pattern on Azure; tier choice drives cost."
+    },
+    "railway": {
+      "headline": "Self-hosted gateway proxy with Postgres and Grafana",
+      "map": {},
+      "notes": "An open-source LLM proxy you operate gives routing and budgets; you own uptime, upgrades and security.",
+      "template": null,
+      "scores": {
+        "performance": 3,
+        "time_to_value": 3,
+        "speed_to_execution": 4,
+        "cost_efficiency": 4,
+        "portability": 5,
+        "governance": 2
+      },
+      "rationale": "Portable and cheap; operational risk sits with your team."
+    }
+  }
+}

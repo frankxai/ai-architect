@@ -81,6 +81,7 @@ Chapters 14 to 17 now draft that shell. The [status and roadmap](strategy/roadma
 | [18. Customer solution systems](manuscript/18-customer-solution-systems.md) | How do customer screens, exact diagrams, provider alternatives and evidence become one portable handoff? |
 
 | [19. The living architecture practice](manuscript/19-the-living-architecture-practice.md) | How do a book, workbench, design tools and quality contracts become an evidence-producing practice? |
+| [20. One workload, many clouds](manuscript/20-multi-cloud-realization.md) | How does one workload pattern become comparable realizations on six providers, exact views and one-click templates that share a tested contract? |
 
 **Appendices**
 
@@ -111,7 +112,7 @@ Inside this repository, the [`/architect` plugin](../README.md) runs the same me
 
 ## Publication state
 
-Edition `2026.0.6-working` is a public working edition, not the final annual book. It has 22 manuscript files, a source and claim ledger, and an executable authority-boundary lab. Final-book source, security, rights, editorial, and author gates remain open. See [edition.yaml](edition.yaml) and [review gates](editorial/review-gates.md). Claims of full field coverage, human expert certification, and production benchmark results are not made.
+Edition `2026.0.7-working` is a public working edition, not the final annual book. It has 23 manuscript files, a source and claim ledger, and an executable authority-boundary lab. Final-book source, security, rights, editorial, and author gates remain open. See [edition.yaml](edition.yaml) and [review gates](editorial/review-gates.md). Claims of full field coverage, human expert certification, and production benchmark results are not made.
 
 Start with the [four decisions](manuscript/02-four-decisions.md), check the [status and roadmap](strategy/roadmap.md), run the [authority-boundary lab](labs/delegated-authority/README.md), or read the [September briefing](publishing/issues/AAB-2026-09.md). The [architecture hub](https://www.frankx.ai/ai-architecture) connects this working source to the wider field guide.
 

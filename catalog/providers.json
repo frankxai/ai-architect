@@ -1,0 +1,342 @@
+{
+  "schema": "ai-architect-providers/v1",
+  "criteria": [
+    {
+      "id": "performance",
+      "title": "Performance",
+      "question": "Does the default path meet the latency and quality budget for this workload?"
+    },
+    {
+      "id": "time_to_value",
+      "title": "Time to value",
+      "question": "How quickly does a team reach a first accepted result with managed parts?"
+    },
+    {
+      "id": "speed_to_execution",
+      "title": "Speed to execution",
+      "question": "How much undifferentiated wiring stands between the design and a running slice?"
+    },
+    {
+      "id": "cost_efficiency",
+      "title": "Cost per accepted result",
+      "question": "How predictable and low is the all-attempt cost at the stated volume?"
+    },
+    {
+      "id": "portability",
+      "title": "Exit cost",
+      "question": "How cheaply can the workload move models, data or runtime later?"
+    },
+    {
+      "id": "governance",
+      "title": "Governance fit",
+      "question": "Do identity, residency, audit and policy controls exist without custom building?"
+    }
+  ],
+  "scoring_note": "Scores are architect judgement on a 1-5 scale for the pattern as specified, recorded with a rationale. They are not benchmarks. A provider's consumption opportunity never changes a customer score.",
+  "providers": [
+    {
+      "id": "gcp",
+      "name": "Google Cloud",
+      "tier": "primary",
+      "accent": "#4285F4",
+      "stance": "Data and model estate in one place: Gemini on Agent Platform, Agent Search and RAG Engine, AlloyDB and BigQuery, Cloud Run for everything else.",
+      "architecture_center": "https://cloud.google.com/architecture",
+      "pricing": "https://cloud.google.com/pricing",
+      "icon_policy": "Four official Google Cloud legacy console icons with recorded hashes; other services use role glyphs.",
+      "deploy": {
+        "kind": "cloud-run-button",
+        "template": "gcp-cloud-run-gemini"
+      },
+      "consumption_drivers": [
+        "Gemini input and output tokens",
+        "Cloud Run vCPU-seconds and requests",
+        "Agent Search queries and index storage",
+        "AlloyDB or Cloud SQL instance hours",
+        "BigQuery slots or bytes scanned"
+      ],
+      "sources": [
+        "gcp-name-changes",
+        "gcp-gemini-38-flash",
+        "gcp-architecture-center"
+      ],
+      "defaults": {
+        "experience": "gcp.cloud-run",
+        "edge": "gcp.cloud-armor",
+        "identity": "gcp.identity-platform",
+        "api": "gcp.cloud-run",
+        "gateway": "gcp.apigee",
+        "guardrail": "gcp.model-armor",
+        "secrets": "gcp.secret-manager",
+        "orchestrator": "gcp.agent-runtime",
+        "agent": "gcp.adk-agents",
+        "model": "gcp.gemini",
+        "tools": "gcp.cloud-run-mcp",
+        "sandbox": "gcp.cloud-run-jobs",
+        "workflow": "gcp.workflows",
+        "queue": "gcp.pubsub",
+        "memory": "gcp.firestore",
+        "retrieval": "gcp.agent-search",
+        "ingest": "gcp.document-ai",
+        "store": "gcp.alloydb",
+        "objects": "gcp.cloud-storage",
+        "analytics": "gcp.bigquery",
+        "observability": "gcp.observability",
+        "evals": "gcp.evaluation",
+        "review": "gcp.review-console"
+      }
+    },
+    {
+      "id": "vercel",
+      "name": "Vercel",
+      "tier": "primary",
+      "accent": "#EDEDED",
+      "stance": "Fastest path from design to a running, observable product: Next.js, AI SDK 7, AI Gateway with OIDC, Workflow, Sandbox; data through Marketplace partners.",
+      "architecture_center": "https://vercel.com/docs",
+      "pricing": "https://vercel.com/pricing",
+      "icon_policy": "No vendor icons are redistributed; role glyphs with the provider name.",
+      "deploy": {
+        "kind": "vercel-clone",
+        "template": "vercel-ai-gateway"
+      },
+      "consumption_drivers": [
+        "AI Gateway tokens across providers",
+        "Fluid compute active CPU and memory",
+        "Function invocations",
+        "Workflow steps and Sandbox seconds",
+        "Marketplace database usage (billed by the partner)"
+      ],
+      "sources": [
+        "vercel-ai-gateway-sdk",
+        "vercel-ai-gateway-oidc",
+        "vercel-workflow",
+        "vercel-sandbox"
+      ],
+      "defaults": {
+        "experience": "vercel.nextjs",
+        "edge": "vercel.firewall",
+        "identity": "vercel.auth",
+        "api": "vercel.functions",
+        "gateway": "vercel.ai-gateway",
+        "guardrail": "vercel.guardrail",
+        "secrets": "vercel.env-oidc",
+        "orchestrator": "vercel.ai-sdk-agent",
+        "agent": "vercel.ai-sdk-agent",
+        "model": "vercel.gateway-models",
+        "tools": "vercel.mcp",
+        "sandbox": "vercel.sandbox",
+        "workflow": "vercel.workflow",
+        "queue": "vercel.queues",
+        "memory": "vercel.upstash",
+        "retrieval": "vercel.neon-vector",
+        "ingest": "vercel.workflow",
+        "store": "vercel.neon",
+        "objects": "vercel.blob",
+        "analytics": "vercel.neon",
+        "observability": "vercel.observability",
+        "evals": "portable.evals",
+        "review": "portable.review"
+      }
+    },
+    {
+      "id": "cloudflare",
+      "name": "Cloudflare",
+      "tier": "primary",
+      "accent": "#F38020",
+      "stance": "Edge-native runtime with state: Workers, Agents SDK on Durable Objects, Workers AI and AI Gateway, AI Search, D1 and R2, Access in front.",
+      "architecture_center": "https://developers.cloudflare.com/reference-architecture/",
+      "pricing": "https://developers.cloudflare.com/workers/platform/pricing/",
+      "icon_policy": "No vendor icons are redistributed; role glyphs with the provider name.",
+      "deploy": {
+        "kind": "cloudflare-button",
+        "template": "cloudflare-workers-ai"
+      },
+      "consumption_drivers": [
+        "Workers requests and CPU time",
+        "Workers AI neurons or AI Gateway unified billing",
+        "Durable Objects requests and duration",
+        "R2 storage and operations",
+        "AI Search and Vectorize queries"
+      ],
+      "sources": [
+        "cf-deploy-buttons",
+        "cf-ai-gateway-binding",
+        "cf-ai-search",
+        "cf-agents-models"
+      ],
+      "defaults": {
+        "experience": "cf.workers-assets",
+        "edge": "cf.waf",
+        "identity": "cf.access",
+        "api": "cf.workers",
+        "gateway": "cf.ai-gateway",
+        "guardrail": "cf.guardrails",
+        "secrets": "cf.secrets-store",
+        "orchestrator": "cf.agents",
+        "agent": "cf.agents",
+        "model": "cf.workers-ai",
+        "tools": "cf.mcp",
+        "sandbox": "cf.sandbox",
+        "workflow": "cf.workflows",
+        "queue": "cf.queues",
+        "memory": "cf.durable-objects",
+        "retrieval": "cf.ai-search",
+        "ingest": "cf.ai-search",
+        "store": "cf.d1",
+        "objects": "cf.r2",
+        "analytics": "cf.analytics-engine",
+        "observability": "cf.observability",
+        "evals": "portable.evals",
+        "review": "cf.review"
+      }
+    },
+    {
+      "id": "aws",
+      "name": "AWS",
+      "tier": "secondary",
+      "accent": "#FF9900",
+      "stance": "Broadest managed catalog: Claude and other models on Bedrock, AgentCore runtime, memory and gateway, Knowledge Bases, Step Functions.",
+      "architecture_center": "https://aws.amazon.com/architecture/",
+      "pricing": "https://aws.amazon.com/pricing/",
+      "icon_policy": "No vendor icons are redistributed; role glyphs with the provider name.",
+      "deploy": {
+        "kind": "manual",
+        "template": null
+      },
+      "consumption_drivers": [
+        "Bedrock input and output tokens",
+        "AgentCore runtime and memory usage",
+        "Lambda and API Gateway requests",
+        "Knowledge Base storage and retrieval",
+        "DynamoDB capacity"
+      ],
+      "sources": [
+        "aws-agentcore",
+        "aws-bedrock-managed-kb",
+        "aws-genai-lens"
+      ],
+      "defaults": {
+        "experience": "aws.amplify",
+        "edge": "aws.cloudfront-waf",
+        "identity": "aws.cognito",
+        "api": "aws.api-lambda",
+        "gateway": "aws.bedrock-routing",
+        "guardrail": "aws.bedrock-guardrails",
+        "secrets": "aws.secrets-manager",
+        "orchestrator": "aws.agentcore-runtime",
+        "agent": "aws.agentcore-runtime",
+        "model": "aws.bedrock-claude",
+        "tools": "aws.agentcore-gateway",
+        "sandbox": "aws.agentcore-code",
+        "workflow": "aws.step-functions",
+        "queue": "aws.sqs",
+        "memory": "aws.agentcore-memory",
+        "retrieval": "aws.bedrock-kb",
+        "ingest": "aws.textract",
+        "store": "aws.dynamodb",
+        "objects": "aws.s3",
+        "analytics": "aws.cur",
+        "observability": "aws.cloudwatch",
+        "evals": "aws.bedrock-evaluations",
+        "review": "portable.review"
+      }
+    },
+    {
+      "id": "azure",
+      "name": "Microsoft Azure",
+      "tier": "secondary",
+      "accent": "#3A96DD",
+      "stance": "Microsoft 365 and Entra estates: Microsoft Foundry models and Agent Service, Azure AI Search, API Management as AI gateway.",
+      "architecture_center": "https://learn.microsoft.com/azure/architecture/",
+      "pricing": "https://azure.microsoft.com/pricing/",
+      "icon_policy": "No vendor icons are redistributed; role glyphs with the provider name.",
+      "deploy": {
+        "kind": "manual",
+        "template": null
+      },
+      "consumption_drivers": [
+        "Foundry model tokens or provisioned throughput",
+        "Azure AI Search units",
+        "Container Apps vCPU-seconds",
+        "Cosmos DB request units",
+        "API Management tier"
+      ],
+      "sources": [
+        "azure-foundry",
+        "azure-ai-pattern"
+      ],
+      "defaults": {
+        "experience": "azure.static-web-apps",
+        "edge": "azure.front-door",
+        "identity": "azure.entra",
+        "api": "azure.container-apps",
+        "gateway": "azure.apim",
+        "guardrail": "azure.content-safety",
+        "secrets": "azure.key-vault",
+        "orchestrator": "azure.foundry-agents",
+        "agent": "azure.foundry-agents",
+        "model": "azure.foundry-models",
+        "tools": "azure.mcp-container-apps",
+        "sandbox": "azure.dynamic-sessions",
+        "workflow": "azure.durable-functions",
+        "queue": "azure.service-bus",
+        "memory": "azure.cosmos",
+        "retrieval": "azure.ai-search",
+        "ingest": "azure.document-intelligence",
+        "store": "azure.cosmos",
+        "objects": "azure.blob",
+        "analytics": "azure.cost-powerbi",
+        "observability": "azure.monitor",
+        "evals": "azure.foundry-evaluations",
+        "review": "portable.review"
+      }
+    },
+    {
+      "id": "railway",
+      "name": "Railway",
+      "tier": "secondary",
+      "accent": "#B279F2",
+      "stance": "Container-first teams who call model APIs directly: services, Postgres with pgvector, Redis, cron, config as code. Least managed AI, most control.",
+      "architecture_center": "https://docs.railway.com/",
+      "pricing": "https://railway.com/pricing",
+      "icon_policy": "No vendor icons are redistributed; role glyphs with the provider name.",
+      "deploy": {
+        "kind": "manual",
+        "template": null
+      },
+      "consumption_drivers": [
+        "Service vCPU and memory minutes",
+        "Postgres and Redis volume usage",
+        "Egress",
+        "Model provider tokens (billed by the model vendor)"
+      ],
+      "sources": [
+        "railway-docs"
+      ],
+      "defaults": {
+        "experience": "railway.service",
+        "edge": "railway.edge",
+        "identity": "railway.auth",
+        "api": "railway.service",
+        "gateway": "railway.gateway",
+        "guardrail": "railway.guardrail",
+        "secrets": "railway.variables",
+        "orchestrator": "railway.worker",
+        "agent": "railway.worker",
+        "model": "railway.model-api",
+        "tools": "railway.service",
+        "sandbox": "railway.sandbox",
+        "workflow": "railway.worker",
+        "queue": "railway.redis",
+        "memory": "railway.redis",
+        "retrieval": "railway.postgres-vector",
+        "ingest": "railway.worker",
+        "store": "railway.postgres",
+        "objects": "railway.objects",
+        "analytics": "railway.postgres",
+        "observability": "railway.observability",
+        "evals": "portable.evals",
+        "review": "portable.review"
+      }
+    }
+  ]
+}
