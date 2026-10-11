@@ -29,6 +29,7 @@ const requiredChapters = [
   '15-identity-security-delivery.md',
   '16-platform-release-reliability.md',
   '17-governance-law-operating-model.md',
+  '18-customer-solution-systems.md',
   'appendix-a-model-snapshot.md',
   'appendix-b-decision-records.md',
 ];

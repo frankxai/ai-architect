@@ -220,3 +220,7 @@ npm test
 
 Apache-2.0 for original software and technical documentation, subject to the
 express exceptions in [LICENSING.md](LICENSING.md). Frank Riemer / FrankX.
+
+## Customer solution reference
+
+The [customer solution kit](solution-kit/README.md) compiles a public synthetic portal and synchronized diagram exports. [Guide chapter 18](guide/manuscript/18-customer-solution-systems.md) connects customer screens, provider alternatives, economics and operating evidence. This is a working reference: no depicted cloud workload is deployed, and the existing stage-agent write scope is unchanged.

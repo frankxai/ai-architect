@@ -353,3 +353,53 @@ sources:
     review_by: 2026-10-15
     accessed_on: 2026-10-05
     review_receipt: releases/2026-10-05-source-review.md
+  - id: S42
+    title: Official Google Cloud product icons
+    publisher: Google
+    kind: vendor-documentation
+    url: https://cloud.google.com/icons
+    supports: Official icon sets and legacy console SVG downloads.
+    volatility: high
+    accessed_on: 2026-10-11
+    review_by: 2026-10-18
+    review_receipt: releases/2026-10-11-solution-systems.md
+  - id: S43
+    title: Cloud Run AI use cases
+    publisher: Google
+    kind: vendor-documentation
+    url: https://docs.cloud.google.com/run/docs/ai/use-cases
+    supports: Cloud Run agent, model integration and RAG use cases.
+    volatility: high
+    accessed_on: 2026-10-11
+    review_by: 2026-10-18
+    review_receipt: releases/2026-10-11-solution-systems.md
+  - id: S44
+    title: Google Cloud model catalog
+    publisher: Google
+    kind: vendor-documentation
+    url: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/google-models
+    supports: Current resolved model documentation and naming; account availability remains untested.
+    volatility: high
+    accessed_on: 2026-10-11
+    review_by: 2026-10-18
+    review_receipt: releases/2026-10-11-solution-systems.md
+  - id: S45
+    title: OpenAI Responses image generation
+    publisher: OpenAI
+    kind: vendor-documentation
+    url: https://developers.openai.com/api/docs/guides/tools-image-generation
+    supports: Current API image tool model guidance; no model call or account availability proof.
+    volatility: high
+    accessed_on: 2026-10-11
+    review_by: 2026-10-18
+    review_receipt: releases/2026-10-11-solution-systems.md
+  - id: S46
+    title: OpenAI API deprecations
+    publisher: OpenAI
+    kind: vendor-documentation
+    url: https://developers.openai.com/api/docs/deprecations
+    supports: Scheduled removal date for the API chatgpt-image-latest alias, not ChatGPT UI availability.
+    volatility: high
+    accessed_on: 2026-10-11
+    review_by: 2026-10-18
+    review_receipt: releases/2026-10-11-solution-systems.md

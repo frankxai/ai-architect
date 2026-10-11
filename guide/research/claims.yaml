@@ -438,3 +438,66 @@ claims:
     location: manuscript/17-governance-law-operating-model.md
     status: proposed
     review_by: 2027-03-04
+  - id: C064
+    class: prescription
+    statement: "One versioned solution specification should generate customer, architecture and handoff views with shared component identities."
+    sources: [ S31, S32 ]
+    location: manuscript/18-customer-solution-systems.md
+    status: proposed
+    review_by: 2026-10-18
+  - id: C065
+    class: prescription
+    statement: "Each artifact maturity must follow its own exact-revision evidence; a working portal cannot promote a depicted workload."
+    sources: [ S31, S32 ]
+    location: manuscript/18-customer-solution-systems.md
+    status: proposed
+    review_by: 2026-10-18
+  - id: C066
+    class: prescription
+    statement: "Use code or reviewed specifications for exact architecture diagrams; use generated art for conceptual stories with exact labels and icons composed separately."
+    sources: [ S42 ]
+    location: manuscript/18-customer-solution-systems.md
+    status: proposed
+    review_by: 2026-10-18
+  - id: C067
+    class: prescription
+    statement: "Report customer accepted-result economics and attributable provider consumption as distinct ledgers."
+    sources: [ S31, S32 ]
+    location: manuscript/18-customer-solution-systems.md
+    status: proposed
+    review_by: 2026-10-18
+  - id: C068
+    class: example
+    statement: "The assumed research scenario yields 480 accepted results, EUR 5760 gross capacity value and EUR 4560 net capacity value after EUR 1200 all-attempt cost; these are not measured results."
+    sources: [ S31 ]
+    location: manuscript/18-customer-solution-systems.md
+    status: illustrative
+    review_by: 2026-10-18
+  - id: C069
+    class: prescription
+    statement: "Treat architectural inventions as contribution hypotheses until prior work and independent experiments support novelty and benefit."
+    sources: [ S31, S32 ]
+    location: manuscript/18-customer-solution-systems.md
+    status: proposed
+    review_by: 2026-10-18
+  - id: C070
+    class: prescription
+    statement: "A portable acceptance capsule should bind specification, source revision, configuration, tests, unresolved findings, operations owner, rollback and export."
+    sources: [ S31, S32, S43 ]
+    location: manuscript/18-customer-solution-systems.md
+    status: proposed
+    review_by: 2026-10-18
+  - id: C071
+    class: fact
+    statement: "The inspected OpenAI Responses guide recommends GPT Image 2.5 Sunburst for precise editing and Flare for fast generation."
+    sources: [ S45 ]
+    location: manuscript/18-customer-solution-systems.md
+    status: source-supported
+    review_by: 2026-10-18
+  - id: C072
+    class: fact
+    statement: "OpenAI schedules API removal of chatgpt-image-latest on 1 December 2026; this does not establish ChatGPT UI availability."
+    sources: [ S46 ]
+    location: manuscript/18-customer-solution-systems.md
+    status: source-supported
+    review_by: 2026-10-18

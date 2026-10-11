@@ -78,6 +78,8 @@ Chapters 14 to 17 now draft that shell. The [status and roadmap](strategy/roadma
 | [16. Platform, release, reliability, and retirement](manuscript/16-platform-release-reliability.md) | Where does it run, how does it change, fail, recover, and stop? |
 | [17. Governance, law, and the operating model](manuscript/17-governance-law-operating-model.md) | Who decides, and what evidence answers an auditor or regulator? |
 
+| [18. Customer solution systems](manuscript/18-customer-solution-systems.md) | How do customer screens, exact diagrams, provider alternatives and evidence become one portable handoff? |
+
 **Appendices**
 
 | Appendix | Question answered |
@@ -107,7 +109,7 @@ Inside this repository, the [`/architect` plugin](../README.md) runs the same me
 
 ## Publication state
 
-Edition `2026.0.4-working` is a public working edition, not the final annual book. It has 20 manuscript files, a source and claim ledger, and an executable authority-boundary lab. Final-book source, security, rights, editorial, and author gates remain open. See [edition.yaml](edition.yaml) and [review gates](editorial/review-gates.md). Claims of full field coverage, human expert certification, and production benchmark results are not made.
+Edition `2026.0.5-working` is a public working edition, not the final annual book. It has 21 manuscript files, a source and claim ledger, and an executable authority-boundary lab. Final-book source, security, rights, editorial, and author gates remain open. See [edition.yaml](edition.yaml) and [review gates](editorial/review-gates.md). Claims of full field coverage, human expert certification, and production benchmark results are not made.
 
 Start with the [four decisions](manuscript/02-four-decisions.md), check the [status and roadmap](strategy/roadmap.md), run the [authority-boundary lab](labs/delegated-authority/README.md), or read the [September briefing](publishing/issues/AAB-2026-09.md). The [architecture hub](https://www.frankx.ai/ai-architecture) connects this working source to the wider field guide.
 

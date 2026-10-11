@@ -9,7 +9,7 @@ function fixture() {
 }
 // Deliberately fixed to the access date of the checked-in source-review fixture.
 // The guide quality command separately enforces freshness against today's date.
-const validate = (data) => validateLedgers(data, '2026-10-05');
+const validate = (data) => validateLedgers(data, '2026-10-11');
 
 test('current working edition validates without certifying final review', () => {
   const data = fixture();
@@ -23,7 +23,7 @@ test('real calendar dates, including leap years', () => {
 });
 test('future access dates remain invalid after a source refresh', () => {
   const data = fixture();
-  data.sources.sources[0].accessed_on = '2026-10-06';
+  data.sources.sources[0].accessed_on = '2026-10-12';
   assert.match(validate(data).join('\n'), /future access date/);
 });
 test('duplicate YAML keys and unsafe aliases fail parsing', () => {
