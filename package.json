@@ -24,6 +24,7 @@
     "guide:export": "node guide/scripts/export-book.mjs",
     "catalog:compile": "node catalog/compile.mjs",
     "catalog:test": "node --test catalog/compile.test.mjs",
+    "catalog:ecosystem": "node catalog/compile.mjs --ecosystem",
     "templates:answer": "node templates/deploy/answer-core/sync.mjs --check && node --test templates/deploy/answer-core/conformance.test.mjs"
   },
   "author": "Frank Riemer <frank@frankx.ai>",

@@ -1,0 +1,302 @@
+{
+  "schema": "ai-architect-inventions/v1",
+  "policy": "Field entries are published work that changed how AI systems are built. Each cites its primary record (an arXiv first version or a dated announcement) and names the catalog roles it shaped; the date is that record's date, not a claim about who was first. Our entries are contribution hypotheses: each names the files that implement it, the evidence for its present status and an experiment that could falsify it. Novelty is unassessed for every one of them; none is a patent, first-of-its-kind or proven-return claim. arXiv records were matched by identifier, title and first author against a research index on the check date.",
+  "checked_on": "2026-10-14",
+  "kinds": [
+    { "id": "model", "title": "Model architecture and scale" },
+    { "id": "adaptation", "title": "Adaptation" },
+    { "id": "alignment", "title": "Alignment" },
+    { "id": "serving", "title": "Serving efficiency" },
+    { "id": "retrieval", "title": "Retrieval" },
+    { "id": "reasoning", "title": "Reasoning" },
+    { "id": "agents", "title": "Agents and tools" },
+    { "id": "security", "title": "Security" },
+    { "id": "evaluation", "title": "Evaluation" },
+    { "id": "protocol", "title": "Interfaces and protocols" }
+  ],
+  "statuses": [
+    { "id": "implemented", "title": "Implemented", "meaning": "Runs in this repository and is covered by a test or gate." },
+    { "id": "partial", "title": "Partial", "meaning": "Part of the mechanism runs; the evidence named is incomplete." },
+    { "id": "proposed", "title": "Proposed", "meaning": "Specified only; nothing runs." }
+  ],
+  "field": [
+    {
+      "id": "hnsw", "name": "Hierarchical navigable small-world graphs", "kind": "retrieval", "date": "2016-03-30", "origin": "Malkov and Yashunin",
+      "arxiv": { "id": "1603.09320", "title": "Efficient and robust approximate nearest neighbor search using Hierarchical Navigable Small World graphs" },
+      "consequence": "Graph-based approximate nearest-neighbour search became the default index inside vector stores, which is what makes embedding retrieval practical at corpus scale.",
+      "roles": ["retrieval", "store"]
+    },
+    {
+      "id": "transformer", "name": "The Transformer", "kind": "model", "date": "2017-06-12", "origin": "Vaswani et al.",
+      "arxiv": { "id": "1706.03762", "title": "Attention Is All You Need" },
+      "consequence": "Self-attention replaced recurrence, so training parallelised across sequence positions; every model the catalog routes to descends from this architecture.",
+      "roles": ["model"]
+    },
+    {
+      "id": "scaling-laws", "name": "Neural scaling laws", "kind": "model", "date": "2020-01-23", "origin": "Kaplan et al.",
+      "arxiv": { "id": "2001.08361", "title": "Scaling Laws for Neural Language Models" },
+      "consequence": "Loss was shown to fall predictably with parameters, data and compute, which turned model training into a capital-planning problem and explains why most teams buy models rather than train them.",
+      "roles": ["model"]
+    },
+    {
+      "id": "dense-passage-retrieval", "name": "Dense passage retrieval", "kind": "retrieval", "date": "2020-04-10", "origin": "Karpukhin et al.",
+      "arxiv": { "id": "2004.04906", "title": "Dense Passage Retrieval for Open-Domain Question Answering" },
+      "consequence": "Learned dual encoders retrieved passages that keyword search missed, establishing embeddings computed at ingest time as a retrieval baseline.",
+      "roles": ["retrieval", "ingest"]
+    },
+    {
+      "id": "colbert", "name": "Late-interaction retrieval (ColBERT)", "kind": "retrieval", "date": "2020-04-27", "origin": "Khattab and Zaharia",
+      "arxiv": { "id": "2004.12832", "title": "ColBERT: Efficient and Effective Passage Search via Contextualized Late Interaction over BERT" },
+      "consequence": "Token-level matching after independent encoding sits between single-vector search and full cross-encoder re-ranking, and is the usual reference for multi-vector retrieval.",
+      "roles": ["retrieval"]
+    },
+    {
+      "id": "retrieval-augmented-generation", "name": "Retrieval-augmented generation", "kind": "retrieval", "date": "2020-05-22", "origin": "Lewis et al.",
+      "arxiv": { "id": "2005.11401", "title": "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks" },
+      "consequence": "Separating what the model knows from what the corpus says made answers citable and corpora updatable without retraining; it is the basis of the catalog's cite-or-refuse contract.",
+      "roles": ["retrieval", "model"]
+    },
+    {
+      "id": "in-context-learning", "name": "In-context learning at scale", "kind": "model", "date": "2020-05-28", "origin": "Brown et al.",
+      "arxiv": { "id": "2005.14165", "title": "Language Models are Few-Shot Learners" },
+      "consequence": "Tasks could be specified with instructions and examples in the prompt instead of a fine-tuned model, which made the prompt an application artifact to version and test.",
+      "roles": ["model", "agent"]
+    },
+    {
+      "id": "switch-transformer", "name": "Sparse mixture-of-experts at scale", "kind": "model", "date": "2021-01-11", "origin": "Fedus et al.",
+      "arxiv": { "id": "2101.03961", "title": "Switch Transformers: Scaling to Trillion Parameter Models with Simple and Efficient Sparsity" },
+      "consequence": "Routing each token to one expert decoupled parameter count from per-token compute, so model size stopped being a reliable proxy for serving cost.",
+      "roles": ["model"]
+    },
+    {
+      "id": "lora", "name": "Low-rank adaptation", "kind": "adaptation", "date": "2021-06-17", "origin": "Hu et al.",
+      "arxiv": { "id": "2106.09685", "title": "LoRA: Low-Rank Adaptation of Large Language Models" },
+      "consequence": "Training small low-rank updates on a frozen model made adapters cheap to train, store and swap per tenant or task.",
+      "roles": ["model"]
+    },
+    {
+      "id": "chain-of-thought", "name": "Chain-of-thought prompting", "kind": "reasoning", "date": "2022-01-28", "origin": "Wei et al.",
+      "arxiv": { "id": "2201.11903", "title": "Chain-of-Thought Prompting Elicits Reasoning in Large Language Models" },
+      "consequence": "Asking for intermediate steps improved multi-step answers, and spending tokens on reasoning became a cost and latency decision an architect has to make explicitly.",
+      "roles": ["agent"]
+    },
+    {
+      "id": "instruction-tuning-rlhf", "name": "Instruction following from human feedback", "kind": "alignment", "date": "2022-03-04", "origin": "Ouyang et al.",
+      "arxiv": { "id": "2203.02155", "title": "Training language models to follow instructions with human feedback" },
+      "consequence": "Fine-tuning on demonstrations and human preference rankings produced models that follow instructions, the behaviour every assistant product now assumes.",
+      "roles": ["model"]
+    },
+    {
+      "id": "self-consistency", "name": "Self-consistency decoding", "kind": "reasoning", "date": "2022-03-21", "origin": "Wang et al.",
+      "arxiv": { "id": "2203.11171", "title": "Self-Consistency Improves Chain of Thought Reasoning in Language Models" },
+      "consequence": "Sampling several reasoning paths and taking the majority answer trades extra calls for reliability, and the agreement rate doubles as a cheap uncertainty signal.",
+      "roles": ["agent", "evals"]
+    },
+    {
+      "id": "flashattention", "name": "IO-aware exact attention", "kind": "serving", "date": "2022-05-27", "origin": "Dao et al.",
+      "arxiv": { "id": "2205.14135", "title": "FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness" },
+      "consequence": "Tiling attention around GPU memory movement cut its memory footprint without approximation, which is part of why long context windows became affordable to serve.",
+      "roles": ["model"]
+    },
+    {
+      "id": "react", "name": "Interleaved reasoning and acting (ReAct)", "kind": "agents", "date": "2022-10-06", "origin": "Yao et al.",
+      "arxiv": { "id": "2210.03629", "title": "ReAct: Synergizing Reasoning and Acting in Language Models" },
+      "consequence": "Alternating thoughts with tool calls and observations gave the agent loop its common shape: decide, act, read the result, decide again.",
+      "roles": ["agent", "tools"]
+    },
+    {
+      "id": "speculative-decoding", "name": "Speculative decoding", "kind": "serving", "date": "2022-11-30", "origin": "Leviathan et al.",
+      "arxiv": { "id": "2211.17192", "title": "Fast Inference from Transformers via Speculative Decoding" },
+      "consequence": "A small draft model proposes tokens that the large model verifies in parallel, lowering latency while keeping the large model's output distribution.",
+      "roles": ["model"]
+    },
+    {
+      "id": "constitutional-ai", "name": "Constitutional AI", "kind": "alignment", "date": "2022-12-15", "origin": "Bai et al.",
+      "arxiv": { "id": "2212.08073", "title": "Constitutional AI: Harmlessness from AI Feedback" },
+      "consequence": "Written principles plus model-generated critiques replaced much of the human labelling for harmlessness, making a policy document part of the training input.",
+      "roles": ["guardrail", "model"]
+    },
+    {
+      "id": "toolformer", "name": "Self-taught tool use", "kind": "agents", "date": "2023-02-09", "origin": "Schick et al.",
+      "arxiv": { "id": "2302.04761", "title": "Toolformer: Language Models Can Teach Themselves to Use Tools" },
+      "consequence": "A model learned when to call an API and how to use the result, framing tools as something a model chooses rather than something a pipeline forces.",
+      "roles": ["tools"]
+    },
+    {
+      "id": "indirect-prompt-injection", "name": "Indirect prompt injection", "kind": "security", "date": "2023-02-23", "origin": "Greshake et al.",
+      "arxiv": { "id": "2302.12173", "title": "Not what you've signed up for: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection" },
+      "consequence": "Instructions hidden in retrieved or tool-returned content can steer the model, so every retrieved document and tool result is untrusted input and tool authority must be bounded outside the model.",
+      "roles": ["guardrail", "tools", "retrieval"]
+    },
+    {
+      "id": "reflexion", "name": "Verbal self-reflection (Reflexion)", "kind": "agents", "date": "2023-03-20", "origin": "Shinn et al.",
+      "arxiv": { "id": "2303.11366", "title": "Reflexion: Language Agents with Verbal Reinforcement Learning" },
+      "consequence": "Agents that write down why an attempt failed and read it on the next attempt improve without weight updates, which makes episodic memory a design element.",
+      "roles": ["agent", "memory"]
+    },
+    {
+      "id": "tree-of-thoughts", "name": "Tree of thoughts", "kind": "reasoning", "date": "2023-05-17", "origin": "Yao et al.",
+      "arxiv": { "id": "2305.10601", "title": "Tree of Thoughts: Deliberate Problem Solving with Large Language Models" },
+      "consequence": "Exploring and pruning several partial solutions turns reasoning into a search an orchestrator can budget, with an explicit trade between calls and quality.",
+      "roles": ["orchestrator", "agent"]
+    },
+    {
+      "id": "qlora", "name": "Quantized low-rank adaptation", "kind": "adaptation", "date": "2023-05-23", "origin": "Dettmers et al.",
+      "arxiv": { "id": "2305.14314", "title": "QLoRA: Efficient Finetuning of Quantized LLMs" },
+      "consequence": "Training adapters on a quantized base model brought fine-tuning of large open models within reach of a single accelerator.",
+      "roles": ["model"]
+    },
+    {
+      "id": "direct-preference-optimization", "name": "Direct preference optimization", "kind": "alignment", "date": "2023-05-29", "origin": "Rafailov et al.",
+      "arxiv": { "id": "2305.18290", "title": "Direct Preference Optimization: Your Language Model is Secretly a Reward Model" },
+      "consequence": "Preference tuning without a separate reward model or reinforcement-learning loop made it a supervised training job that more teams can run.",
+      "roles": ["model"]
+    },
+    {
+      "id": "llm-as-judge", "name": "Model-graded evaluation", "kind": "evaluation", "date": "2023-06-09", "origin": "Zheng et al.",
+      "arxiv": { "id": "2306.05685", "title": "Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena" },
+      "consequence": "Strong models agree with human preference often enough to grade open-ended output, and they carry measurable position and verbosity biases, so a judge is itself something to calibrate.",
+      "roles": ["evals"]
+    },
+    {
+      "id": "lost-in-the-middle", "name": "Position sensitivity in long context", "kind": "retrieval", "date": "2023-07-06", "origin": "Liu et al.",
+      "arxiv": { "id": "2307.03172", "title": "Lost in the Middle: How Language Models Use Long Contexts" },
+      "consequence": "Models used information at the start and end of a long context more reliably than the middle, so the order and size of retrieved context are design parameters, not details.",
+      "roles": ["retrieval", "memory"]
+    },
+    {
+      "id": "pagedattention", "name": "Paged attention for serving (vLLM)", "kind": "serving", "date": "2023-09-12", "origin": "Kwon et al.",
+      "arxiv": { "id": "2309.06180", "title": "Efficient Memory Management for Large Language Model Serving with PagedAttention" },
+      "consequence": "Managing the attention cache in pages, like virtual memory, let servers batch far more concurrent requests and set the template for open-source model serving.",
+      "roles": ["model"]
+    },
+    {
+      "id": "ragas", "name": "Reference-free retrieval evaluation (Ragas)", "kind": "evaluation", "date": "2023-09-26", "origin": "Es et al.",
+      "arxiv": { "id": "2309.15217", "title": "RAGAS: Automated Evaluation of Retrieval Augmented Generation" },
+      "consequence": "Faithfulness, answer relevance and context relevance became separate metrics, so a failing retrieval system can be traced to the retriever or the generator.",
+      "roles": ["evals", "retrieval"]
+    },
+    {
+      "id": "graphrag", "name": "Graph-based retrieval over community summaries", "kind": "retrieval", "date": "2024-04-24", "origin": "Edge et al.",
+      "arxiv": { "id": "2404.16130", "title": "From Local to Global: A Graph RAG Approach to Query-Focused Summarization" },
+      "consequence": "Building an entity graph and summarising its communities at ingest time answers corpus-wide questions that chunk retrieval cannot, at the cost of a heavier ingest pipeline.",
+      "roles": ["retrieval", "ingest"]
+    },
+    {
+      "id": "function-calling", "name": "Function calling in a model API", "kind": "protocol", "date": "2023-06-13", "origin": "OpenAI",
+      "sources": ["openai-function-calling"],
+      "consequence": "Models emitted structured calls against developer-declared schemas, moving tool use from prompt parsing into the API contract.",
+      "roles": ["tools", "api"]
+    },
+    {
+      "id": "structured-outputs", "name": "Schema-constrained output", "kind": "protocol", "date": "2024-08-06", "origin": "OpenAI",
+      "sources": ["openai-structured-outputs"],
+      "consequence": "Constraining generation to a supplied JSON Schema turned output validation from a retry loop into a guarantee of the decoding step.",
+      "roles": ["api", "guardrail"]
+    },
+    {
+      "id": "model-context-protocol", "name": "Model Context Protocol", "kind": "protocol", "date": "2024-11-25", "origin": "Anthropic; donated to the Agentic AI Foundation",
+      "sources": ["mcp-announcement", "mcp-aaif", "mcp-spec"],
+      "consequence": "One open protocol for exposing tools, resources and prompts to any model client replaced per-integration adapters; it underlies the catalog's tool hub pattern.",
+      "roles": ["tools", "gateway"]
+    },
+    {
+      "id": "agent2agent", "name": "Agent2Agent protocol", "kind": "protocol", "date": "2025-04-09", "origin": "Google; moved to the Linux Foundation",
+      "sources": ["a2a-announcement", "a2a-lf-launch"],
+      "consequence": "Agents built on different frameworks can discover each other's capabilities and exchange tasks, the agent-to-agent counterpart to MCP's agent-to-tool interface.",
+      "roles": ["orchestrator", "agent"]
+    }
+  ],
+  "ours": [
+    {
+      "id": "i01", "name": "Experience-to-topology compiler",
+      "mechanism": "One pattern file holds the customer journey, component IDs and flows; the compiler emits React Flow, Mermaid, diagrams.net, SVG and Structurizr views that share those IDs, so no view is drawn by hand.",
+      "status": "implemented",
+      "implemented_in": ["catalog/compile.mjs", "catalog/compile.test.mjs"],
+      "evidence": "Tests assert identical component and flow IDs across views and byte-identical output for identical input.",
+      "experiment": "Give two teams the same change request, one editing hand-drawn views and one editing the pattern file; compare drift between views and time to a consistent set.",
+      "prior_work": "Architecture-as-code tools, the C4 model and Structurizr, model-driven engineering."
+    },
+    {
+      "id": "i02", "name": "Evidence-preserving portal",
+      "mechanism": "Every maturity the portal displays must be backed by an artifact-specific receipt; the compiler refuses to promote a fixture beyond 'visualized' or import runtime receipts.",
+      "status": "partial",
+      "implemented_in": ["solution-kit/compile.mjs", "solution-kit/portal.html"],
+      "evidence": "The compiler rejects runtime maturity and receipts in fixtures. No live receipt has been recorded, so promotion with real evidence is untested.",
+      "experiment": "Hand a reviewer contradictory receipts and measure how often a higher maturity is displayed than the receipts support.",
+      "prior_work": "Software supply-chain provenance (SLSA, in-toto), evidence-based assessment."
+    },
+    {
+      "id": "i03", "name": "Dual value ledger",
+      "mechanism": "Customer value counts only accepted results, while cost counts every attempt; the provider's consumption drivers are shown beside it and never move the customer score.",
+      "status": "partial",
+      "implemented_in": ["catalog/compile.mjs", "catalog/providers.json"],
+      "evidence": "The economics function and its test charge failed attempts. The figures are assumptions per pattern; no pilot data exists.",
+      "experiment": "Run one pilot with the ledger and one without; compare whether scope decisions improve net customer value without consumption that buys no accepted result.",
+      "prior_work": "Unit economics, FinOps cost allocation, value-stream measurement."
+    },
+    {
+      "id": "i04", "name": "Source-drift gate",
+      "mechanism": "Every product and program claim carries a checked-on and review-by date; the compiler stops when one passes, so stale claims cannot be published.",
+      "status": "partial",
+      "implemented_in": ["catalog/compile.mjs", "catalog/sources.json"],
+      "evidence": "A test proves compilation fails on an expired source. The gate does not yet list which pages, templates or chapters depend on the expired claim.",
+      "experiment": "Expire one API claim and measure how many dependent artifacts a maintainer finds with and without a generated dependency list.",
+      "prior_work": "Documentation linting, dependency freshness bots, citation management."
+    },
+    {
+      "id": "i05", "name": "Portable acceptance capsule",
+      "mechanism": "Tests, results, ownership and rollback steps are exported with the solution so a customer can re-run acceptance on their own host.",
+      "status": "partial",
+      "implemented_in": ["solution-kit/practice.mjs", "solution-kit/practice.test.mjs"],
+      "evidence": "The practice domain runs against a synthetic fixture only; no customer host has reproduced a capsule.",
+      "experiment": "Reproduce one capsule on a fresh customer host and record every manual step needed.",
+      "prior_work": "Reproducible builds, acceptance-test-driven development, release evidence packs."
+    },
+    {
+      "id": "i06", "name": "Industry R&D workbench",
+      "mechanism": "Evidence-linked industry cases generate solution variants and lab missions from the same catalog.",
+      "status": "proposed",
+      "implemented_in": [],
+      "evidence": "Described in this register only; nothing runs.",
+      "experiment": "Compare time to a reviewable design against an existing discovery workflow on the same brief.",
+      "prior_work": "Design-space exploration tools, pattern languages, case-based reasoning."
+    },
+    {
+      "id": "i07", "name": "One answer contract on three runtimes",
+      "mechanism": "A single cite-or-refuse contract module is copied verbatim into the Vercel, Cloudflare and Cloud Run templates, and one conformance suite runs against all three.",
+      "status": "implemented",
+      "implemented_in": ["templates/deploy/answer-core/answer-core.mjs", "templates/deploy/answer-core/sync.mjs", "templates/deploy/answer-core/conformance.test.mjs"],
+      "evidence": "The sync check fails when a template's copy drifts, and conformance tests run locally. No provider deployment receipt exists.",
+      "experiment": "Deploy all three and run the conformance suite against each live endpoint; record any behaviour that differs by runtime.",
+      "prior_work": "Consumer-driven contract testing, OpenAPI conformance suites."
+    },
+    {
+      "id": "i08", "name": "Reweightable judgement scorecard",
+      "mechanism": "Each realization carries a recorded 1-to-5 judgement per criterion with a written rationale, published per criterion so a reader can reweight them; no score is presented as a benchmark, and provider consumption never changes a customer score.",
+      "status": "implemented",
+      "implemented_in": ["catalog/providers.json", "catalog/patterns"],
+      "evidence": "Validation rejects scores outside 1 to 5 and realizations without a rationale.",
+      "experiment": "Ask several architects to score the same realizations independently and measure agreement before publishing a ranking.",
+      "prior_work": "Multi-criteria decision analysis, architecture trade-off analysis (ATAM)."
+    },
+    {
+      "id": "i09", "name": "Verified-icon rule",
+      "mechanism": "Official vendor icons are embedded only from a hash-pinned registry and only for that vendor's services; every other node uses a neutral role glyph.",
+      "status": "implemented",
+      "implemented_in": ["catalog/compile.mjs", "solution-kit/icons/registry.json"],
+      "evidence": "The compiler fails on a hash mismatch or on an official icon attached to another provider's service; a test covers the second.",
+      "experiment": "Audit a sample of generated diagrams against vendor icon terms and count misattributed marks.",
+      "prior_work": "Vendor icon kits and their usage terms, asset provenance in design systems."
+    },
+    {
+      "id": "i10", "name": "Name-evidence ledger",
+      "mechanism": "Every service name carries how it was verified (a registered source, a long-standing name, or inferred from a rename); inferred or non-GA names are flagged to confirm before customer use.",
+      "status": "implemented",
+      "implemented_in": ["catalog/services.json", "catalog/compile.mjs"],
+      "evidence": "Validation requires registered sources for source-verified names, and each realization lists the bindings to confirm.",
+      "experiment": "Re-check flagged and unflagged names against vendor documentation and compare the error rate of each group.",
+      "prior_work": "Data lineage and provenance tagging."
+    }
+  ]
+}

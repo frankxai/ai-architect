@@ -40,4 +40,4 @@ A compiled view is a design. It becomes `local-tested` only for a template that 
 
 ## MCP
 
-The plugin's MCP server exposes `catalog_patterns`, `catalog_realization` and `catalog_view`, so an agent can fetch a resolved realization or a view as text without compiling to disk.
+The plugin's MCP server exposes `catalog_patterns`, `catalog_realization`, `catalog_view` and `catalog_register`, so an agent can fetch a resolved realization, a view or the partner and invention registers as text without compiling to disk.

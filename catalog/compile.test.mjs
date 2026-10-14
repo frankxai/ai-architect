@@ -3,9 +3,9 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { load, validate, resolve, compile, economics, mermaidFlow, structurizr, reactFlow, drawio, svg, wrap, deployUrl } from './compile.mjs';
+import { load, validate, resolve, compile, economics, mermaidFlow, structurizr, reactFlow, drawio, svg, wrap, deployUrl, registers, ecosystemMarkdown, exportPlan } from './compile.mjs';
 
-const TODAY = '2026-10-11';
+const TODAY = '2026-10-14';
 const fresh = () => structuredClone(load());
 const clean = () => fs.mkdtempSync(path.join(os.tmpdir(), 'catalog-'));
 
@@ -114,7 +114,7 @@ test('compile is deterministic, hashed and refuses unrelated output directories'
   const two = compile(b, { revision: 'abc123', today: TODAY }).manifest;
   assert.deepEqual(one.files, two.files);
   const providers = load().providers.providers.length;
-  assert.equal(one.files.length, 7 * (2 + providers * 4) + 2);
+  assert.equal(one.files.length, 7 * (2 + providers * 4) + 3);
   assert.ok(one.files.every(f => /^[0-9a-f]{64}$/.test(f.sha256)));
   const dirty = clean();
   fs.writeFileSync(path.join(dirty, 'notes.txt'), 'mine');
@@ -123,4 +123,78 @@ test('compile is deterministic, hashed and refuses unrelated output directories'
   assert.equal(bundle.source_revision, 'abc123');
   assert.ok(bundle.providers.every(p => !('defaults' in p)));
   assert.ok(bundle.templates.every(t => t.deploy_url.startsWith('https://')));
+});
+
+test('partner register refuses unevidenced relationships, overclaimed programs and partnership wording', () => {
+  const entry = (cat, id) => cat.partners.partners.find(e => e.id === id);
+  const a = fresh();
+  entry(a, 'vercel').relationship = { status: 'applied', reference: null };
+  assert.throws(() => validate(a, TODAY), /status applied needs a reference/);
+  const b = fresh();
+  entry(b, 'google-cloud').relationship = { status: 'partner', reference: 'AGR-1', scope: 'Services', expires: '2026-01-01' };
+  assert.throws(() => validate(b, TODAY), /partner needs scope and an unexpired expiry date/);
+  const c = fresh();
+  entry(c, 'openai').program.verified = true;
+  assert.throws(() => validate(c, TODAY), /verified needs a primary-doc or search-index source, not secondary/);
+  const d = fresh();
+  entry(d, 'cloudflare').fit = 'Certified Cloudflare delivery partner.';
+  assert.throws(() => validate(d, TODAY), /claims a relationship/);
+  const e = fresh();
+  e.partners.partners = e.partners.partners.filter(p => p.provider !== 'railway');
+  assert.throws(() => validate(e, TODAY), /provider railway needs exactly one entry/);
+  const f = fresh();
+  entry(f, 'mermaid').used_in = ['catalog/missing.mjs'];
+  assert.throws(() => validate(f, TODAY), /used_in paths must exist/);
+});
+
+test('invention register ties arXiv ids to dates, roles to the catalog and contributions to real files', () => {
+  const field = (cat, id) => cat.inventions.field.find(x => x.id === id);
+  const ours = (cat, id) => cat.inventions.ours.find(x => x.id === id);
+  const a = fresh();
+  field(a, 'transformer').date = '2018-06-12';
+  assert.throws(() => validate(a, TODAY), /arXiv 1706.03762 does not match date 2018-06-12/);
+  const b = fresh();
+  field(b, 'react').roles.push('planner');
+  assert.throws(() => validate(b, TODAY), /roles must be catalog roles/);
+  const c = fresh();
+  field(c, 'pagedattention').consequence = 'Serving got 24x faster.';
+  assert.throws(() => validate(c, TODAY), /states a measured gain/);
+  const d = fresh();
+  ours(d, 'i06').implemented_in = ['catalog/compile.mjs'];
+  assert.throws(() => validate(d, TODAY), /only a proposed contribution has no implementation/);
+  const e = fresh();
+  ours(e, 'i01').implemented_in = ['catalog/gone.mjs'];
+  assert.throws(() => validate(e, TODAY), /implemented_in paths must exist/);
+  const f = fresh();
+  ours(f, 'i07').mechanism = 'A novel contract no one has built.';
+  assert.throws(() => validate(f, TODAY), /claims novelty/);
+  const g = fresh();
+  field(g, 'model-context-protocol').arxiv = { id: '2411.00001', title: 'x' };
+  assert.throws(() => validate(g, TODAY), /cite exactly one of arxiv or sources/);
+});
+
+test('registers derive partner footprints from the export plan and invention reach from roles', () => {
+  const cat = validate(fresh(), TODAY);
+  const patterns = resolve(cat);
+  const { partners, inventions } = registers(cat, patterns);
+  const providers = cat.providers.providers.length;
+  const gcp = partners.partners.find(e => e.provider === 'gcp');
+  assert.equal(gcp.footprint.realizations, patterns.length);
+  assert.deepEqual(gcp.footprint.templates, ['gcp-cloud-run-gemini']);
+  assert.equal(partners.partners.find(e => e.id === 'mermaid').exports.mermaid, patterns.length * (providers + 1));
+  assert.equal(partners.partners.find(e => e.id === 'xyflow').exports.reactflow, exportPlan(cat, patterns).filter(([f]) => f.endsWith('.reactflow.json')).length);
+  assert.ok(partners.partners.every(e => e.relationship.status === 'none'));
+  const dates = inventions.field.map(f => f.date);
+  assert.deepEqual(dates, [...dates].sort());
+  const mcp = inventions.field.find(f => f.id === 'model-context-protocol');
+  assert.ok(mcp.patterns.includes('enterprise-mcp-tool-hub'));
+  assert.equal(inventions.field.find(f => f.id === 'retrieval-augmented-generation').record.url, 'https://arxiv.org/abs/2005.11401');
+});
+
+test('the committed ecosystem register is the generated one', () => {
+  const cat = validate(fresh(), TODAY);
+  const text = ecosystemMarkdown(cat, registers(cat, resolve(cat)));
+  const committed = fs.readFileSync(path.join(import.meta.dirname, '..', 'solution-kit', 'ecosystem.md'), 'utf8');
+  assert.equal(committed, text, 'solution-kit/ecosystem.md drifted from the registers; run npm run catalog:ecosystem');
+  assert.doesNotMatch(text, /\| (applied|member|partner):/);
 });
