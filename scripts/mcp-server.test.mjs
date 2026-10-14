@@ -132,6 +132,9 @@ test('catalog tools list patterns, resolve a realization and return views', () =
     call(4, 'catalog_view', { pattern: 'support-resolution-agent', format: 'structurizr' }),
     call(5, 'catalog_view', { pattern: 'support-resolution-agent', format: 'mermaid' }),
     call(6, 'catalog_realization', { pattern: 'nope', provider: 'gcp' }),
+    call(7, 'catalog_register', { register: 'partners' }),
+    call(8, 'catalog_register', { register: 'inventions' }),
+    call(9, 'catalog_register', { register: 'customers' }),
   ]);
   assert.equal(result.status, 0);
   const byId = Object.fromEntries(parseLines(result.stdout).map((m) => [m.id, m]));
@@ -143,4 +146,11 @@ test('catalog tools list patterns, resolve a realization and return views', () =
   assert.match(JSON.parse(byId[4].result.content[0].text).text, /deploymentEnvironment "Google Cloud"/);
   assert.equal(byId[5].result.isError, true);
   assert.equal(byId[6].result.isError, true);
+  const partners = JSON.parse(byId[7].result.content[0].text);
+  assert.ok(partners.partners.every((e) => e.relationship.status === 'none'));
+  assert.equal(partners.partners.find((e) => e.provider === 'cloudflare').footprint.realizations, 7);
+  const inventions = JSON.parse(byId[8].result.content[0].text);
+  assert.ok(inventions.field.some((f) => f.record.url === 'https://arxiv.org/abs/1706.03762'));
+  assert.ok(inventions.ours.every((c) => c.status !== 'proposed' || c.implemented_in.length === 0));
+  assert.equal(byId[9].result.isError, true);
 });

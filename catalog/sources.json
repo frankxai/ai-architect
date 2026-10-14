@@ -284,5 +284,203 @@
     "checked_on": "2026-10-11",
     "review_by": "2026-10-25",
     "volatility": "high"
+  },
+  {
+    "id": "prog-gcp-partner-advantage",
+    "title": "Google Cloud Partner Advantage",
+    "publisher": "Google Cloud",
+    "url": "https://partners.cloud.google.com/",
+    "scoped_claim": "Partner Advantage has a Service engagement for consulting, training and integration work; firms apply and select Service as their engagement of interest.",
+    "verification": "search-index",
+    "checked_on": "2026-10-14",
+    "review_by": "2026-11-14",
+    "volatility": "high"
+  },
+  {
+    "id": "prog-vercel-partners",
+    "title": "Vercel partners",
+    "publisher": "Vercel",
+    "url": "https://vercel.com/partners",
+    "scoped_claim": "Vercel lists solution partners (agencies, consultancies, systems integrators) and runs a certified solution partner cohort; no public application criteria were found.",
+    "verification": "search-index",
+    "checked_on": "2026-10-14",
+    "review_by": "2026-11-14",
+    "volatility": "high"
+  },
+  {
+    "id": "prog-cloudflare-partners",
+    "title": "Cloudflare Partner Network",
+    "publisher": "Cloudflare",
+    "url": "https://www.cloudflare.com/partners/",
+    "scoped_claim": "The Partner Network includes services tracks (authorized service delivery, managed services) and a self-serve agency program in beta.",
+    "verification": "search-index",
+    "checked_on": "2026-10-14",
+    "review_by": "2026-11-14",
+    "volatility": "high"
+  },
+  {
+    "id": "prog-aws-apn",
+    "title": "AWS Partner Network",
+    "publisher": "Amazon Web Services",
+    "url": "https://aws.amazon.com/partners/",
+    "scoped_claim": "AWS recognizes services partners at Select, Advanced and Premier tiers; current requirements are published in Partner Central.",
+    "verification": "search-index",
+    "checked_on": "2026-10-14",
+    "review_by": "2026-11-14",
+    "volatility": "high"
+  },
+  {
+    "id": "prog-microsoft-ai-cloud",
+    "title": "Microsoft AI Cloud Partner Program overview",
+    "publisher": "Microsoft",
+    "url": "https://learn.microsoft.com/en-us/partner-center/membership/mpn-overview",
+    "scoped_claim": "Membership starts by joining the Microsoft AI Cloud Partner Program and verifying a Partner Center account.",
+    "verification": "search-index",
+    "checked_on": "2026-10-14",
+    "review_by": "2026-11-14",
+    "volatility": "high"
+  },
+  {
+    "id": "prog-claude-partner-network",
+    "title": "Claude Partner Network",
+    "publisher": "Anthropic",
+    "url": "https://claude.com/partners",
+    "scoped_claim": "The Claude Partner Network, launched in March 2026, has a services track for consultancies with an application form; tier requirements appear only in secondary coverage.",
+    "verification": "search-index",
+    "checked_on": "2026-10-14",
+    "review_by": "2026-11-14",
+    "volatility": "high"
+  },
+  {
+    "id": "prog-openai-partner-network",
+    "title": "OpenAI launches partner network",
+    "publisher": "Dataconomy",
+    "url": "https://dataconomy.com/2026/06/15/openai-launches-150-million-partner-network/",
+    "scoped_claim": "Secondary coverage reports an OpenAI Partner Network announced in June 2026 with Select, Advanced and Elite tiers; the official page was not retrieved.",
+    "verification": "secondary",
+    "checked_on": "2026-10-14",
+    "review_by": "2026-11-14",
+    "volatility": "high"
+  },
+  {
+    "id": "prog-nvidia-npn",
+    "title": "Join the NVIDIA Partner Network",
+    "publisher": "NVIDIA",
+    "url": "https://www.nvidia.com/en-us/about-nvidia/partners/become-a-partner/",
+    "scoped_claim": "The NVIDIA Partner Network admits consulting, integration and solution partners with competency-based membership levels.",
+    "verification": "search-index",
+    "checked_on": "2026-10-14",
+    "review_by": "2026-11-14",
+    "volatility": "high"
+  },
+  {
+    "id": "prog-railway-templates",
+    "title": "Railway templates and kickback",
+    "publisher": "Railway",
+    "url": "https://docs.railway.com/templates",
+    "scoped_claim": "Creators of templates published to the Railway marketplace earn a share of the usage their deployments generate; Railway also runs open source and technology partner programs.",
+    "verification": "search-index",
+    "checked_on": "2026-10-14",
+    "review_by": "2026-11-14",
+    "volatility": "high"
+  },
+  {
+    "id": "mcp-announcement",
+    "title": "Introducing the Model Context Protocol",
+    "publisher": "Anthropic",
+    "url": "https://www.anthropic.com/news/model-context-protocol",
+    "scoped_claim": "Anthropic introduced MCP on 2024-11-25 as an open standard for connecting AI assistants to the systems where data lives.",
+    "verification": "search-index",
+    "checked_on": "2026-10-14",
+    "review_by": "2027-04-14",
+    "volatility": "low"
+  },
+  {
+    "id": "mcp-aaif",
+    "title": "Donating the Model Context Protocol and establishing the Agentic AI Foundation",
+    "publisher": "Anthropic",
+    "url": "https://www.anthropic.com/news/donating-the-model-context-protocol-and-establishing-of-the-agentic-ai-foundation",
+    "scoped_claim": "On 2025-12-09 MCP moved to the Agentic AI Foundation, a directed fund under the Linux Foundation, with unchanged governance.",
+    "verification": "search-index",
+    "checked_on": "2026-10-14",
+    "review_by": "2027-04-14",
+    "volatility": "low"
+  },
+  {
+    "id": "a2a-announcement",
+    "title": "Announcing the Agent2Agent Protocol (A2A)",
+    "publisher": "Google for Developers Blog",
+    "url": "https://developers.googleblog.com/en/a2a-a-new-era-of-agent-interoperability/",
+    "scoped_claim": "Google announced the Agent2Agent (A2A) protocol, an open protocol for interoperability between AI agents, on 9 April 2025.",
+    "verification": "primary-doc",
+    "checked_on": "2026-10-14",
+    "review_by": "2027-04-14",
+    "volatility": "low"
+  },
+  {
+    "id": "a2a-lf-launch",
+    "title": "Linux Foundation Launches the Agent2Agent Protocol Project to Enable Secure, Intelligent Communication Between AI Agents",
+    "publisher": "The Linux Foundation",
+    "url": "https://www.linuxfoundation.org/press/linux-foundation-launches-the-agent2agent-protocol-project-to-enable-secure-intelligent-communication-between-ai-agents",
+    "scoped_claim": "On 23 June 2025 the Linux Foundation launched the Agent2Agent (A2A) project, an open protocol created by Google for agent-to-agent communication, under vendor-neutral governance; Google launched the protocol in April 2025.",
+    "verification": "search-index",
+    "checked_on": "2026-10-14",
+    "review_by": "2027-04-14",
+    "volatility": "low"
+  },
+  {
+    "id": "openai-function-calling",
+    "title": "Function calling and other API updates",
+    "publisher": "OpenAI",
+    "url": "https://openai.com/index/function-calling-and-other-api-updates",
+    "scoped_claim": "On 2023-06-13 OpenAI models gained function calling: they detect when to call a developer-declared function and return JSON matching its signature.",
+    "verification": "search-index",
+    "checked_on": "2026-10-14",
+    "review_by": "2027-04-14",
+    "volatility": "low"
+  },
+  {
+    "id": "openai-structured-outputs",
+    "title": "Introducing Structured Outputs in the API",
+    "publisher": "OpenAI",
+    "url": "https://openai.com/index/introducing-structured-outputs-in-the-api/",
+    "scoped_claim": "On 2024-08-06 OpenAI added Structured Outputs, constraining model output to a developer-supplied JSON Schema.",
+    "verification": "search-index",
+    "checked_on": "2026-10-14",
+    "review_by": "2027-04-14",
+    "volatility": "low"
+  },
+  {
+    "id": "otel-genai-semconv",
+    "title": "Semantic conventions for generative AI client spans",
+    "publisher": "OpenTelemetry",
+    "url": "https://opentelemetry.io/docs/specs/semconv/gen-ai/gen-ai-spans/",
+    "scoped_claim": "GenAI client span conventions are in Development status; spans are named after the operation and requested model and carry gen_ai.* attributes.",
+    "verification": "search-index",
+    "checked_on": "2026-10-14",
+    "review_by": "2026-11-14",
+    "volatility": "medium"
+  },
+  {
+    "id": "mermaid-docs",
+    "title": "Mermaid documentation",
+    "publisher": "Mermaid",
+    "url": "https://mermaid.js.org/",
+    "scoped_claim": "Text-defined flowcharts and sequence diagrams rendered in browsers and in GitHub Markdown.",
+    "verification": "prior",
+    "checked_on": "2026-10-14",
+    "review_by": "2027-01-14",
+    "volatility": "low"
+  },
+  {
+    "id": "drawio-docs",
+    "title": "draw.io documentation",
+    "publisher": "JGraph",
+    "url": "https://www.drawio.com/doc/",
+    "scoped_claim": "Editable diagram files in the draw.io XML format, opened by diagrams.net and its desktop and IDE apps.",
+    "verification": "prior",
+    "checked_on": "2026-10-14",
+    "review_by": "2027-01-14",
+    "volatility": "low"
   }
 ]

@@ -33,11 +33,13 @@ export function load() {
   const services = readJson('services.json').services;
   const sources = readJson('sources.json');
   const templates = readJson('templates.json');
+  const partners = readJson('partners.json');
+  const inventions = readJson('inventions.json');
   const icons = JSON.parse(fs.readFileSync(path.join(REPO, 'solution-kit/icons/registry.json'), 'utf8'));
   const patternDir = path.join(ROOT, 'patterns');
   const patterns = fs.readdirSync(patternDir).filter(f => f.endsWith('.json')).sort()
     .map(f => ({ file: f, ...JSON.parse(fs.readFileSync(path.join(patternDir, f), 'utf8')) }));
-  return { roles, providers, services, sources, templates, icons, patterns };
+  return { roles, providers, services, sources, templates, partners, inventions, icons, patterns };
 }
 
 export function validate(cat, today = new Date().toISOString().slice(0, 10)) {
@@ -168,8 +170,116 @@ export function validate(cat, today = new Date().toISOString().slice(0, 10)) {
     }
     need(Object.keys(pat.realizations ?? {}).every(k => providerIds.has(k)), `${where}: realization for unknown provider`);
   }
+
+  validateRegisters(cat, { need, today, roleIds, providerIds, sourceIds });
   if (errors.length) throw new Error(errors.join('\n'));
   return cat;
+}
+
+const STATUSES = ['none', 'applied', 'member', 'partner'];
+const CONTRIBUTION_STATUSES = ['implemented', 'partial', 'proposed'];
+const FORMATS = { reactflow: '.reactflow.json', mermaid: '.mmd', drawio: '.drawio', structurizr: '.dsl', svg: '.svg' };
+const isDate = v => typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v);
+const repoPath = p => typeof p === 'string' && !p.startsWith('/') && !p.split('/').includes('..') && fs.existsSync(path.join(REPO, p));
+// Wording a register must never use about a relationship it cannot evidence, or a contribution it has not assessed.
+const CLAIMS = /\b(certified|accredited|endorsed by|official partner|premier partner|partnered with|patent(ed)?|first[- ]ever|first[- ]of[- ]its[- ]kind|world[- ]first|breakthrough|novel)\b/i;
+
+function validateRegisters(cat, { need, today, roleIds, providerIds, sourceIds }) {
+  const P = cat.partners;
+  need(P.schema === 'ai-architect-partners/v1' && isText(P.policy, 800), 'partners: schema and policy');
+  need(JSON.stringify(P.statuses) === JSON.stringify(STATUSES), `partners: statuses must be ${STATUSES.join(', ')}`);
+  const kinds = new Set(P.kinds.map(k => k.id));
+  const sourceById = new Map(cat.sources.map(s => [s.id, s]));
+  const partnerIds = new Set();
+  for (const e of P.partners) {
+    const where = `partner ${e.id}`;
+    need(isId(e.id) && !partnerIds.has(e.id), `${where}: duplicate or invalid id`);
+    partnerIds.add(e.id);
+    need(isText(e.name, 60) && kinds.has(e.kind), `${where}: name and kind`);
+    need(e.provider === null || providerIds.has(e.provider), `${where}: provider must be a catalog provider or null`);
+    for (const k of ['contributes', 'fit', 'next_step']) need(isText(e[k], 300) && !CLAIMS.test(e[k]), `${where}: ${k} missing, too long or claims a relationship`);
+    need(Array.isArray(e.sources) && e.sources.length > 0 && e.sources.every(id => sourceIds.has(id)), `${where}: sources must be registered`);
+    if (e.program !== null) {
+      need(isText(e.program?.name, 80) && isText(e.program?.track, 120) && typeof e.program?.verified === 'boolean', `${where}: program name, track and verified flag`);
+      need(e.sources.includes(e.program?.source), `${where}: program source must be one of the entry's sources`);
+      const via = sourceById.get(e.program?.source)?.verification;
+      need(!e.program?.verified || ['primary-doc', 'search-index'].includes(via), `${where}: a program marked verified needs a primary-doc or search-index source, not ${via}`);
+    }
+    need(Array.isArray(e.used_in) && e.used_in.every(repoPath), `${where}: used_in paths must exist in this repository`);
+    need(Array.isArray(e.exports) && e.exports.every(f => Object.hasOwn(FORMATS, f)), `${where}: unknown export format`);
+    const r = e.relationship ?? {};
+    need(STATUSES.includes(r.status), `${where}: relationship status`);
+    if (r.status === 'none') need(r.reference === null, `${where}: status none carries no reference`);
+    else need(isText(r.reference, 120), `${where}: status ${r.status} needs a reference`);
+    if (['member', 'partner'].includes(r.status)) need(isText(r.scope, 200) && isDate(r.expires) && r.expires >= today, `${where}: ${r.status} needs scope and an unexpired expiry date`);
+  }
+  for (const pid of providerIds) need(P.partners.filter(e => e.provider === pid).length === 1, `partners: provider ${pid} needs exactly one entry`);
+
+  const I = cat.inventions;
+  need(I.schema === 'ai-architect-inventions/v1' && isText(I.policy, 1000), 'inventions: schema and policy');
+  need(isDate(I.checked_on) && I.checked_on <= today, 'inventions: checked_on must be a past date');
+  need(JSON.stringify(I.statuses.map(s => s.id)) === JSON.stringify(CONTRIBUTION_STATUSES), `inventions: statuses must be ${CONTRIBUTION_STATUSES.join(', ')}`);
+  const ikinds = new Set(I.kinds.map(k => k.id));
+  const ids = new Set();
+  for (const f of I.field) {
+    const where = `invention ${f.id}`;
+    need(isId(f.id) && !ids.has(f.id), `${where}: duplicate or invalid id`);
+    ids.add(f.id);
+    need(isText(f.name, 120) && ikinds.has(f.kind) && isText(f.origin, 120), `${where}: name, kind and origin`);
+    need(isDate(f.date) && f.date <= today, `${where}: date must be a past date`);
+    need(isText(f.consequence, 400) && !/\d\s?(%|x\b|times\b)/.test(f.consequence), `${where}: consequence missing or states a measured gain`);
+    need(Array.isArray(f.roles) && f.roles.length > 0 && f.roles.every(r => roleIds.has(r)), `${where}: roles must be catalog roles`);
+    need(!!f.arxiv !== !!f.sources, `${where}: cite exactly one of arxiv or sources`);
+    if (f.arxiv) {
+      need(/^\d{4}\.\d{4,5}$/.test(f.arxiv.id) && isText(f.arxiv.title, 200), `${where}: arXiv id and title`);
+      // New-style arXiv identifiers begin with the two-digit year and month of the first version.
+      need(f.arxiv.id?.slice(0, 4) === f.date?.slice(2, 4) + f.date?.slice(5, 7), `${where}: arXiv ${f.arxiv.id} does not match date ${f.date}`);
+    } else {
+      need(Array.isArray(f.sources) && f.sources.length > 0 && f.sources.every(id => sourceIds.has(id)), `${where}: sources must be registered`);
+    }
+  }
+  for (const c of I.ours) {
+    const where = `contribution ${c.id}`;
+    need(/^i\d{2}$/.test(c.id ?? '') && !ids.has(c.id), `${where}: id must be i01, i02, ...`);
+    ids.add(c.id);
+    need(CONTRIBUTION_STATUSES.includes(c.status), `${where}: status`);
+    for (const k of ['name', 'mechanism', 'evidence', 'experiment', 'prior_work']) need(isText(c[k], 400) && !CLAIMS.test(c[k]), `${where}: ${k} missing, too long or claims novelty`);
+    need(Array.isArray(c.implemented_in) && c.implemented_in.every(repoPath), `${where}: implemented_in paths must exist in this repository`);
+    need((c.status === 'proposed') === (c.implemented_in?.length === 0), `${where}: only a proposed contribution has no implementation`);
+  }
+}
+
+// Derived, never hand-entered: what each partner's technology does in this
+// catalog, and which patterns each field invention shapes through its roles.
+export function registers(cat, patterns) {
+  const exportNames = exportPlan(cat, patterns).map(([rel]) => rel);
+  const partners = cat.partners.partners.map(e => {
+    let footprint = null;
+    if (e.provider) {
+      const rs = patterns.map(p => p.realizations[e.provider]);
+      const services = new Set(rs.flatMap(r => Object.values(r.bindings).filter(b => b && b.provider === e.provider).map(b => b.id)));
+      const mean = rs.reduce((sum, r) => sum + r.mean_score, 0) / rs.length;
+      footprint = {
+        realizations: rs.length, services: services.size,
+        templates: cat.templates.filter(t => t.provider === e.provider).map(t => t.id),
+        mean_score: Math.round(mean * 100) / 100,
+        to_confirm: new Set(rs.flatMap(r => r.caution)).size,
+      };
+    }
+    const exports = Object.fromEntries(e.exports.map(f => [f, exportNames.filter(n => n.endsWith(FORMATS[f])).length]));
+    return { ...e, footprint, exports };
+  });
+  const sourceById = new Map(cat.sources.map(s => [s.id, s]));
+  const field = [...cat.inventions.field].sort((a, b) => a.date.localeCompare(b.date) || a.id.localeCompare(b.id)).map(f => ({
+    ...f,
+    record: f.arxiv
+      ? { label: `arXiv:${f.arxiv.id}`, title: f.arxiv.title, url: `https://arxiv.org/abs/${f.arxiv.id}` }
+      : { label: sourceById.get(f.sources[0]).publisher, title: sourceById.get(f.sources[0]).title, url: sourceById.get(f.sources[0]).url },
+    patterns: patterns.filter(p => p.components.some(c => f.roles.includes(c.role))).map(p => p.id),
+  }));
+  const { field: _f, ours, ...meta } = cat.inventions;
+  const { partners: _p, ...pmeta } = cat.partners;
+  return { partners: { ...pmeta, partners }, inventions: { ...meta, field, ours } };
 }
 
 export function economics(e) {
@@ -416,6 +526,70 @@ export function deployUrl(t, ref = 'main') {
   return `https://deploy.cloud.run/?git_repo=${encodeURIComponent(REPOSITORY + '.git')}&dir=${encodeURIComponent(t.path)}&revision=${encodeURIComponent(ref)}`;
 }
 
+// Every export file and its renderer, in a fixed order. compile() writes these;
+// registers() counts them, so the partner footprint cannot drift from the output.
+export function exportPlan(cat, patterns) {
+  const plan = [];
+  for (const pat of patterns) {
+    plan.push([`exports/${pat.id}/workspace.dsl`, () => structurizr(cat, pat)]);
+    plan.push([`exports/${pat.id}/journey.sequence.mmd`, () => mermaidSequence(pat)]);
+    for (const p of cat.providers.providers) {
+      plan.push([`exports/${pat.id}/${p.id}.reactflow.json`, () => JSON.stringify(reactFlow(pat, p.id), null, 2) + '\n']);
+      plan.push([`exports/${pat.id}/${p.id}.mmd`, () => mermaidFlow(cat, pat, p.id)]);
+      plan.push([`exports/${pat.id}/${p.id}.drawio`, () => drawio(cat, pat, p.id)]);
+      plan.push([`exports/${pat.id}/${p.id}.svg`, () => svg(cat, pat, p.id)]);
+    }
+  }
+  return plan;
+}
+
+const cell = v => String(v).replace(/\|/g, '\\|').replace(/\r?\n/g, ' ');
+
+// The human-readable register. solution-kit/ecosystem.md is this output,
+// committed; a test fails when the two differ.
+export function ecosystemMarkdown(cat, { partners, inventions }) {
+  const providerName = new Map(cat.providers.providers.map(p => [p.id, p.name]));
+  const sourceById = new Map(cat.sources.map(s => [s.id, s]));
+  const status = new Map(inventions.statuses.map(s => [s.id, s.title]));
+  const L = [
+    '# Ecosystem and invention register', '',
+    '<!-- Generated by catalog/compile.mjs from catalog/partners.json and catalog/inventions.json. Edit those files, then run `npm run catalog:ecosystem`. -->', '',
+    '## Partners and programs', '', partners.policy, '',
+  ];
+  for (const kind of partners.kinds) {
+    const rows = partners.partners.filter(e => e.kind === kind.id);
+    if (!rows.length) continue;
+    L.push(`### ${kind.title}`, '', '| Organization | What it contributes | Program and track | Relationship | Use in this repository | Next step |', '|---|---|---|---|---|---|');
+    for (const e of rows) {
+      const program = e.program
+        ? `[${e.program.name}](${sourceById.get(e.program.source).url}): ${e.program.track}${e.program.verified ? '' : ' (official page not found; unverified)'}`
+        : 'No program';
+      const use = [];
+      if (e.footprint) {
+        const f = e.footprint;
+        const confirm = f.to_confirm === 0 ? 'no service names to confirm' : `${f.to_confirm} service ${f.to_confirm === 1 ? 'name' : 'names'} to confirm`;
+        use.push(`${f.realizations} ${providerName.get(e.provider)} realizations using ${f.services} services; mean judgement ${f.mean_score}/5; ${confirm}; ${f.templates.length ? `template ${f.templates.join(', ')}` : 'no template'}`);
+      }
+      for (const [fmt, n] of Object.entries(e.exports)) use.push(`${n} ${fmt} exports`);
+      for (const p of e.used_in) use.push(`\`${p}\``);
+      const rel = e.relationship.status === 'none' ? 'None' : `${e.relationship.status}: ${e.relationship.reference}`;
+      L.push(`| ${cell(e.name)} | ${cell(e.contributes)} | ${cell(program)} | ${rel} | ${cell(use.join('; ') || 'Not used yet')} | ${cell(e.next_step)} |`);
+    }
+    L.push('');
+  }
+  L.push('## Field inventions', '', inventions.policy, '', `Records checked on ${inventions.checked_on}.`, '',
+    '| Date | Invention | Origin | Primary record | Roles it shaped | Consequence for an architect |', '|---|---|---|---|---|---|');
+  for (const f of inventions.field) L.push(`| ${f.date} | ${cell(f.name)} | ${cell(f.origin)} | [${f.record.label}](${f.record.url}) | ${f.roles.join(', ')} | ${cell(f.consequence)} |`);
+  L.push('', '## Proposed original contributions', '',
+    '| ID | Contribution | Mechanism | Status | Implemented in | Evidence | Experiment that could falsify it | Prior work to check |', '|---|---|---|---|---|---|---|---|');
+  for (const c of inventions.ours) {
+    const files = c.implemented_in.map(p => `\`${p}\``).join(', ') || 'Nothing yet';
+    L.push(`| ${c.id.toUpperCase()} | ${cell(c.name)} | ${cell(c.mechanism)} | ${status.get(c.status)} | ${files} | ${cell(c.evidence)} | ${cell(c.experiment)} | ${cell(c.prior_work)} |`);
+  }
+  L.push('', 'Novelty is unassessed for every contribution. Check the prior work named in each row before calling any of them new.', '');
+  return L.join('\n');
+}
+
 export function compile(out, { revision = null, ref = 'main', today } = {}) {
   const cat = validate(load(), today);
   const patterns = resolve(cat);
@@ -430,32 +604,29 @@ export function compile(out, { revision = null, ref = 'main', today } = {}) {
     fs.writeFileSync(file, data);
     written.set(rel, sha256(data));
   };
-  for (const pat of patterns) {
-    write(`exports/${pat.id}/workspace.dsl`, structurizr(cat, pat));
-    write(`exports/${pat.id}/journey.sequence.mmd`, mermaidSequence(pat));
-    for (const p of cat.providers.providers) {
-      write(`exports/${pat.id}/${p.id}.reactflow.json`, JSON.stringify(reactFlow(pat, p.id), null, 2) + '\n');
-      write(`exports/${pat.id}/${p.id}.mmd`, mermaidFlow(cat, pat, p.id));
-      write(`exports/${pat.id}/${p.id}.drawio`, drawio(cat, pat, p.id));
-      write(`exports/${pat.id}/${p.id}.svg`, svg(cat, pat, p.id));
-    }
-  }
+  for (const [rel, render] of exportPlan(cat, patterns)) write(rel, render());
   const templates = cat.templates.map(t => ({ ...t, deploy_url: deployUrl(t, ref), source_url: `${REPOSITORY}/tree/${ref}/${t.path}` }));
   const usedServices = new Set(patterns.flatMap(p => Object.values(p.realizations).flatMap(r => Object.values(r.bindings).filter(Boolean).map(b => b.id))));
+  const { partners, inventions } = registers(cat, patterns);
   const bundle = {
     schema: 'ai-architect-catalog/v1',
     source_repository: REPOSITORY,
     source_revision: revision,
     deploy_ref: ref,
     state: 'designed architectures; templates are local-tested only; no provider deployment receipts',
-    counts: { patterns: patterns.length, providers: cat.providers.providers.length, services: usedServices.size, sources: cat.sources.length, realizations: patterns.length * cat.providers.providers.length, templates: templates.length },
+    counts: {
+      patterns: patterns.length, providers: cat.providers.providers.length, services: usedServices.size, sources: cat.sources.length,
+      realizations: patterns.length * cat.providers.providers.length, templates: templates.length,
+      partners: partners.partners.length, field_inventions: inventions.field.length, contributions: inventions.ours.length,
+    },
     layers: cat.roles.layers, roles: cat.roles.roles,
     criteria: cat.providers.criteria, scoring_note: cat.providers.scoring_note,
     providers: cat.providers.providers.map(({ defaults, ...p }) => p),
-    sources: cat.sources, templates, patterns,
+    sources: cat.sources, templates, patterns, partners, inventions,
   };
   write('catalog.json', JSON.stringify(bundle, null, 2) + '\n');
   write('llms.txt', llms(bundle));
+  write('ecosystem.md', ecosystemMarkdown(cat, { partners, inventions }));
   const manifest = { schema: 'ai-architect-catalog-export/v1', source_revision: revision, compiler_sha256: sha256(fs.readFileSync(fileURLToPath(import.meta.url))), files: [...written].sort(([a], [b]) => a.localeCompare(b)).map(([p, h]) => ({ path: p, sha256: h })) };
   fs.writeFileSync(path.join(out, 'manifest.json'), JSON.stringify(manifest, null, 2) + '\n');
   return { manifest, bundle };
@@ -468,12 +639,35 @@ function llms(bundle) {
     for (const [id, r] of Object.entries(p.realizations)) L.push(`- ${id}: ${r.headline} (mean judgement ${r.mean_score}/5)`);
     L.push('');
   }
+  L.push('## Partners and programs', '', bundle.partners.policy, '');
+  for (const e of bundle.partners.partners) L.push(`- ${e.name} (${e.kind}): ${e.contributes} Program: ${e.program ? e.program.name : 'none'}. Relationship: ${e.relationship.status}.`);
+  L.push('', '## Field inventions', '');
+  for (const f of bundle.inventions.field) L.push(`- ${f.date} ${f.name}, ${f.origin} (${f.record.url}): ${f.consequence}`);
+  L.push('', '## Proposed original contributions (novelty unassessed)', '');
+  for (const c of bundle.inventions.ours) L.push(`- ${c.id.toUpperCase()} ${c.name} [${c.status}]: ${c.mechanism}`);
+  L.push('');
   return L.join('\n');
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const [out, ...rest] = process.argv.slice(2);
-  if (!out) { console.error('Usage: node catalog/compile.mjs OUTPUT_DIR [--revision SHA] [--ref BRANCH]'); process.exit(2); }
+  if (out === '--ecosystem') {
+    // Regenerate (or, with --check, verify) the committed register in solution-kit/.
+    const file = path.join(REPO, 'solution-kit/ecosystem.md');
+    try {
+      const cat = validate(load());
+      const text = ecosystemMarkdown(cat, registers(cat, resolve(cat)));
+      if (rest.includes('--check')) {
+        if (fs.readFileSync(file, 'utf8') !== text) { console.error('solution-kit/ecosystem.md is out of date; run npm run catalog:ecosystem'); process.exit(1); }
+        console.log('solution-kit/ecosystem.md matches the registers.');
+      } else {
+        fs.writeFileSync(file, text);
+        console.log('Wrote solution-kit/ecosystem.md from the registers.');
+      }
+    } catch (e) { console.error(e.message); process.exit(1); }
+    process.exit(0);
+  }
+  if (!out) { console.error('Usage: node catalog/compile.mjs OUTPUT_DIR [--revision SHA] [--ref BRANCH] | --ecosystem [--check]'); process.exit(2); }
   const opt = name => { const i = rest.indexOf(name); return i >= 0 ? rest[i + 1] : undefined; };
   try {
     const { bundle, manifest } = compile(path.resolve(out), { revision: opt('--revision') ?? null, ref: opt('--ref') ?? 'main' });

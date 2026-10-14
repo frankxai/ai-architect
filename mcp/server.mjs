@@ -14,6 +14,7 @@
 //   catalog_patterns            — list the multi-cloud workload patterns
 //   catalog_realization         — one pattern resolved onto one provider
 //   catalog_view                — Mermaid, sequence, React Flow, Structurizr or diagrams.net text
+//   catalog_register            — the partner and program register, or the invention register
 //
 // Configure as a local stdio server. Do not host this.
 // Caller-supplied `root` is a local filesystem path. This server does not
@@ -24,7 +25,7 @@ import { existsSync, readFileSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { nextIncomplete, parseWorkflow } from '../scripts/parse-workflow.mjs';
-import { load, validate, resolve, mermaidFlow, mermaidSequence, reactFlow, structurizr, drawio, deployUrl } from '../catalog/compile.mjs';
+import { load, validate, resolve, mermaidFlow, mermaidSequence, reactFlow, structurizr, drawio, deployUrl, registers } from '../catalog/compile.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const pluginRoot = path.resolve(__dirname, '..');
@@ -115,6 +116,15 @@ const TOOLS = [
         provider: { type: 'string', description: 'Required for mermaid, reactflow and drawio.' },
         format: { type: 'string', enum: ['mermaid', 'sequence', 'reactflow', 'structurizr', 'drawio'] },
       },
+    },
+  },
+  {
+    name: 'catalog_register',
+    description: 'Return a register: partners (organizations, programs, relationship status with its evidence rule, and what each one does in the catalog) or inventions (dated field inventions with their primary records and the roles they shaped, plus proposed contributions with files, evidence and a falsifying experiment). No entry claims a partnership or novelty.',
+    inputSchema: {
+      type: 'object',
+      required: ['register'],
+      properties: { register: { type: 'string', enum: ['partners', 'inventions'] } },
     },
   },
 ].map((tool) => ({
@@ -214,13 +224,18 @@ function catalog() {
 }
 
 function handleCatalog(name, args) {
-  const allowed = { catalog_patterns: [], catalog_realization: ['pattern', 'provider'], catalog_view: ['pattern', 'provider', 'format'] }[name];
+  const allowed = { catalog_patterns: [], catalog_realization: ['pattern', 'provider'], catalog_view: ['pattern', 'provider', 'format'], catalog_register: ['register'] }[name];
   if (!args || typeof args !== 'object' || Array.isArray(args) || Object.keys(args).some((k) => !allowed.includes(k))
     || Object.values(args).some((v) => typeof v !== 'string' || !v)) {
     throw new Error(`arguments must be an object with string fields from: ${allowed.join(', ') || 'none'}`);
   }
   const { cat, patterns, stale } = catalog();
   const notice = { state: 'designed architectures; no provider deployment receipts', stale_sources: stale };
+  if (name === 'catalog_register') {
+    const regs = registers(cat, patterns);
+    if (!Object.hasOwn(regs, args.register)) throw new Error('register must be partners or inventions');
+    return { ...notice, register: args.register, ...regs[args.register] };
+  }
   if (name === 'catalog_patterns') {
     return { ...notice, patterns: patterns.map((p) => ({ id: p.id, title: p.title, sophistication: p.sophistication, customer_job: p.customer_job, accepted_result: p.accepted_result, scores: Object.fromEntries(Object.entries(p.realizations).map(([k, r]) => [k, r.mean_score])) })) };
   }

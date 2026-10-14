@@ -1,0 +1,423 @@
+{
+  "schema": "ai-architect-partners/v1",
+  "policy": "No entry claims a partnership, endorsement, reseller right or certification. Every relationship is 'none' until a reference exists: 'applied' needs an application reference; 'member' and 'partner' need an agreement reference, scope and expiry date. Program names, tracks and requirements are volatile and expire with their sources.",
+  "kinds": [
+    {
+      "id": "cloud",
+      "title": "Cloud providers"
+    },
+    {
+      "id": "model-lab",
+      "title": "Model labs"
+    },
+    {
+      "id": "compute",
+      "title": "Accelerated computing"
+    },
+    {
+      "id": "standard",
+      "title": "Open standards"
+    },
+    {
+      "id": "tooling",
+      "title": "Open-source tooling"
+    }
+  ],
+  "statuses": [
+    "none",
+    "applied",
+    "member",
+    "partner"
+  ],
+  "partners": [
+    {
+      "id": "google-cloud",
+      "name": "Google Cloud",
+      "kind": "cloud",
+      "provider": "gcp",
+      "contributes": "Gemini models on Agent Platform, Cloud Run, Agent Search and the official icon set used in the catalog's Google Cloud views.",
+      "program": {
+        "name": "Google Cloud Partner Advantage",
+        "track": "Service engagement: consulting, training and integration",
+        "source": "prog-gcp-partner-advantage",
+        "verified": true
+      },
+      "used_in": [],
+      "exports": [],
+      "relationship": {
+        "status": "none",
+        "reference": null
+      },
+      "fit": "Primary provider in the catalog and home of the Cloud Run template; a services engagement matches architecture and delivery work.",
+      "next_step": "Decide whether to apply under the Service engagement, then record the application reference here.",
+      "sources": [
+        "prog-gcp-partner-advantage",
+        "gcp-architecture-center"
+      ]
+    },
+    {
+      "id": "vercel",
+      "name": "Vercel",
+      "kind": "cloud",
+      "provider": "vercel",
+      "contributes": "AI SDK, AI Gateway, Functions and the deploy button behind the Vercel template; the Academy itself runs on Vercel.",
+      "program": {
+        "name": "Vercel solution partners",
+        "track": "Solution partner: agencies, consultancies and systems integrators",
+        "source": "prog-vercel-partners",
+        "verified": true
+      },
+      "used_in": [],
+      "exports": [],
+      "relationship": {
+        "status": "none",
+        "reference": null
+      },
+      "fit": "Primary provider with a shipped template and the platform the Academy is hosted on.",
+      "next_step": "Ask Vercel partnerships for the solution partner criteria, which are not published.",
+      "sources": [
+        "prog-vercel-partners",
+        "vercel-ai-gateway-sdk"
+      ]
+    },
+    {
+      "id": "cloudflare",
+      "name": "Cloudflare",
+      "kind": "cloud",
+      "provider": "cloudflare",
+      "contributes": "Workers, Workers AI, AI Gateway and AI Search; runs the Cloudflare template.",
+      "program": {
+        "name": "Cloudflare Partner Network",
+        "track": "Services partner tracks, or the self-serve agency program (beta)",
+        "source": "prog-cloudflare-partners",
+        "verified": true
+      },
+      "used_in": [],
+      "exports": [],
+      "relationship": {
+        "status": "none",
+        "reference": null
+      },
+      "fit": "Primary provider with a shipped template; the edge runtime suits low-cost grounded answers.",
+      "next_step": "Compare the agency program with the authorized service delivery track before applying.",
+      "sources": [
+        "prog-cloudflare-partners",
+        "cf-ai-gateway-binding"
+      ]
+    },
+    {
+      "id": "aws",
+      "name": "AWS",
+      "kind": "cloud",
+      "provider": "aws",
+      "contributes": "Bedrock, AgentCore and the Generative AI Lens referenced by the AWS realizations.",
+      "program": {
+        "name": "AWS Partner Network",
+        "track": "Services path: Select, Advanced and Premier tiers",
+        "source": "prog-aws-apn",
+        "verified": true
+      },
+      "used_in": [],
+      "exports": [],
+      "relationship": {
+        "status": "none",
+        "reference": null
+      },
+      "fit": "Secondary provider in the catalog with no template yet.",
+      "next_step": "Ship an AWS template of the answer contract before considering the services path.",
+      "sources": [
+        "prog-aws-apn",
+        "aws-genai-lens"
+      ]
+    },
+    {
+      "id": "microsoft-azure",
+      "name": "Microsoft Azure",
+      "kind": "cloud",
+      "provider": "azure",
+      "contributes": "Microsoft Foundry and the Azure AI workload guidance referenced by the Azure realizations.",
+      "program": {
+        "name": "Microsoft AI Cloud Partner Program",
+        "track": "Membership through a verified Partner Center account",
+        "source": "prog-microsoft-ai-cloud",
+        "verified": true
+      },
+      "used_in": [],
+      "exports": [],
+      "relationship": {
+        "status": "none",
+        "reference": null
+      },
+      "fit": "Secondary provider; strongest where customers already run Entra ID and Microsoft 365.",
+      "next_step": "Ship an Azure template before joining; membership needs a verified Partner Center account.",
+      "sources": [
+        "prog-microsoft-ai-cloud",
+        "azure-ai-pattern"
+      ]
+    },
+    {
+      "id": "railway",
+      "name": "Railway",
+      "kind": "cloud",
+      "provider": "railway",
+      "contributes": "Container services, managed Postgres and cron for the Railway realizations.",
+      "program": {
+        "name": "Railway templates and kickback",
+        "track": "Template creator; open source and technology partner programs",
+        "source": "prog-railway-templates",
+        "verified": true
+      },
+      "used_in": [],
+      "exports": [],
+      "relationship": {
+        "status": "none",
+        "reference": null
+      },
+      "fit": "Every pattern is realized on Railway, but no Railway template ships yet.",
+      "next_step": "Publish the answer-contract template to the Railway marketplace, where published templates earn a usage share.",
+      "sources": [
+        "prog-railway-templates",
+        "railway-docs"
+      ]
+    },
+    {
+      "id": "anthropic",
+      "name": "Anthropic",
+      "kind": "model-lab",
+      "provider": null,
+      "contributes": "Claude models, the Model Context Protocol and Claude Code, which runs the AI Architect plugin and skills.",
+      "program": {
+        "name": "Claude Partner Network",
+        "track": "Services track for consultancies",
+        "source": "prog-claude-partner-network",
+        "verified": true
+      },
+      "used_in": [
+        ".claude-plugin/plugin.json",
+        "skills"
+      ],
+      "exports": [],
+      "relationship": {
+        "status": "none",
+        "reference": null
+      },
+      "fit": "The plugin and skills run in Claude Code, and the Vercel template routes to a Claude model by default.",
+      "next_step": "Read the services track requirements on the official page; tier figures in press coverage are unverified.",
+      "sources": [
+        "prog-claude-partner-network",
+        "mcp-announcement"
+      ]
+    },
+    {
+      "id": "openai",
+      "name": "OpenAI",
+      "kind": "model-lab",
+      "provider": null,
+      "contributes": "GPT models, function calling, Structured Outputs and the image model named in the catalog's image recipes.",
+      "program": {
+        "name": "OpenAI Partner Network",
+        "track": "Reported tiers: Select, Advanced and Elite",
+        "source": "prog-openai-partner-network",
+        "verified": false
+      },
+      "used_in": [],
+      "exports": [],
+      "relationship": {
+        "status": "none",
+        "reference": null
+      },
+      "fit": "Image recipes name an OpenAI image model; no template routes to OpenAI by default.",
+      "next_step": "Find the official program page before acting; only secondary coverage was found.",
+      "sources": [
+        "prog-openai-partner-network",
+        "openai-gpt-image-2"
+      ]
+    },
+    {
+      "id": "nvidia",
+      "name": "NVIDIA",
+      "kind": "compute",
+      "provider": null,
+      "contributes": "Accelerated computing for self-hosted and fine-tuned models; no catalog realization uses it today.",
+      "program": {
+        "name": "NVIDIA Partner Network",
+        "track": "Consulting and solution partner types with competency levels",
+        "source": "prog-nvidia-npn",
+        "verified": true
+      },
+      "used_in": [],
+      "exports": [],
+      "relationship": {
+        "status": "none",
+        "reference": null
+      },
+      "fit": "Relevant only for customers who self-host or fine-tune models; the catalog uses managed model APIs.",
+      "next_step": "No action until a pattern needs self-hosted inference.",
+      "sources": [
+        "prog-nvidia-npn"
+      ]
+    },
+    {
+      "id": "model-context-protocol",
+      "name": "Model Context Protocol",
+      "kind": "standard",
+      "provider": null,
+      "contributes": "The tool and context protocol behind the enterprise MCP tool hub pattern and the AI Architect MCP server.",
+      "program": {
+        "name": "Agentic AI Foundation (Linux Foundation)",
+        "track": "Open governance; contributions through the public specification process",
+        "source": "mcp-aaif",
+        "verified": true
+      },
+      "used_in": [
+        "mcp/server.mjs",
+        "catalog/patterns/enterprise-mcp-tool-hub.json"
+      ],
+      "exports": [],
+      "relationship": {
+        "status": "none",
+        "reference": null
+      },
+      "fit": "Core to the tool hub pattern; the engine ships its own MCP server.",
+      "next_step": "Track specification changes and contribute only through the public process.",
+      "sources": [
+        "mcp-spec",
+        "mcp-aaif"
+      ]
+    },
+    {
+      "id": "agent2agent",
+      "name": "Agent2Agent protocol",
+      "kind": "standard",
+      "provider": null,
+      "contributes": "Agent discovery and task exchange across vendors, complementary to MCP.",
+      "program": {
+        "name": "A2A project (Linux Foundation)",
+        "track": "Open governance",
+        "source": "a2a-lf-launch",
+        "verified": true
+      },
+      "used_in": [],
+      "exports": [],
+      "relationship": {
+        "status": "none",
+        "reference": null
+      },
+      "fit": "Not used by any pattern yet; a candidate for the coordinated-agents pattern.",
+      "next_step": "Evaluate it for the agentic operations workflow before adopting it.",
+      "sources": [
+        "a2a-lf-launch",
+        "a2a-announcement"
+      ]
+    },
+    {
+      "id": "opentelemetry",
+      "name": "OpenTelemetry",
+      "kind": "standard",
+      "provider": null,
+      "contributes": "Trace and metric conventions, including generative AI spans, for the observability role.",
+      "program": {
+        "name": "OpenTelemetry (CNCF)",
+        "track": "Open governance; generative AI conventions in Development status",
+        "source": "otel-genai-semconv",
+        "verified": true
+      },
+      "used_in": [],
+      "exports": [],
+      "relationship": {
+        "status": "none",
+        "reference": null
+      },
+      "fit": "Every pattern has an observability role, and the generative AI conventions are not yet stable.",
+      "next_step": "Pin a conventions version in the templates once they stabilize.",
+      "sources": [
+        "otel-genai-semconv"
+      ]
+    },
+    {
+      "id": "c4-structurizr",
+      "name": "C4 model and Structurizr",
+      "kind": "tooling",
+      "provider": null,
+      "contributes": "The C4 views and the Structurizr DSL that every pattern exports.",
+      "program": null,
+      "used_in": [],
+      "exports": [
+        "structurizr"
+      ],
+      "relationship": {
+        "status": "none",
+        "reference": null
+      },
+      "fit": "Every pattern compiles to a Structurizr workspace with one deployment environment per provider.",
+      "next_step": "Keep exports parseable by the Structurizr DSL library and credit the method in documentation.",
+      "sources": [
+        "c4-model",
+        "structurizr-dsl"
+      ]
+    },
+    {
+      "id": "xyflow",
+      "name": "xyflow (React Flow)",
+      "kind": "tooling",
+      "provider": null,
+      "contributes": "The React Flow library behind the Studio canvas and the React Flow exports.",
+      "program": null,
+      "used_in": [],
+      "exports": [
+        "reactflow"
+      ],
+      "relationship": {
+        "status": "none",
+        "reference": null
+      },
+      "fit": "Renders every Studio workbench.",
+      "next_step": "Consider financially supporting the maintainers if the Studio becomes a product surface.",
+      "sources": [
+        "react-flow"
+      ]
+    },
+    {
+      "id": "mermaid",
+      "name": "Mermaid",
+      "kind": "tooling",
+      "provider": null,
+      "contributes": "Text-defined flowcharts and journey sequences exported for every pattern and provider.",
+      "program": null,
+      "used_in": [],
+      "exports": [
+        "mermaid"
+      ],
+      "relationship": {
+        "status": "none",
+        "reference": null
+      },
+      "fit": "Every realization exports a Mermaid flowchart, and every pattern a journey sequence.",
+      "next_step": "Keep exports rendering in the pinned Mermaid version and in GitHub Markdown.",
+      "sources": [
+        "mermaid-docs"
+      ]
+    },
+    {
+      "id": "diagrams-net",
+      "name": "diagrams.net (draw.io)",
+      "kind": "tooling",
+      "provider": null,
+      "contributes": "Editable diagram files exported for every realization, sharing component IDs with the other views.",
+      "program": null,
+      "used_in": [],
+      "exports": [
+        "drawio"
+      ],
+      "relationship": {
+        "status": "none",
+        "reference": null
+      },
+      "fit": "The editable hand-off format for architects who refine diagrams by hand.",
+      "next_step": "Keep exports opening cleanly in the desktop and web editors.",
+      "sources": [
+        "drawio-docs"
+      ]
+    }
+  ]
+}

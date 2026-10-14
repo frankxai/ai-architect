@@ -20,6 +20,8 @@ Seven workload patterns, each realized on Google Cloud, Vercel, Cloudflare, AWS,
 - `sources.json`: dated sources. Compilation fails once a review date passes; re-read the source, do not move the date.
 - `patterns/*.json`: components on a grid, typed flows with data classes, the request journey, team lanes, screens, evaluations, risks, illustrative economics and one realization per provider with scores and a rationale.
 - `templates.json`: the one-click templates that implement the [answer contract](../templates/deploy/answer-core/README.md).
+- `partners.json`: cloud providers, model labs, accelerated computing, open standards and open-source tooling, each with its program and track, a relationship status and the next step. Every status is `none`; `applied` needs an application reference, and `member` or `partner` need an agreement reference, scope and an unexpired expiry date. A program marked verified must rest on a primary or search-index source.
+- `inventions.json`: dated field inventions, each tied to its arXiv first version or announcement and to the catalog roles it shaped, plus proposed contributions of this repository with the files that implement them, the evidence for their status and an experiment that could falsify them. Novelty is unassessed.
 
 ## Compile
 
@@ -28,7 +30,9 @@ node catalog/compile.mjs /tmp/catalog-out --revision "$(git rev-parse HEAD)"
 node --test catalog/compile.test.mjs
 ```
 
-Output per pattern: `<provider>.reactflow.json`, `<provider>.mmd`, `<provider>.drawio`, `<provider>.svg` for every provider, plus `journey.sequence.mmd` and `workspace.dsl` (Structurizr, every provider as a deployment environment). `catalog.json` is the resolved bundle the Academy Studio renders; `llms.txt` is a plain-text summary; `manifest.json` hashes every file.
+Output per pattern: `<provider>.reactflow.json`, `<provider>.mmd`, `<provider>.drawio`, `<provider>.svg` for every provider, plus `journey.sequence.mmd` and `workspace.dsl` (Structurizr, every provider as a deployment environment). `catalog.json` is the resolved bundle the Academy Studio renders, including both registers with derived fields (each provider's realizations, services, templates and mean judgement; each tool's export count; each invention's patterns); `llms.txt` is a plain-text summary; `ecosystem.md` is the readable register; `manifest.json` hashes every file.
+
+`solution-kit/ecosystem.md` is the same register, committed. Regenerate it with `npm run catalog:ecosystem`; a test fails when it drifts from the JSON.
 
 The views were validated with the tools that consume them on 11 October 2026: all 49 Mermaid flowcharts and 7 sequence diagrams parse and render in Mermaid 12.1.0, all 7 workspaces parse with the Structurizr DSL 6.2.3 library, and every diagrams.net file, SVG and React Flow document is well-formed with no dangling edge.
 
@@ -40,9 +44,11 @@ The views were validated with the tools that consume them on 11 October 2026: al
 - Economics charge cost to every attempt and report cost per accepted result. Every pattern states that its figures are assumptions.
 - Official Google Cloud icons appear only for Google services and only when the icon file matches its recorded hash. Other nodes use role glyphs. Download hosts for further official icon sets were blocked from the build environment; add icons by downloading them from cloud.google.com/icons and recording their hashes in `solution-kit/icons/registry.json`.
 - Screen fixtures may not use a percent sign, so illustrative numbers cannot be read as measurements.
+- Every catalog provider has exactly one partner entry. Partner text may not use partnership, certification or endorsement wording, and contribution text may not claim novelty, patents or firsts.
+- An arXiv identifier must match the year and month of the date it is cited for. Invention consequences may not state a measured gain. Contribution files must exist, and only a proposed contribution may have none.
 
 ## Claude Code and MCP
 
-`skills/architecture-studio/SKILL.md` teaches the method; `/architect-visualize <pattern> [provider]` writes the chosen views into a customer's `docs/architecture/views/`; the MCP server exposes `catalog_patterns`, `catalog_realization` and `catalog_view`.
+`skills/architecture-studio/SKILL.md` teaches the method; `/architect-visualize <pattern> [provider]` writes the chosen views into a customer's `docs/architecture/views/`; the MCP server exposes `catalog_patterns`, `catalog_realization`, `catalog_view` and `catalog_register`.
 
 Licensing: original catalog content is Apache-2.0 with the repository. Provider names are trademarks of their owners and do not imply partnership. Google Cloud icons remain Google property and are excluded from the Apache grant.
