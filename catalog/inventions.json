@@ -33,6 +33,18 @@
       "roles": ["model"]
     },
     {
+      "id": "bert", "name": "Bidirectional pre-trained encoders (BERT)", "kind": "model", "date": "2018-10-11", "origin": "Devlin et al.",
+      "arxiv": { "id": "1810.04805", "title": "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding" },
+      "consequence": "Pre-training an encoder once and fine-tuning it per task made pre-trained encoders the starting point for search, classification and extraction; the retrievers in this register build on them.",
+      "roles": ["model", "retrieval"]
+    },
+    {
+      "id": "sentence-bert", "name": "Sentence embeddings for similarity search", "kind": "retrieval", "date": "2019-08-27", "origin": "Reimers and Gurevych",
+      "arxiv": { "id": "1908.10084", "title": "Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks" },
+      "consequence": "Siamese training produced sentence embeddings comparable by cosine similarity, which made embedding a corpus once at ingest time and searching it by vector a practical pipeline.",
+      "roles": ["ingest", "retrieval"]
+    },
+    {
       "id": "scaling-laws", "name": "Neural scaling laws", "kind": "model", "date": "2020-01-23", "origin": "Kaplan et al.",
       "arxiv": { "id": "2001.08361", "title": "Scaling Laws for Neural Language Models" },
       "consequence": "Loss was shown to fall predictably with parameters, data and compute, which turned model training into a capital-planning problem and explains why most teams buy models rather than train them.",
