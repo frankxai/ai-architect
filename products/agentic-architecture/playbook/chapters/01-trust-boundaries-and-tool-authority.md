@@ -79,7 +79,7 @@ Route all tool invocations through a deterministic capability proxy that classif
 - **Negative / Cost:** Tier 2 actions add one asynchronous pause-and-resume round trip and require persistent storage for pending proposals.
 
 ## Verification Command
-`node products/agentic-architecture/scripts/verify-agentic-architecture.mjs`
+`node --experimental-strip-types products/agentic-architecture/scripts/verify-agentic-architecture.mjs`
 ```
 
 ## 4. Production failure mode: `FM-01`
@@ -101,7 +101,7 @@ Without a deterministic Tier 2 gate and tenant-scoped proxy, the agent invokes t
 3. Require a two-phase approval token (`approvalToken` bound to the SHA-256 hash of `toolName + canonicalJson(args)`) for all Tier 2 tools (`guide/labs/delegated-authority/policy.test.mjs` and `kit/mcp/reference-mcp-server.mjs`).
 
 ### Executable verification in this kit
-- Run `node products/agentic-architecture/scripts/verify-agentic-architecture.mjs` to execute the reference MCP server against both an unapproved Tier 2 write (`E_APPROVAL_REQUIRED`) and a path-escape probe (`E_PATH_CONTAINMENT`).
+- Run `node --experimental-strip-types products/agentic-architecture/scripts/verify-agentic-architecture.mjs` to execute the reference MCP server against both an unapproved Tier 2 write (`E_APPROVAL_REQUIRED`) and a path-escape probe (`E_PATH_CONTAINMENT`).
 
 ## 5. Worked implementation and red-team walkthrough
 
