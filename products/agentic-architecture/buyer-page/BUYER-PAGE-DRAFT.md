@@ -1,21 +1,21 @@
-# Buyer Page Draft: Agentic Architecture Playbook and Kit
+# Buyer page draft: Agentic Architecture Playbook and Kit
 
-**Surface:** AI Architect Studio (`/playbooks/agentic-architecture`)
-**Commercial posture:** **Waitlist-first (`available-soon`)**. `offer.facts.json` keeps `price.state: "decision_required", amount: null`. No price is displayed and no live checkout is enabled until G0 through G5 are signed off.
-**Visual system:** Uses the CMO Playbook System placeholders defined in [`playbook/VISUAL-PLACEHOLDERS.json`](../playbook/VISUAL-PLACEHOLDERS.json).
+Surface: `https://www.frankx.ai/ai-architecture`
+Commercial posture: Waitlist-first (`available-soon`). `offer.facts.json` keeps `price.state: "decision_required", amount: null, currency: "EUR"`. No price is displayed on the public page and no live checkout is enabled until release gates G0 through G5 pass.
+Visual system: Uses the CMO playbook system placeholders defined in [`playbook/VISUAL-PLACEHOLDERS.json`](../playbook/VISUAL-PLACEHOLDERS.json).
 
 ---
 
-## Section 1: First Screen (One Buyer Job and Visible Outcome)
+## Section 1: First screen (what your team builds and ships)
 
-**Eyebrow:** AI Architect Studio · Playbook 02 (beside Multi-Agent Ops) · v1.0.0
+Eyebrow: AI Architect Studio · Playbook 02 (beside Multi-Agent Ops) · v1.0.0
 
-**H1:** Design production agent systems whose trust boundaries, handoffs, and cost ceilings are enforced by code, not prompt wishes.
+H1: Ship multi-agent systems with a working capability proxy, C4 blueprints, and predictable unit economics.
 
-**Lede:** Start with the free Apache-2.0 `/architect` nine-stage lifecycle in your coding agent today. When your team needs the complete reference implementation, the Agentic Architecture Playbook and Kit adds 10 pattern-to-failure chapters, C4 diagrams as code, 10 worked ADRs, an executable threat and all-attempts cost workbook, a reference MCP capability proxy, and TypeScript plus n8n workflows verified by one script.
+Lede: Start with the free Apache-2.0 `/architect` plugin in your coding agent today. When your team is designing a production system, the Agentic Architecture Playbook and Kit gives you 10 full-length architecture chapters, a Structurizr C4 model and 4 Mermaid views, 10 worked ADRs, a runnable stdio MCP server with OAuth 2.1 audience checks and HMAC approval tokens, a two-provider TypeScript supervisor, and an OpenTelemetry trace cost calculator you can run against your own logs.
 
-**Primary actions:**
-- `Inspect the 6 runnable kit checks below` (`#prove-the-kit`)
+Primary actions:
+- `Inspect the 4 runnable kit checks below` (`#prove-the-kit`)
 - `Install the free /architect plugin` (`https://github.com/frankxai/ai-architect`)
 - `Join the waitlist for the Playbook and Kit` (`#waitlist`)
 
@@ -23,14 +23,14 @@
 
 ---
 
-## Section 2: Prove the Kit Works (`#prove-the-kit`)
+## Section 2: Prove the kit works (`#prove-the-kit`)
 
-Every artifact in the kit is checked by `node products/agentic-architecture/scripts/verify-agentic-architecture.mjs`:
+Every artifact in the kit is executed locally by `node --experimental-strip-types products/agentic-architecture/scripts/verify-agentic-architecture.mjs`:
 
-1. **Step 01 (`C4-as-code verified`):** Parses `kit/c4/agentic-system.dsl` (14 typed relationships across 9 architectural elements) and 4 Mermaid C4 views (`c1` context, `c2` containers, `c3` tool-plane components, `c4` Maker-Checker sequence).
-2. **Step 02 (`10 ADRs verified`):** Lints `ADR-0001` through `ADR-0010` against `PAT-01..10` and `FM-01..10`, confirming rejected alternatives and verification commands on every record.
-3. **Step 03 (`Threat & all-attempts cost workbook verified`):** Evaluates `T-01` through `T-10` (residual severity `<= 1`) and computes all-attempts unit economics across 3 production workloads, including retries and human review minutes.
-4. **Step 04 (`Reference MCP server & workflows verified`):** Executes `kit/mcp/reference-mcp-server.mjs` over JSON-RPC 2.0 (verifying `<untrusted-content>` wrapping, `docs/architecture/` path containment, idempotency replay, and Tier-2 two-phase approval tokens) and runs `kit/workflows/supervisor-maker-checker.ts` plus the 6-node n8n workflow graph.
+1. Step 01 (`C4-as-code verified`): Parses `kit/c4/agentic-system.dsl` (18 architectural elements and 16 typed relationships) and 4 Mermaid C4 views (`c1` system context, `c2` containers, `c3` tool-plane components, `c4` Maker-Checker sequence).
+2. Step 02 (`10 worked ADRs verified`): Lints `ADR-0001` through `ADR-0010` against `PAT-01..10` and `FM-01..10`, verifying that every record documents at least 3 concrete rejected alternatives with failure and cost reasons plus an executable verification command.
+3. Step 03 (`Threat bindings & OTel trace cost analyzer verified`): Verifies that each threat `T-01` through `T-10` binds to an executable test and error code (`E_APPROVAL_REQUIRED`, `E_OAUTH_AUDIENCE_MISMATCH`, `E_WRITE_COLLISION`, `E_RECURSION_DEPTH_EXCEEDED`), models all-attempts unit economics across 3 reference workloads, and ingests OpenTelemetry GenAI span exports (`ingestOtelTraceSpans`) to compute cost per accepted outcome.
+4. Step 04 (`Runnable MCP server & two-provider supervisor verified`): Runs `kit/mcp/reference-mcp-server.mjs` (verifying fail-closed startup without secrets, OAuth 2.1 RFC 8707 `aud` and `scope` checks, `<untrusted-content>` wrapping, `docs/architecture/` path containment, and HMAC-SHA256 approval tokens bound to `tenantId` and `expiresAt`) and executes `kit/workflows/supervisor-maker-checker.ts` across two provider families with disjoint write-path, recursion-depth, and 80% budget-ceiling checks.
 
 [[PLAYBOOK_KIT_TOPOLOGY]]
 
@@ -38,40 +38,41 @@ Every artifact in the kit is checked by `node products/agentic-architecture/scri
 
 ---
 
-## Section 3: Ten Chapters — Pattern, Decision Record, and Failure Mode in Every Chapter
+## Section 3: Ten full-depth chapters (pattern, worked ADR, failure story, and walkthrough in every chapter)
 
-1. **Ch 01 (Full Chapter):** Trust Boundaries, Tool Authority, and Blast-Radius Containment (`PAT-01`, `ADR-0001`, `FM-01`) — `[[PLAYBOOK_FIG_CH01_TRUST_BOUNDARY]]`
-2. **Ch 02:** Model-Provider Seams and Routing Under Model Churn (`PAT-02`, `ADR-0002`, `FM-02`) — `[[PLAYBOOK_FIG_CH02_MODEL_SEAM]]`
-3. **Ch 03:** Context Planes, Provenance Ledgers, and Retrieval Hygiene (`PAT-03`, `ADR-0003`, `FM-03`) — `[[PLAYBOOK_FIG_CH03_CONTEXT_ENVELOPE]]`
-4. **Ch 04 (Full Chapter):** Multi-Agent Topology, Handoff Contracts, and Maker-Checker Isolation (`PAT-04`, `ADR-0004`, `FM-04`) — `[[PLAYBOOK_FIG_CH04_MAKER_CHECKER]]`
-5. **Ch 05:** Tool Plane and Model Context Protocol (MCP) Server Hardening (`PAT-05`, `ADR-0005`, `FM-05`) — `[[PLAYBOOK_FIG_CH05_MCP_GATEWAY]]`
-6. **Ch 06:** Durable Execution, Checkpointing, and Out-of-Order Event Recovery (`PAT-06`, `ADR-0006`, `FM-06`) — `[[PLAYBOOK_FIG_CH06_CONVERGENT_SAGA]]`
-7. **Ch 07 (Full Chapter):** Memory Planes, State Convergence, and All-Attempts Cost Envelopes (`PAT-07`, `ADR-0007`, `FM-07`) — `[[PLAYBOOK_FIG_CH07_COST_ENVELOPE]]`
-8. **Ch 08:** Evaluation Planes, Regression Suites, and Adversarial Red-Teaming (`PAT-08`, `ADR-0008`, `FM-08`) — `[[PLAYBOOK_FIG_CH08_EVAL_TRIAD]]`
-9. **Ch 09:** Observability Planes, OpenTelemetry GenAI Traces, and Incident Replay (`PAT-09`, `ADR-0009`, `FM-09`) — `[[PLAYBOOK_FIG_CH09_OTEL_REPLAY]]`
-10. **Ch 10:** Release Gates, Portable Ownership, and Sovereign Exit Readiness (`PAT-10`, `ADR-0010`, `FM-10`) — `[[PLAYBOOK_FIG_CH10_GOVERNANCE_GATE]]`
+1. Ch 01: Trust boundaries, tool authority, and blast-radius containment (`PAT-01`, `ADR-0001`, `FM-01`) - `[[PLAYBOOK_FIG_CH01_TRUST_BOUNDARY]]`
+2. Ch 02: Model-provider seams and routing under model churn (`PAT-02`, `ADR-0002`, `FM-02`) - `[[PLAYBOOK_FIG_CH02_MODEL_SEAM]]`
+3. Ch 03: Context planes, provenance ledgers, and retrieval hygiene (`PAT-03`, `ADR-0003`, `FM-03`) - `[[PLAYBOOK_FIG_CH03_CONTEXT_ENVELOPE]]`
+4. Ch 04: Multi-agent topology, handoff contracts, and Maker-Checker isolation (`PAT-04`, `ADR-0004`, `FM-04`) - `[[PLAYBOOK_FIG_CH04_MAKER_CHECKER]]`
+5. Ch 05: Tool plane and Model Context Protocol (MCP) server hardening (`PAT-05`, `ADR-0005`, `FM-05`) - `[[PLAYBOOK_FIG_CH05_MCP_GATEWAY]]`
+6. Ch 06: Durable execution, checkpointing, and out-of-order event recovery (`PAT-06`, `ADR-0006`, `FM-06`) - `[[PLAYBOOK_FIG_CH06_CONVERGENT_SAGA]]`
+7. Ch 07: Memory planes, state convergence, and all-attempts cost envelopes (`PAT-07`, `ADR-0007`, `FM-07`) - `[[PLAYBOOK_FIG_CH07_COST_ENVELOPE]]`
+8. Ch 08: Evaluation planes, regression suites, and adversarial red-teaming (`PAT-08`, `ADR-0008`, `FM-08`) - `[[PLAYBOOK_FIG_CH08_EVAL_TRIAD]]`
+9. Ch 09: Observability planes, OpenTelemetry GenAI traces, and incident replay (`PAT-09`, `ADR-0009`, `FM-09`) - `[[PLAYBOOK_FIG_CH09_OTEL_REPLAY]]`
+10. Ch 10: Production release readiness and 48-hour provider exit drills (`PAT-10`, `ADR-0010`, `FM-10`) - `[[PLAYBOOK_FIG_CH10_EXIT_DRILL]]`
 
 ---
 
-## Section 4: Free Core vs. Playbook and Kit (`#waitlist`)
+## Section 4: Free core versus Playbook and Kit (`#waitlist`)
 
-| Layer | License | What You Get Today |
+| Layer | License | What your team gets |
 | :--- | :--- | :--- |
-| **Free Core (`/architect` plugin & working guide)** | `Apache-2.0` | Nine-stage gated CLI workflow, 23 working guide files, 58 dated primary sources, and the delegated-authority lab. Available now in `frankxai/ai-architect`. |
-| **Agentic Architecture Playbook and Kit** | Commercial terms (`Available soon`) | The 10-chapter playbook (3 chapters in full + 7 structured pattern/ADR/failure-mode chapters), Structurizr DSL + 4 Mermaid C4 views, 10 worked ADRs, the executable Threat & Cost Workbook, the reference MCP server, TypeScript + n8n workflows, and the 6-role Prompt Set. |
+| Free core (`/architect` plugin and working guide) | `Apache-2.0` | Nine-stage CLI workflow, 23 working guide files, 58 dated primary sources, and the delegated-authority lab in `frankxai/ai-architect`. |
+| Agentic Architecture Playbook and Kit | Commercial terms (`Available soon`) | All 10 full-depth playbook chapters, Structurizr C4 DSL + 4 Mermaid views, 10 worked ADRs, the Threat and OTel Trace Cost Workbook, the runnable stdio MCP server, the two-provider TypeScript supervisor + n8n workflow, and the 6-role prompt set. |
 
-### What You Still Do Yourself
+### What your team still does itself
 
-1. **Adapt the C4 and ADR files to your domain:** Replace the reference container names and workload token numbers in `kit/c4/agentic-system.dsl` and `kit/workbooks/threat-and-cost-workbook.json` with your system's real services and traffic.
-2. **Bring your own cloud, model, and KV accounts:** You run the workflows on your own infrastructure with your own API keys.
-3. **Wire your production identity provider:** The reference MCP server demonstrates OAuth 2.1 audience checks and SHA-256 two-phase approval tokens; you bind it to your organization's identity provider before enabling live Tier-2 writes.
-4. **Approve your own legal and compliance posture:** The threat workbook and governance gates are engineering tools, not legal certification.
+1. Adapt the C4 model and ADRs to your own services: Replace the reference container names and workload numbers in `kit/c4/agentic-system.dsl` and `kit/workbooks/threat-and-cost-workbook.json` with your system's services and traffic.
+2. Bring your own cloud, model, and KV accounts: You run the supervisor and MCP server on your own infrastructure with your own API keys.
+3. Connect your organization's OAuth 2.1 issuer: `kit/mcp/reference-mcp-server.mjs` implements RFC 8707 resource-indicator audience (`aud`), scope, and expiry verification plus HMAC-SHA256 two-phase approval tokens; you wire it to your identity provider's JWKS or token secret before enabling live Tier-2 writes.
+4. Approve your own legal and compliance posture: The threat workbook and release checklists are engineering tools, not legal advice.
 
 [[PLAYBOOK_BUYER_FUNNEL_FLOW]]
 
-### Waitlist Configuration (`@starlight/demand-capture`)
+### Waitlist configuration (`@starlight/demand-capture`)
 
 - `productId`: `"agentic-architecture-playbook"`
 - `productName`: `"Agentic Architecture Playbook and Kit"`
+- `surface`: `"https://www.frankx.ai/ai-architecture"`
 - `foundingBenefit`: `"First 100 are named in the release credits (optional) and help choose which cloud deployment realization ships next."`
 - `status`: `Available soon` (checkout stays off until G0 through G5 pass).

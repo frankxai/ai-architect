@@ -5,10 +5,12 @@
   "brand_id": "brand_ai_architect_studio",
   "title": "Agentic Architecture Playbook and Kit",
   "version": "1.0.0",
+  "canonical_surface": "https://www.frankx.ai/ai-architecture",
   "price": {
     "state": "decision_required",
     "amount": null,
-    "currency": "USD"
+    "currency": "EUR",
+    "reference_band_note": "Candidate reference band EUR 149 to 199 pending G5 owner decision and EU VAT MoR setup"
   },
   "checkout": {
     "state": "waitlist_only",
@@ -22,20 +24,20 @@
     "repository": "https://github.com/frankxai/ai-architect",
     "license": "Apache-2.0",
     "includes": [
-      "Nine-stage /architect evidence-gated plugin for Claude Code and Codex",
+      "Nine-stage /architect plugin for Claude Code and Codex",
       "Public working edition of the AI Architect Guide (23 manuscript files, 58 sources, 84 claims)",
       "Delegated-authority lab and answer-core deployment templates"
     ]
   },
   "paid_kit": {
     "includes": [
-      "10-chapter Agentic Architecture Playbook (patterns PAT-01..10, ADR templates, failure modes FM-01..10)",
-      "C4 diagrams as code (Structurizr DSL + 4 Mermaid C4 views + validator)",
-      "10 worked Architecture Decision Records (ADR-0001..ADR-0010 + linter)",
-      "Executable Threat and All-Attempts Cost Workbook (10 threats + 3 workload models)",
-      "Reference MCP Server (Tier 0/1/2 capability proxy, untrusted-content tagging, two-phase approval)",
-      "Workflow templates in plain TypeScript and importable n8n JSON",
-      "6-role versioned Prompt Set with golden, refusal, and injection eval cases"
+      "10-chapter Agentic Architecture Playbook (1,000+ prose words per chapter, patterns PAT-01..10, ADRs, failure modes FM-01..10)",
+      "C4 diagrams as code (Structurizr DSL with 18 elements and 16 relationships + 4 Mermaid C4 views + validator)",
+      "10 worked Architecture Decision Records (ADR-0001..ADR-0010 with 3 concrete rejected options each + linter)",
+      "Threat and OTel trace cost workbook (10 threat-to-test bindings + 3 workload models + OTel GenAI span cost ingester)",
+      "Runnable stdio MCP server (OAuth 2.1 RFC 8707 audience check, <untrusted-content> tagging, path containment, HMAC tenant+expiry approval tokens)",
+      "Two-provider TypeScript supervisor workflow and importable 6-node n8n workflow JSON",
+      "6-role versioned prompt set with JSON output schemas and golden, refusal, and injection eval cases"
     ],
     "excludes": [
       "Managed cloud hosting or third-party model API tokens",
