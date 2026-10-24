@@ -18,7 +18,7 @@
     "scoped_claim": "Model ID gemini-3.8-flash is GA with global and multi-region endpoints; REST path uses locations/global and generateContent.",
     "verification": "search-index",
     "checked_on": "2026-10-11",
-    "review_by": "2026-10-18",
+    "review_by": "2026-11-24",
     "volatility": "high"
   },
   {
@@ -62,7 +62,7 @@
     "scoped_claim": "AI SDK 7 routes provider/model strings such as anthropic/claude-sonnet-5 through AI Gateway when AI_GATEWAY_API_KEY is set; gateway fallbacks and provider order are request options.",
     "verification": "primary-doc",
     "checked_on": "2026-10-11",
-    "review_by": "2026-10-18",
+    "review_by": "2026-11-24",
     "volatility": "high"
   },
   {
@@ -128,7 +128,7 @@
     "scoped_claim": "env.AI.run(model, input, { gateway: { id } }) routes Workers AI and supported third-party models through AI Gateway; the 'default' gateway is created on first use.",
     "verification": "primary-doc",
     "checked_on": "2026-10-11",
-    "review_by": "2026-10-18",
+    "review_by": "2026-11-24",
     "volatility": "high"
   },
   {
@@ -194,7 +194,7 @@
     "scoped_claim": "Azure AI Foundry is now named Microsoft Foundry; models, Agent Service and evaluation sit in one platform.",
     "verification": "secondary",
     "checked_on": "2026-10-11",
-    "review_by": "2026-10-18",
+    "review_by": "2026-11-24",
     "volatility": "high"
   },
   {
@@ -271,7 +271,7 @@
     "scoped_claim": "gpt-image-2 is available in the API with stronger text rendering, layout and editing, and resolutions up to 2K.",
     "verification": "search-index",
     "checked_on": "2026-10-11",
-    "review_by": "2026-10-18",
+    "review_by": "2026-11-24",
     "volatility": "high"
   },
   {

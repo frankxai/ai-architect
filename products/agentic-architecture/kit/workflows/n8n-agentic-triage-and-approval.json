@@ -1,0 +1,138 @@
+{
+  "name": "Agentic Architecture - Signed Webhook Triage and Two-Phase Approval Loop",
+  "nodes": [
+    {
+      "id": "n1",
+      "name": "Webhook Ingress",
+      "type": "n8n-nodes-base.webhook",
+      "position": [
+        120,
+        240
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "agentic-triage"
+      }
+    },
+    {
+      "id": "n2",
+      "name": "Verify Timestamp and HMAC (timestamp.rawBody)",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        360,
+        240
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems"
+      }
+    },
+    {
+      "id": "n3",
+      "name": "Tag Untrusted Ingress and Classify Tier",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        600,
+        240
+      ],
+      "parameters": {
+        "mode": "runOnceForEachItem"
+      }
+    },
+    {
+      "id": "n4",
+      "name": "Two-Phase Human Approval Gate (Tier 2)",
+      "type": "n8n-nodes-base.wait",
+      "position": [
+        840,
+        240
+      ],
+      "parameters": {
+        "resume": "webhook"
+      }
+    },
+    {
+      "id": "n5",
+      "name": "Write-Before-Mark Convergent Executor",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1080,
+        240
+      ],
+      "parameters": {
+        "method": "POST"
+      }
+    },
+    {
+      "id": "n6",
+      "name": "Emit PII-Redacted OpenTelemetry Receipt",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        1320,
+        240
+      ],
+      "parameters": {
+        "mode": "runOnceForEachItem"
+      }
+    }
+  ],
+  "connections": {
+    "Webhook Ingress": {
+      "main": [
+        [
+          {
+            "node": "Verify Timestamp and HMAC (timestamp.rawBody)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify Timestamp and HMAC (timestamp.rawBody)": {
+      "main": [
+        [
+          {
+            "node": "Tag Untrusted Ingress and Classify Tier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tag Untrusted Ingress and Classify Tier": {
+      "main": [
+        [
+          {
+            "node": "Two-Phase Human Approval Gate (Tier 2)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Two-Phase Human Approval Gate (Tier 2)": {
+      "main": [
+        [
+          {
+            "node": "Write-Before-Mark Convergent Executor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write-Before-Mark Convergent Executor": {
+      "main": [
+        [
+          {
+            "node": "Emit PII-Redacted OpenTelemetry Receipt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

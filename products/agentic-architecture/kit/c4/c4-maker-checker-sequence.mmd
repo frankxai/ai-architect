@@ -1,0 +1,19 @@
+sequenceDiagram
+  participant Op as Operator
+  participant Sup as Deterministic Supervisor
+  participant Mak as Maker (Model Family A)
+  participant Prx as Capability Proxy
+  participant Chk as Checker (Model Family B, RO)
+  participant Own as Accountable Owner
+
+  Op->>Sup: Submit task + maxBudgetUsd
+  Sup->>Sup: Verify disjoint writePaths & budget < 80%
+  Sup->>Mak: Dispatch HandoffPacket
+  Mak->>Prx: Call stage_adr_draft (Tier 1 + idempotencyKey)
+  Prx-->>Mak: Draft receipt + SHA-256
+  Sup->>Chk: Dispatch CleanRoomPacket (writePaths=[])
+  Chk-->>Sup: Verdict PASS (maker != checker verified)
+  Mak->>Prx: Call approve_release_gate (Tier 2)
+  Prx-->>Own: Pending approval (payloadSha256)
+  Own->>Prx: Submit signed approvalToken
+  Prx-->>Sup: Committed receipt

@@ -1,0 +1,16 @@
+flowchart LR
+  operator["Person: Platform Architect"]
+  buyer["Person: End User / Buyer"]
+  owner["Person: Accountable Owner"]
+  system["Software System: Agentic Architecture Runtime"]
+  providerA["External System: Model Family A (Maker)"]
+  providerB["External System: Model Family B (Checker)"]
+  saas["External System: Merchant & Webhook APIs"]
+
+  buyer -->|"HTTPS requests"| system
+  operator -->|"Configures budgets & gates"| system
+  owner -->|"Approves Tier-2 writes"| system
+  saas -->|"Signed webhooks (timestamp.rawBody)"| system
+  system -->|"Pinned snapshot calls"| providerA
+  system -->|"Cross-model verification"| providerB
+  system -->|"Approved idempotent writes"| saas

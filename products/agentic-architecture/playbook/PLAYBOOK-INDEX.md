@@ -1,0 +1,21 @@
+# Agentic Architecture Playbook (10 Chapters)
+
+**Product:** `product_agentic_architecture_playbook` (AI Architect Studio)
+**Companion to:** Multi-Agent Ops Playbook and the open-source `/architect` nine-stage lifecycle.
+
+[[PLAYBOOK_HERO_DIAGRAM]]
+
+## Chapter Matrix
+
+| Ch | Title | Architecture Pattern | Decision Record | Failure Mode | Visual Placeholder | Craft Depth |
+| :- | :--- | :--- | :--- | :--- | :--- | :--- |
+| 01 | [Trust Boundaries, Tool Authority, and Blast-Radius Containment](chapters/01-trust-boundaries-and-tool-authority.md) | `PAT-01` Scoped Capability Proxy and Two-Phase Action Gate | [`ADR-0001`](../kit/adrs/ADR-0001.md) | `FM-01` Indirect Prompt Injection Escalating to Unattended External Write | `[[PLAYBOOK_FIG_CH01_TRUST_BOUNDARY]]` | Full chapter (1,300+ words) |
+| 02 | [Model-Provider Seams and Routing Under Model Churn](chapters/02-model-provider-seams-and-routing.md) | `PAT-02` Task-Tiered Model Gateway with Pinned Snapshot Contracts | [`ADR-0002`](../kit/adrs/ADR-0002.md) | `FM-02` Silent Provider Alias Drift Breaking Structured Output Schemas | `[[PLAYBOOK_FIG_CH02_MODEL_SEAM]]` | Structured pattern + ADR + failure mode |
+| 03 | [Context Planes, Provenance Ledgers, and Retrieval Hygiene](chapters/03-context-planes-and-provenance.md) | `PAT-03` Tagged Untrusted Context Envelope and Citation-Bound Retrieval | [`ADR-0003`](../kit/adrs/ADR-0003.md) | `FM-03` Cross-Tenant Context Bleed and Unattributed Hallucination | `[[PLAYBOOK_FIG_CH03_CONTEXT_ENVELOPE]]` | Structured pattern + ADR + failure mode |
+| 04 | [Multi-Agent Topology, Handoff Contracts, and Maker-Checker Isolation](chapters/04-multi-agent-topology-and-maker-checker.md) | `PAT-04` Bounded Supervisor-Specialist Graph with Clean-Room Checker Gate | [`ADR-0004`](../kit/adrs/ADR-0004.md) | `FM-04` Recursive Subagent Fanout, Shared-Branch Clobbering, and Self-Grading Bias | `[[PLAYBOOK_FIG_CH04_MAKER_CHECKER]]` | Full chapter (1,300+ words) |
+| 05 | [Tool Plane and Model Context Protocol (MCP) Server Hardening](chapters/05-tool-plane-and-mcp-hardening.md) | `PAT-05` Audience-Bound MCP Server with Schema-Strict Input and Idempotency Keys | [`ADR-0005`](../kit/adrs/ADR-0005.md) | `FM-05` Poisoned MCP Tool Description Hijacking Host Agent Control Flow | `[[PLAYBOOK_FIG_CH05_MCP_GATEWAY]]` | Structured pattern + ADR + failure mode |
+| 06 | [Durable Execution, Checkpointing, and Out-of-Order Event Recovery](chapters/06-durable-execution-and-state-convergence.md) | `PAT-06` Write-Before-Mark Convergent State Machine and Tombstone Ledger | [`ADR-0006`](../kit/adrs/ADR-0006.md) | `FM-06` Mid-Flight Worker Crash or Out-of-Order Webhook Dropping State | `[[PLAYBOOK_FIG_CH06_CONVERGENT_SAGA]]` | Structured pattern + ADR + failure mode |
+| 07 | [Memory Planes, State Convergence, and All-Attempts Cost Envelopes](chapters/07-memory-planes-and-cost-envelopes.md) | `PAT-07` Episodic Working Memory and Versioned Semantic Ledger with Hard Budget Breakers | [`ADR-0007`](../kit/adrs/ADR-0007.md) | `FM-07` Unbounded Memory Compaction Drift and Runaway Retry Spend | `[[PLAYBOOK_FIG_CH07_COST_ENVELOPE]]` | Full chapter (1,300+ words) |
+| 08 | [Evaluation Planes, Regression Suites, and Adversarial Red-Teaming](chapters/08-evaluation-planes-and-red-teaming.md) | `PAT-08` Golden-Case, Refusal, and Injection Triad Gate in CI | [`ADR-0008`](../kit/adrs/ADR-0008.md) | `FM-08` Benchmark Overfitting Masking Production Refusal or Injection Regressions | `[[PLAYBOOK_FIG_CH08_EVAL_TRIAD]]` | Structured pattern + ADR + failure mode |
+| 09 | [Observability Planes, OpenTelemetry GenAI Traces, and Incident Replay](chapters/09-observability-and-incident-replay.md) | `PAT-09` PII-Redacted Span Graph with Deterministic Replay Fixtures | [`ADR-0009`](../kit/adrs/ADR-0009.md) | `FM-09` Opaque Multi-Step Failure With Unredacted Credentials in Logs | `[[PLAYBOOK_FIG_CH09_OTEL_REPLAY]]` | Structured pattern + ADR + failure mode |
+| 10 | [Release Gates, Portable Ownership, and Sovereign Exit Readiness](chapters/10-release-gates-and-sovereign-exit.md) | `PAT-10` Nine-Stage Evidence Gate and Zero-Lock-In Export Package | [`ADR-0010`](../kit/adrs/ADR-0010.md) | `FM-10` Unverified Production Launch With Hardcoded Vendor Lock-In | `[[PLAYBOOK_FIG_CH10_GOVERNANCE_GATE]]` | Structured pattern + ADR + failure mode |

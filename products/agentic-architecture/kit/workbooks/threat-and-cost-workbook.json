@@ -1,0 +1,173 @@
+{
+  "schema": "agentic-architecture-threat-and-cost-workbook/v1",
+  "verified_on": "2026-10-24",
+  "threats": [
+    {
+      "id": "T-01",
+      "failure_mode": "FM-01",
+      "stride": "Elevation of Privilege",
+      "owasp_agentic": "ASI01-Excessive-Agency",
+      "title": "Indirect prompt injection triggers unattended Tier-2 write",
+      "inherent_severity": 5,
+      "control_id": "PAT-01",
+      "control": "Two-phase approval token bound to SHA-256 payload hash from distinct principal",
+      "residual_severity": 1,
+      "test_ref": "kit/mcp/reference-mcp-server.mjs"
+    },
+    {
+      "id": "T-02",
+      "failure_mode": "FM-02",
+      "stride": "Tampering",
+      "owasp_agentic": "ASI02-Model-Drift",
+      "title": "Floating model alias changes structured JSON output shape",
+      "inherent_severity": 4,
+      "control_id": "PAT-02",
+      "control": "Pinned snapshot IDs and strict JSON schema validation at gateway",
+      "residual_severity": 1,
+      "test_ref": "kit/prompts/prompt-set.json"
+    },
+    {
+      "id": "T-03",
+      "failure_mode": "FM-03",
+      "stride": "Information Disclosure",
+      "owasp_agentic": "ASI03-Cross-Tenant-Bleed",
+      "title": "Retrieval query omits tenant filter or emits ungrounded claim",
+      "inherent_severity": 5,
+      "control_id": "PAT-03",
+      "control": "Mandatory tenantId predicate and citation-marker grounding filter",
+      "residual_severity": 1,
+      "test_ref": "templates/deploy/answer-core/conformance.test.mjs"
+    },
+    {
+      "id": "T-04",
+      "failure_mode": "FM-04",
+      "stride": "Tampering",
+      "owasp_agentic": "ASI04-Multi-Agent-Collision",
+      "title": "Parallel specialists clobber shared files or self-approve gate",
+      "inherent_severity": 5,
+      "control_id": "PAT-04",
+      "control": "Disjoint writePaths check and cross-model read-only Checker gate",
+      "residual_severity": 1,
+      "test_ref": "kit/workflows/supervisor-maker-checker.ts"
+    },
+    {
+      "id": "T-05",
+      "failure_mode": "FM-05",
+      "stride": "Spoofing",
+      "owasp_agentic": "ASI05-Tool-Poisoning",
+      "title": "MCP tool description injection or ../ path traversal",
+      "inherent_severity": 5,
+      "control_id": "PAT-05",
+      "control": "<untrusted-content> wrapping, closed schema, and realpath containment",
+      "residual_severity": 1,
+      "test_ref": "kit/mcp/reference-mcp-server.mjs"
+    },
+    {
+      "id": "T-06",
+      "failure_mode": "FM-06",
+      "stride": "Repudiation",
+      "owasp_agentic": "ASI06-State-Desync",
+      "title": "Mid-write webhook failure or early refund resurrects access",
+      "inherent_severity": 5,
+      "control_id": "PAT-06",
+      "control": "Write-before-mark convergent upsert and early-refund tombstone",
+      "residual_severity": 1,
+      "test_ref": "kit/workflows/n8n-agentic-triage-and-approval.json"
+    },
+    {
+      "id": "T-07",
+      "failure_mode": "FM-07",
+      "stride": "Denial of Service",
+      "owasp_agentic": "ASI07-Runaway-Spend",
+      "title": "Compaction drops constraints or retry loop exhausts API budget",
+      "inherent_severity": 4,
+      "control_id": "PAT-07",
+      "control": "Verbatim working context doc + 70%/80% budget breaker and maxRetries=2",
+      "residual_severity": 1,
+      "test_ref": "kit/workbooks/evaluate-workbook.mjs"
+    },
+    {
+      "id": "T-08",
+      "failure_mode": "FM-08",
+      "stride": "Tampering",
+      "owasp_agentic": "ASI08-Eval-Blindness",
+      "title": "Prompt edit breaks refusal or injection boundary undetected",
+      "inherent_severity": 4,
+      "control_id": "PAT-08",
+      "control": "CI triad gate: golden + refusal + injection cases on every PR",
+      "residual_severity": 1,
+      "test_ref": "evals/run.mjs"
+    },
+    {
+      "id": "T-09",
+      "failure_mode": "FM-09",
+      "stride": "Information Disclosure",
+      "owasp_agentic": "ASI09-Secret-Leakage",
+      "title": "Error logs emit raw bearer tokens or customer email addresses",
+      "inherent_severity": 4,
+      "control_id": "PAT-09",
+      "control": "PII-free error codes and OpenTelemetry span secret redaction",
+      "residual_severity": 1,
+      "test_ref": "kit/mcp/reference-mcp-server.mjs"
+    },
+    {
+      "id": "T-10",
+      "failure_mode": "FM-10",
+      "stride": "Denial of Service",
+      "owasp_agentic": "ASI10-Lock-In-And-Broken-Archive",
+      "title": "Release archive fails outside git checkout or locks buyer to one vendor",
+      "inherent_severity": 4,
+      "control_id": "PAT-10",
+      "control": "Clean-room /tmp archive verification (G2) and 48-hour exit drill",
+      "residual_severity": 1,
+      "test_ref": "scripts/verify-agentic-architecture.mjs"
+    }
+  ],
+  "workloads": [
+    {
+      "id": "solo_operator_architecture_review",
+      "name": "Solo Operator Architecture Review Desk",
+      "monthly_accepted_runs": 120,
+      "mean_attempts_per_accepted_run": 1.25,
+      "p95_attempts_per_accepted_run": 2.0,
+      "input_tokens_per_attempt": 42000,
+      "output_tokens_per_attempt": 4500,
+      "input_price_per_million_usd": 3.0,
+      "output_price_per_million_usd": 15.0,
+      "tool_cost_per_attempt_usd": 0.02,
+      "human_review_minutes_per_accepted_run": 4.0,
+      "human_hourly_rate_usd": 90.0,
+      "max_run_budget_usd": 2.5
+    },
+    {
+      "id": "customer_support_triage_and_refund_guard",
+      "name": "Customer Support Triage with Two-Phase Refund Gate",
+      "monthly_accepted_runs": 3000,
+      "mean_attempts_per_accepted_run": 1.15,
+      "p95_attempts_per_accepted_run": 1.6,
+      "input_tokens_per_attempt": 14000,
+      "output_tokens_per_attempt": 1200,
+      "input_price_per_million_usd": 0.8,
+      "output_price_per_million_usd": 4.0,
+      "tool_cost_per_attempt_usd": 0.005,
+      "human_review_minutes_per_accepted_run": 0.5,
+      "human_hourly_rate_usd": 60.0,
+      "max_run_budget_usd": 0.5
+    },
+    {
+      "id": "multi_agent_release_gate_pipeline",
+      "name": "Supervisor + Maker + Cross-Model Checker Release Pipeline",
+      "monthly_accepted_runs": 60,
+      "mean_attempts_per_accepted_run": 1.4,
+      "p95_attempts_per_accepted_run": 2.2,
+      "input_tokens_per_attempt": 95000,
+      "output_tokens_per_attempt": 11000,
+      "input_price_per_million_usd": 5.0,
+      "output_price_per_million_usd": 25.0,
+      "tool_cost_per_attempt_usd": 0.12,
+      "human_review_minutes_per_accepted_run": 8.0,
+      "human_hourly_rate_usd": 120.0,
+      "max_run_budget_usd": 12.0
+    }
+  ]
+}

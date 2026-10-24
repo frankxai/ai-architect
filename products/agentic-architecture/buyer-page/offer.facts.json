@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0.0",
+  "product_id": "product_agentic_architecture_playbook",
+  "sku_id": "sku_agentic_architecture_playbook_v1",
+  "brand_id": "brand_ai_architect_studio",
+  "title": "Agentic Architecture Playbook and Kit",
+  "version": "1.0.0",
+  "price": {
+    "state": "decision_required",
+    "amount": null,
+    "currency": "USD"
+  },
+  "checkout": {
+    "state": "waitlist_only",
+    "merchant": null
+  },
+  "refund": {
+    "state": "draft",
+    "window_days": 14
+  },
+  "free_core": {
+    "repository": "https://github.com/frankxai/ai-architect",
+    "license": "Apache-2.0",
+    "includes": [
+      "Nine-stage /architect evidence-gated plugin for Claude Code and Codex",
+      "Public working edition of the AI Architect Guide (23 manuscript files, 58 sources, 84 claims)",
+      "Delegated-authority lab and answer-core deployment templates"
+    ]
+  },
+  "paid_kit": {
+    "includes": [
+      "10-chapter Agentic Architecture Playbook (patterns PAT-01..10, ADR templates, failure modes FM-01..10)",
+      "C4 diagrams as code (Structurizr DSL + 4 Mermaid C4 views + validator)",
+      "10 worked Architecture Decision Records (ADR-0001..ADR-0010 + linter)",
+      "Executable Threat and All-Attempts Cost Workbook (10 threats + 3 workload models)",
+      "Reference MCP Server (Tier 0/1/2 capability proxy, untrusted-content tagging, two-phase approval)",
+      "Workflow templates in plain TypeScript and importable n8n JSON",
+      "6-role versioned Prompt Set with golden, refusal, and injection eval cases"
+    ],
+    "excludes": [
+      "Managed cloud hosting or third-party model API tokens",
+      "Custom consulting, bespoke architecture sign-off, or legal advice"
+    ]
+  }
+}

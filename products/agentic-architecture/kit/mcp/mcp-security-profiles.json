@@ -1,0 +1,41 @@
+{
+  "schema": "agentic-architecture-mcp-profiles/v1",
+  "profiles": [
+    {
+      "id": "tier0_readonly_discovery",
+      "tier": 0,
+      "auth": "oauth2.1-bearer-audience-bound",
+      "allowed_scopes": [
+        "architecture:read"
+      ],
+      "untrusted_output_wrapping": true,
+      "requires_idempotency_key": false,
+      "requires_two_phase_approval": false
+    },
+    {
+      "id": "tier1_idempotent_draft",
+      "tier": 1,
+      "auth": "oauth2.1-bearer-audience-bound",
+      "allowed_scopes": [
+        "architecture:read",
+        "architecture:draft"
+      ],
+      "untrusted_output_wrapping": true,
+      "requires_idempotency_key": true,
+      "requires_two_phase_approval": false,
+      "path_containment_root": "docs/architecture"
+    },
+    {
+      "id": "tier2_confirm_gated_write",
+      "tier": 2,
+      "auth": "oauth2.1-bearer-audience-bound",
+      "allowed_scopes": [
+        "architecture:approve"
+      ],
+      "untrusted_output_wrapping": true,
+      "requires_idempotency_key": true,
+      "requires_two_phase_approval": true,
+      "distinct_approver_principal_required": true
+    }
+  ]
+}
