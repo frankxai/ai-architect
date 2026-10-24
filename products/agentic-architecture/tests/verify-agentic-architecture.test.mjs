@@ -32,7 +32,7 @@ test("all 10 chapters (>= 1000 prose words each, zero boilerplate duplication), 
   assert.equal(res.adrs.adrCount, 10)
   assert.equal(res.adrs.minRejectedAlternativesPerAdr, 3)
   assert.equal(res.workbook.threatsBoundToTests, 10)
-  assert.equal(res.workbook.otelTraceIngestion.costPerAcceptedRunUsd, 0.342)
+  assert.equal(res.workbook.otelTraceIngestion.costPerAcceptedRunUsd, 0.448)
   assert.equal(res.mcpServerVerified.oauth2AudienceCheck, true)
   assert.equal(res.supervisorVerified.subagentSpawnBanVerified, true)
 
@@ -235,7 +235,7 @@ test("TypeScript supervisor workflow enforces disjoint writePaths, cross-model c
   assert.throws(
     () =>
       ingestOtelTraceSpans([
-        { traceId: "t1", runId: "r1", attempt: 1, accepted: false, attributes: { "gen_ai.request.model": "claude-sonnet-5-5", "gen_ai.usage.input_tokens": 1000, "gen_ai.usage.output_tokens": 500 } },
+        { traceId: "t1", runId: "r1", attempt: 1, accepted: false, attributes: { "gen_ai.request.model": "tier-b-balanced-builder", "gen_ai.usage.input_tokens": 1000, "gen_ai.usage.output_tokens": 500 } },
       ]),
     /Zero accepted runs/,
   )

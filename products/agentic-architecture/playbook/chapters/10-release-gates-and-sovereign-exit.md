@@ -38,7 +38,7 @@ Combine a **Clean-Room Package Verifier** (`scripts/verify-agentic-architecture.
    - Executes the two-provider TypeScript supervisor (`kit/workflows/supervisor-maker-checker.ts`), verifying disjoint `writePaths`, cross-family Maker/Checker separation, subagent spawn blocking (`E_SUBAGENT_SPAWN_FORBIDDEN`), and the 80% budget ceiling.
 3. **48-Hour Provider Exit Drill Checklist:**
    Every external dependency in the architecture is held behind an open-format artifact or adapter seam:
-   - **Model provider exit (<2 hours):** Update the tier mapping in the capability router (`PAT-02`) from Provider A (`claude-sonnet-5-5`) to Provider B (`gpt-6.1-sol` or `gemini-4-argon`), run `npm run evals` (`16/16` cases) and `verify-agentic-architecture.mjs`, and deploy.
+   - **Model provider exit (<2 hours):** Update the tier mapping in the capability router (`PAT-02`) from Provider A (`tier-b-balanced-builder` primary adapter) to Provider B (`tier-b-balanced-builder` secondary adapter), run `npm run evals` (`16/16` cases) and `verify-agentic-architecture.mjs`, and deploy.
    - **Diagram and ADR exit (0 hours - already open):** All C4 models live in plain-text Structurizr DSL (`.dsl`) and Mermaid (`.mmd`), and all decisions live in Markdown (`ADR-0001..0010.md`) inside git.
    - **Workflow and tool exit (<24 hours):** Tool boundaries run on the open MCP JSON-RPC 2.0 protocol (`S08`), and orchestration logic ships in both plain TypeScript (`supervisor-maker-checker.ts`) and portable n8n workflow JSON (`n8n-agentic-triage-and-approval.json`).
 

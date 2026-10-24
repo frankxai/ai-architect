@@ -30,7 +30,7 @@ Implement a three-part **Redacted Span and Replay Pipeline** (`kit/workbooks/eva
 1. **Standardized OpenTelemetry GenAI Span Attributes (`S16`):**
    Every model call and tool invocation emits a structured span carrying:
    - `traceId`, `runId`, `attempt` (integer `1..N`), and `accepted` (boolean indicating whether the run passed its verification gate)
-   - `attributes["gen_ai.request.model"]` (the exact pinned snapshot ID, such as `"claude-sonnet-5-5"` or `"claude-opus-5-5"`)
+   - `attributes["gen_ai.request.model"]` (the capability tier or pinned snapshot ID, such as `"tier-b-balanced-builder"` or `"tier-c-frontier-reasoner"`)
    - `attributes["gen_ai.usage.input_tokens"]` and `attributes["gen_ai.usage.output_tokens"]`
    - `attributes["tool.name"]`, `attributes["tool.tier"]`, `attributes["tool.outcome_code"]`, and `attributes["tool.cost_usd"]`.
 2. **Deterministic Redaction Filter at Emission (`redactSpan`):**
@@ -113,16 +113,16 @@ Every engineer or contractor with read access to application logs can read live 
 In `kit/workbooks/sample-otel-spans.json` and `kit/workbooks/evaluate-workbook.mjs`, we ship a working trace-to-cost pipeline:
 
 - `sample-otel-spans.json` contains three spans across two runs (`run_101` and `run_102`):
-  - `tr_01` (`run_101`, `attempt: 1`, `accepted: false`): `claude-sonnet-5-5`, `38,000` input tokens, `3,200` output tokens, `USD 0.01` tool cost -> `USD 0.1180` on a failed first attempt.
-  - `tr_02` (`run_101`, `attempt: 2`, `accepted: true`): `claude-sonnet-5-5`, `44,000` input tokens, `4,800` output tokens, `USD 0.02` tool cost -> `USD 0.1560` on the accepted retry.
-  - `tr_03` (`run_102`, `attempt: 1`, `accepted: true`): `claude-opus-5-5`, `60,000` input tokens, `6,000` output tokens, `USD 0.05` tool cost -> `USD 0.4100`.
-- When `evaluate-workbook.mjs` runs `ingestOtelTraceSpans(sampleSpans)`, it sums all three spans (`totalComputeCostUsd = USD 0.6840` across `142,000` input tokens and `14,000` output tokens) and divides by the `2` accepted runs, reporting `meanAttemptsPerRun: 1.5` and `costPerAcceptedRunUsd: 0.342`.
+  - `tr_01` (`run_101`, `attempt: 1`, `accepted: false`): `tier-b-balanced-builder`, `38,000` input tokens, `3,200` output tokens, `USD 0.01` tool cost -> `USD 0.1720` on a failed first attempt.
+  - `tr_02` (`run_101`, `attempt: 2`, `accepted: true`): `tier-b-balanced-builder`, `44,000` input tokens, `4,800` output tokens, `USD 0.02` tool cost -> `USD 0.2240` on the accepted retry.
+  - `tr_03` (`run_102`, `attempt: 1`, `accepted: true`): `tier-c-frontier-reasoner`, `60,000` input tokens, `6,000` output tokens, `USD 0.05` tool cost -> `USD 0.5000`.
+- When `evaluate-workbook.mjs` runs `ingestOtelTraceSpans(sampleSpans)`, it sums all three spans (`totalComputeCostUsd = USD 0.8960` across `142,000` input tokens and `14,000` output tokens) and divides by the `2` accepted runs, reporting `meanAttemptsPerRun: 1.5` and `costPerAcceptedRunUsd: 0.448`.
 
 ### Red-team verification checklist for chapter 09
 
 - Pass a span batch where all spans have `accepted: false` into `ingestOtelTraceSpans` and confirm it throws an infinite-cost error rather than returning a finite number.
 - Pass a span naming an unknown model ID into `ingestOtelTraceSpans` and confirm it throws an unknown-model error rather than silently pricing tokens at $0.
-- Run `node products/agentic-architecture/kit/workbooks/evaluate-workbook.mjs` and confirm the OTel trace summary matches `costPerAcceptedRunUsd: 0.342`.
+- Run `node products/agentic-architecture/kit/workbooks/evaluate-workbook.mjs` and confirm the OTel trace summary matches `costPerAcceptedRunUsd: 0.448`.
 
 ## 6. Operational metrics and production rollout sequence
 

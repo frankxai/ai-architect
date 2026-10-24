@@ -5,7 +5,7 @@ import { fileURLToPath, pathToFileURL } from "node:url"
 
 import { validateC4 } from "../kit/c4/validate-c4.mjs"
 import { validateAdrs } from "../kit/adrs/validate-adrs.mjs"
-import { evaluateWorkbook } from "../kit/workbooks/evaluate-workbook.mjs"
+import { evaluateWorkbook, ingestOtelTraceSpans } from "../kit/workbooks/evaluate-workbook.mjs"
 import {
   computeApprovalToken,
   createReferenceMcpServer,

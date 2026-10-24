@@ -8,12 +8,12 @@ Failure mode: `FM-02` (Silent provider alias drift breaking structured output sc
 
 ## 1. The architect's problem
 
-In traditional cloud architecture, a database engine or message broker changes its wire protocol once every five years. In production agent systems, the underlying language model catalog shifts every four to eight weeks. Across the four primary model catalogs tracked in our source ledger (`S01` OpenAI, `S02` Anthropic, `S03` Google Gemini, and `S04` xAI Grok), input and output token prices span a 100x range: from USD 0.10 per million input tokens and USD 0.50 per million output tokens on high-volume models (`claude-haiku-5-5` and `gpt-6-luna`) to USD 10.00 per million input tokens and USD 50.00 per million output tokens on deep-reasoning models (`claude-fable-5-1` and `gpt-6-astra`).
+In traditional cloud architecture, a database engine or message broker changes its wire protocol once every five years. In production agent systems, the underlying language model catalog shifts every four to eight weeks. Across major commercial model catalogs (`S01` OpenAI, `S02` Anthropic, `S03` Google Gemini, and `S04` xAI Grok), input and output token prices between small high-volume classification models and deep-reasoning frontier models span more than an order of magnitude (always check each vendor's official pricing page for current token rates before locking capacity budgets).
 
 Teams that import a vendor SDK directly into thirty application files and hardcode a floating alias such as `-latest` suffer two predictable failures:
 
 1. **Silent behavioral and schema drift (`FM-02`):** As Google's Gemini API documentation (`S03`) notes explicitly, a `-latest` alias is hot-swapped whenever a new model variation ships. Even a minor change in how a model formats JSON tool arguments, handles markdown code fences around JSON, or chooses between a refusal and a partial answer can break a downstream parser that worked the day before.
-2. **Margin collapse from uniform frontier routing:** Routing every classification, tag extraction, and routing step through a USD 10 / USD 50 frontier model instead of a USD 0.10 / USD 0.50 tier-1 model inflates compute spend by 20x to 50x without improving task accuracy on simple extraction jobs.
+2. **Margin collapse from uniform frontier routing:** Routing every classification, tag extraction, and routing step through a frontier reasoning model instead of a small fast classification model inflates compute spend by an order of magnitude without improving task accuracy on simple extraction jobs (check current vendor pricing pages to compare exact tier rates).
 
 An architecture that survives model churn treats every model call as a replaceable capability contract behind a single owned seam.
 
@@ -27,9 +27,9 @@ Your application executes diverse cognitive tasks (fast intent routing, structur
 
 Isolate all provider SDKs and HTTP calls behind one internal **Capability Router** that exposes four named functional tiers rather than vendor model names:
 
-1. **`fast-classifier` (Tier A - low latency, high volume):** Bound to a pinned small model snapshot (`claude-haiku-5-5` at USD 0.10 / USD 0.50 per million tokens or `gpt-6-luna` at USD 0.10 / USD 0.50 per million tokens). Used for intent classification, routing, and format pre-checks with a 2-second timeout.
-2. **`balanced-builder` (Tier B - default production workhorse):** Bound to a pinned mid-tier snapshot (`claude-sonnet-5-5` at USD 2 / USD 10 per million tokens, `gpt-6.1-sol` at USD 2 / USD 10 per million tokens, or `grok-4.7` at USD 2 / USD 6 per million tokens under 200k context). Used for structured drafting, ADR authoring, and standard tool use.
-3. **`frontier-reasoner` (Tier C - complex architecture and multi-file synthesis):** Bound to `claude-opus-5-5` (USD 4 / USD 20 per million tokens), `gemini-4-argon`, or `gpt-6-astra` (USD 10 / USD 50 per million tokens). Invoked only when the task requires long-horizon planning or when Tier B fails a deterministic check.
+1. **`tier-a-fast-classifier` (Tier A - low latency, high volume):** Bound to a pinned small fast model snapshot from Provider A or Provider B (check your vendor's official model and pricing page for current snapshot IDs and rates). Used for intent classification, routing, and format pre-checks with a strict latency budget.
+2. **`tier-b-balanced-builder` (Tier B - default production workhorse):** Bound to a pinned mid-tier balanced model snapshot. Used for structured drafting, ADR authoring, and standard tool use.
+3. **`tier-c-frontier-reasoner` (Tier C - complex architecture and multi-file synthesis):** Bound to a pinned frontier reasoning model snapshot from a distinct provider family. Invoked only when the task requires long-horizon planning, independent verification, or when Tier B fails a deterministic check.
 4. **`independent-checker` (Tier D - cross-family verification):** Bound by rule to a provider family different from the active Maker tier (`PAT-04`). If the Maker ran on an Anthropic snapshot, `independent-checker` resolves to an OpenAI or Google snapshot.
 
 ```
@@ -45,7 +45,7 @@ Isolate all provider SDKs and HTTP calls behind one internal **Capability Router
               +------------------------+------------------------+
               | Primary Snapshot                                | Fallback Family (on 5xx)
               v                                                 v
-   [claude-sonnet-5-5 (S02)]                          [gpt-6.1-sol (S01)]
+   [Provider A pinned snapshot]                       [Provider B pinned snapshot]
 ```
 
 ### Seam invariants enforced by code
@@ -67,7 +67,7 @@ Full worked record: [`kit/adrs/ADR-0002.md`](../../kit/adrs/ADR-0002.md).
 - **Mitigates:** FM-02 (Silent provider alias drift breaking structured output schemas)
 
 ## Context
-Model vendors update weights, deprecate floating aliases, and price models across a 100x spread (USD 0.10 to USD 10.00 per million input tokens across S01-S04).
+Model vendors update weights, deprecate floating aliases, and price small fast models and frontier reasoning models across more than an order-of-magnitude spread (`S01` through `S04`; check current vendor pricing pages).
 
 ## Decision
 Call language models exclusively through a four-tier internal capability router (`fast-classifier`, `balanced-builder`, `frontier-reasoner`, `independent-checker`) that binds each tier to a pinned snapshot ID, validates every response against a closed JSON schema, and maintains a tested fallback on a second provider family.
@@ -99,7 +99,7 @@ Because the application called `JSON.parse` without a schema gate at the model s
 
 ### Deterministic mitigation
 
-1. Pin exact model IDs in configuration (`claude-sonnet-5-5`, `gpt-6.1-sol`, `gemini-4-argon`, `grok-4.7`) and record their review dates in `guide/research/sources.yaml`.
+1. Pin exact dated model snapshot IDs in configuration (taken from your vendor's official model catalog) and record their review dates in `guide/research/sources.yaml`.
 2. Validate every model output against `required_output_keys` (`kit/prompts/prompt-set.json`) inside the seam before returning to the caller.
 3. Run the 16-case evaluation harness (`npm run evals`) on a candidate snapshot in staging before updating the pinned tier mapping.
 
@@ -108,9 +108,9 @@ Because the application called `JSON.parse` without a schema gate at the model s
 In `kit/prompts/prompt-set.json`, each of the six production prompts (`discovery-architect`, `trust-boundary-auditor`, `adr-author`, `cost-envelope-modeler`, `mcp-tool-steward`, and `independent-gate-checker`) declares its exact `input_variables` and `required_output_keys`:
 
 - For `discovery-architect`, the gateway requires `["modelSeam", "loopShape", "trustBoundary", "longRunHome", "killCriteria"]`.
-- When a caller invokes `discovery-architect`, the seam selects the pinned `balanced-builder` snapshot (`claude-sonnet-5-5` at USD 2 / USD 10 per million tokens), sets `max_tokens: 4096`, and parses the response.
+- When a caller invokes `discovery-architect`, the seam selects the pinned `tier-b-balanced-builder` snapshot on Provider A, sets `max_tokens: 4096`, and parses the response.
 - If the response is not valid JSON or is missing any of the five keys, the seam throws `E_SCHEMA_DRIFT` immediately rather than passing a partial object into the ADR generator.
-- If the primary provider returns HTTP 502, 503, or 529, the seam retries once against the configured secondary provider (`gpt-6.1-sol` at USD 2 / USD 10 per million tokens) using the identical prompt and output schema contract.
+- If Provider A returns HTTP 502, 503, or 529, the seam retries once against the configured secondary provider (`tier-b-balanced-builder` on Provider B) using the identical prompt and output schema contract.
 
 ### Red-team verification checklist for chapter 02
 
@@ -124,4 +124,4 @@ Transitioning an existing application from scattered direct SDK calls to a task-
 
 1. **Step 1 (Centralize calls and ban floating aliases):** Create the internal capability client, move all vendor SDK initialization into that single module, and replace every `-latest` string with a pinned snapshot identifier recorded in `guide/research/sources.yaml`.
 2. **Step 2 (Attach closed output schemas to every structured call):** Bind each prompt role in `kit/prompts/prompt-set.json` to its `required_output_keys` array and log `gen_ai.response.validation_code` on every response so schema drift is caught at the boundary rather than inside business logic.
-3. **Step 3 (Shift high-volume classification to Tier A):** Route intent classification and format pre-checks to `fast-classifier` (`claude-haiku-5-5` or `gpt-6-luna` at USD 0.10 / USD 0.50 per million tokens) while reserving `balanced-builder` and `frontier-reasoner` for synthesis and verification, tracking cost per accepted run via `ingestOtelTraceSpans`.
+3. **Step 3 (Shift high-volume classification to Tier A):** Route intent classification and format pre-checks to `tier-a-fast-classifier` (a small fast model; check current vendor pricing) while reserving `tier-b-balanced-builder` and `tier-c-frontier-reasoner` for synthesis and verification, tracking cost per accepted run via `ingestOtelTraceSpans`.
