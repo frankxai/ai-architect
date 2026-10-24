@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { readdirSync, readFileSync } from "node:fs"
-import { dirname, join } from "node:path"
-import { fileURLToPath } from "node:url"
+import { dirname, join, resolve } from "node:path"
+import { fileURLToPath, pathToFileURL } from "node:url"
 
 const here = dirname(fileURLToPath(import.meta.url))
 
@@ -26,6 +26,6 @@ export function validateAdrs(dir = here) {
   return { ok: true, adrCount: files.length - 1, templatePresent: true }
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1] && pathToFileURL(resolve(process.argv[1])).href === import.meta.url) {
   console.log(JSON.stringify(validateAdrs(), null, 2))
 }

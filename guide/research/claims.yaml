@@ -6,7 +6,7 @@ claims:
     statement: Major model vendors expose materially different model families, prices, context limits, modalities, and release states.
     sources: [ S01, S02, S03, S04 ]
     status: source-supported
-    review_by: 2026-11-24
+    review_by: 2026-10-15
     reviewed_on: 2026-10-05
     review_receipt: releases/2026-10-05-source-review.md
   - id: C002
@@ -14,7 +14,7 @@ claims:
     statement: A production system should isolate model-provider specifics behind one owned seam because the vendor catalog changes faster than the business process.
     sources: [ S01, S02, S03, S04 ]
     status: reasoned
-    review_by: 2026-11-24
+    review_by: 2026-10-15
     reviewed_on: 2026-10-05
     review_receipt: releases/2026-10-05-source-review.md
   - id: C003
@@ -124,7 +124,7 @@ claims:
     statement: The EU AI Act became generally applicable on 2026-08-02, with separate dates for prohibited practices, GPAI duties, and high-risk systems.
     sources: [ S20 ]
     status: source-supported
-    review_by: 2026-11-24
+    review_by: 2026-10-15
     reviewed_on: 2026-10-05
     review_receipt: releases/2026-10-05-source-review.md
   - id: C021
@@ -132,7 +132,7 @@ claims:
     statement: Compliance evidence should be emitted by the runtime and release process instead of assembled after deployment.
     sources: [ S17, S20 ]
     status: proposed
-    review_by: 2026-11-24
+    review_by: 2026-10-15
     reviewed_on: 2026-10-05
     review_receipt: releases/2026-10-05-source-review.md
   - id: C022
@@ -164,7 +164,7 @@ claims:
     statement: NIST's 2026 AI Agent Standards Initiative treats open protocols, agent authentication, identity infrastructure, secure human-agent and multi-agent interaction, and security evaluation as active standards work.
     sources: [ S22 ]
     status: source-supported
-    review_by: 2026-11-24
+    review_by: 2026-10-15
     reviewed_on: 2026-10-05
     review_receipt: releases/2026-10-05-source-review.md
   - id: C027
@@ -172,7 +172,7 @@ claims:
     statement: A production agent system should separate human, workload, agent, session, and tool identity and record the scope, audience, expiry, and revocation path of delegated authority.
     sources: [ S09, S10, S18, S22 ]
     status: proposed
-    review_by: 2026-11-24
+    review_by: 2026-10-15
     reviewed_on: 2026-10-05
     review_receipt: releases/2026-10-05-source-review.md
   - id: C028
@@ -222,7 +222,7 @@ claims:
     statement: The Kubernetes report describes an in-development Agent Sandbox for isolated, stateful workloads with stable identity, suspension, and resumption.
     sources: [ S28 ]
     status: source-supported
-    review_by: 2026-11-24
+    review_by: 2026-10-15
     reviewed_on: 2026-10-05
     review_receipt: releases/2026-10-05-source-review.md
   - id: C036
@@ -230,7 +230,7 @@ claims:
     statement: AI gateways, model-aware routing, capacity allocation, and agent sandboxing form a platform concern separate from application orchestration.
     sources: [ S28, S29, S30, S31, S32, S33 ]
     status: reasoned
-    review_by: 2026-11-24
+    review_by: 2026-10-15
     reviewed_on: 2026-10-05
     review_receipt: releases/2026-10-05-source-review.md
   - id: C037
@@ -256,7 +256,7 @@ claims:
     statement: The EU General-Purpose AI Code of Practice has transparency, copyright, and safety and security chapters, with the last chapter applying to providers of models with systemic risk.
     sources: [ S38 ]
     status: source-supported
-    review_by: 2026-11-24
+    review_by: 2026-10-15
     reviewed_on: 2026-10-05
     review_receipt: releases/2026-10-05-source-review.md
   - id: C041
@@ -264,7 +264,7 @@ claims:
     statement: The linked European Commission high-risk AI classification page presents its guidance as a draft; it does not establish every publication's status.
     sources: [ S39 ]
     status: source-supported
-    review_by: 2026-11-24
+    review_by: 2026-10-15
     reviewed_on: 2026-10-05
     review_receipt: releases/2026-10-05-source-review.md
   - id: C042
@@ -278,7 +278,7 @@ claims:
     statement: AAIF describes distinct open-stack roles for project instructions, agent runtimes, tool connectivity, traffic control, and agent-to-agent interoperability.
     sources: [ S41 ]
     status: source-supported
-    review_by: 2026-11-24
+    review_by: 2026-10-15
     reviewed_on: 2026-10-05
     review_receipt: releases/2026-10-05-source-review.md
   - id: C044
@@ -293,7 +293,7 @@ claims:
     sources: [S01]
     location: manuscript/appendix-a-model-snapshot.md
     status: source-supported
-    review_by: 2026-11-24
+    review_by: 2026-10-15
     reviewed_on: 2026-10-05
     review_receipt: releases/2026-10-05-source-review.md
   - id: C046
@@ -302,7 +302,7 @@ claims:
     sources: [S01]
     location: manuscript/appendix-a-model-snapshot.md
     status: source-supported
-    review_by: 2026-11-24
+    review_by: 2026-10-15
     reviewed_on: 2026-10-05
     review_receipt: releases/2026-10-05-source-review.md
   - id: C047
@@ -311,7 +311,7 @@ claims:
     sources: [S01]
     location: manuscript/appendix-a-model-snapshot.md
     status: source-supported
-    review_by: 2026-11-24
+    review_by: 2026-10-15
     reviewed_on: 2026-10-05
     review_receipt: releases/2026-10-05-source-review.md
   - id: C048
@@ -320,7 +320,7 @@ claims:
     sources: [S01]
     location: manuscript/appendix-a-model-snapshot.md
     status: source-supported
-    review_by: 2026-11-24
+    review_by: 2026-10-15
     reviewed_on: 2026-10-05
     review_receipt: releases/2026-10-05-source-review.md
   - id: C049
@@ -329,7 +329,7 @@ claims:
     sources: [S02]
     location: manuscript/appendix-a-model-snapshot.md
     status: source-supported
-    review_by: 2026-11-24
+    review_by: 2026-10-15
     reviewed_on: 2026-10-05
     review_receipt: releases/2026-10-05-source-review.md
   - id: C050
@@ -338,7 +338,7 @@ claims:
     sources: [S02]
     location: manuscript/appendix-a-model-snapshot.md
     status: source-supported
-    review_by: 2026-11-24
+    review_by: 2026-10-15
     reviewed_on: 2026-10-05
     review_receipt: releases/2026-10-05-source-review.md
   - id: C051
@@ -347,7 +347,7 @@ claims:
     sources: [S02]
     location: manuscript/appendix-a-model-snapshot.md
     status: source-supported
-    review_by: 2026-11-24
+    review_by: 2026-10-15
     reviewed_on: 2026-10-05
     review_receipt: releases/2026-10-05-source-review.md
   - id: C052
@@ -356,7 +356,7 @@ claims:
     sources: [S02]
     location: manuscript/appendix-a-model-snapshot.md
     status: source-supported
-    review_by: 2026-11-24
+    review_by: 2026-10-15
     reviewed_on: 2026-10-05
     review_receipt: releases/2026-10-05-source-review.md
   - id: C053
@@ -365,7 +365,7 @@ claims:
     sources: [S04]
     location: manuscript/appendix-a-model-snapshot.md
     status: source-supported
-    review_by: 2026-11-24
+    review_by: 2026-10-15
     reviewed_on: 2026-10-05
     review_receipt: releases/2026-10-05-source-review.md
   - id: C054
@@ -444,98 +444,98 @@ claims:
     sources: [ S31, S32 ]
     location: manuscript/18-customer-solution-systems.md
     status: proposed
-    review_by: 2026-11-24
+    review_by: 2026-10-18
   - id: C065
     class: prescription
     statement: "Each artifact maturity must follow its own exact-revision evidence; a working portal cannot promote a depicted workload."
     sources: [ S31, S32 ]
     location: manuscript/18-customer-solution-systems.md
     status: proposed
-    review_by: 2026-11-24
+    review_by: 2026-10-18
   - id: C066
     class: prescription
     statement: "Use code or reviewed specifications for exact architecture diagrams; use generated art for conceptual stories with exact labels and icons composed separately."
     sources: [ S42 ]
     location: manuscript/18-customer-solution-systems.md
     status: proposed
-    review_by: 2026-11-24
+    review_by: 2026-10-18
   - id: C067
     class: prescription
     statement: "Report customer accepted-result economics and attributable provider consumption as distinct ledgers."
     sources: [ S31, S32 ]
     location: manuscript/18-customer-solution-systems.md
     status: proposed
-    review_by: 2026-11-24
+    review_by: 2026-10-18
   - id: C068
     class: example
     statement: "The assumed research scenario yields 480 accepted results, EUR 5760 gross capacity value and EUR 4560 net capacity value after EUR 1200 all-attempt cost; these are not measured results."
     sources: [ S31 ]
     location: manuscript/18-customer-solution-systems.md
     status: illustrative
-    review_by: 2026-11-24
+    review_by: 2026-10-18
   - id: C069
     class: prescription
     statement: "Treat architectural inventions as contribution hypotheses until prior work and independent experiments support novelty and benefit."
     sources: [ S31, S32 ]
     location: manuscript/18-customer-solution-systems.md
     status: proposed
-    review_by: 2026-11-24
+    review_by: 2026-10-18
   - id: C070
     class: prescription
     statement: "A portable acceptance capsule should bind specification, source revision, configuration, tests, unresolved findings, operations owner, rollback and export."
     sources: [ S31, S32, S43 ]
     location: manuscript/18-customer-solution-systems.md
     status: proposed
-    review_by: 2026-11-24
+    review_by: 2026-10-18
   - id: C071
     class: fact
     statement: "The inspected OpenAI Responses guide recommends GPT Image 2.5 Sunburst for precise editing and Flare for fast generation."
     sources: [ S45 ]
     location: manuscript/18-customer-solution-systems.md
     status: source-supported
-    review_by: 2026-11-24
+    review_by: 2026-10-18
   - id: C072
     class: fact
     statement: "OpenAI schedules API removal of chatgpt-image-latest on 1 December 2026; this does not establish ChatGPT UI availability."
     sources: [ S46 ]
     location: manuscript/18-customer-solution-systems.md
     status: source-supported
-    review_by: 2026-11-24
+    review_by: 2026-10-18
   - id: C073
     class: prescription
     statement: "Keep engine, Studio, Academy, technical guide, personal book and publication projections connected without exchanging their authority."
     sources: [ S47, S49 ]
     location: manuscript/19-the-living-architecture-practice.md
     status: proposed
-    review_by: 2026-11-24
+    review_by: 2026-10-18
   - id: C074
     class: prescription
     statement: "Compare the simplest feasible architecture and a justified alternative on frozen tasks, acceptance, recovery and full cost."
     sources: [ S13, S31 ]
     location: manuscript/19-the-living-architecture-practice.md
     status: proposed
-    review_by: 2026-11-24
+    review_by: 2026-10-18
   - id: C075
     class: prescription
     statement: "Allocate evaluations at source-access, tool-effect and post-review revision seams where errors change authority or consequence."
     sources: [ S09, S13, S18 ]
     location: manuscript/19-the-living-architecture-practice.md
     status: proposed
-    review_by: 2026-11-24
+    review_by: 2026-10-18
   - id: C076
     class: prescription
     statement: "Include reviewer effort and realized capacity use in full-path customer economics, separate from attributable provider consumption."
     sources: [ S31, S36 ]
     location: manuscript/19-the-living-architecture-practice.md
     status: proposed
-    review_by: 2026-11-24
+    review_by: 2026-10-18
   - id: C077
     class: prescription
     statement: "Record source changes with their impact on claims, chapters, profiles, templates and tests before regenerating projections."
     sources: [ S13, S49 ]
     location: manuscript/19-the-living-architecture-practice.md
     status: proposed
-    review_by: 2026-11-24
+    review_by: 2026-10-18
   - id: C078
     class: fact
     statement: "Google renamed Vertex AI to Gemini Enterprise Agent Platform; Vertex AI Search maps to Agent Search and Agent Engine to Agent Runtime, while RAG Engine keeps its name."
@@ -584,4 +584,4 @@ claims:
     sources: [ S56 ]
     location: manuscript/20-multi-cloud-realization.md
     status: source-supported
-    review_by: 2026-11-24
+    review_by: 2026-10-18

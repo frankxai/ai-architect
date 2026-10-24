@@ -1,0 +1,38 @@
+[
+  {
+    "traceId": "tr_01",
+    "runId": "run_101",
+    "attempt": 1,
+    "accepted": false,
+    "attributes": {
+      "gen_ai.request.model": "claude-sonnet-5-5",
+      "gen_ai.usage.input_tokens": 38000,
+      "gen_ai.usage.output_tokens": 3200,
+      "tool.cost_usd": 0.01
+    }
+  },
+  {
+    "traceId": "tr_02",
+    "runId": "run_101",
+    "attempt": 2,
+    "accepted": true,
+    "attributes": {
+      "gen_ai.request.model": "claude-sonnet-5-5",
+      "gen_ai.usage.input_tokens": 44000,
+      "gen_ai.usage.output_tokens": 4800,
+      "tool.cost_usd": 0.02
+    }
+  },
+  {
+    "traceId": "tr_03",
+    "runId": "run_102",
+    "attempt": 1,
+    "accepted": true,
+    "attributes": {
+      "gen_ai.request.model": "claude-opus-5-5",
+      "gen_ai.usage.input_tokens": 60000,
+      "gen_ai.usage.output_tokens": 6000,
+      "tool.cost_usd": 0.05
+    }
+  }
+]

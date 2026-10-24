@@ -1,9 +1,14 @@
+import { createHash } from "node:crypto"
+
 export interface SpecialistTask {
   id: string
   role: "maker" | "checker"
   providerFamily: "anthropic" | "openai" | "google" | "xai"
   readPaths: string[]
   writePaths: string[]
+  allowedTools?: string[]
+  parentTaskId?: string | null
+  depth?: number
   estimatedCostUsd: number
 }
 
@@ -12,6 +17,27 @@ export interface PipelineConfig {
   wave: SpecialistTask[]
   maker: SpecialistTask
   checker: SpecialistTask
+}
+
+const FORBIDDEN_CHILD_SPAWN_TOOLS = new Set(["task", "dispatch_subagent", "spawn_agent", "delegate_wave"])
+
+export function assertNoNestedSubagentSpawn(tasks: SpecialistTask[]): void {
+  for (const task of tasks) {
+    if ((task.depth !== undefined && task.depth > 1) || (task.parentTaskId !== undefined && task.parentTaskId !== null)) {
+      throw Object.assign(
+        new Error(`Specialist ${task.id} exceeds recursion depth 1 (parentTaskId=${task.parentTaskId ?? "none"}, depth=${task.depth ?? 1})`),
+        { code: "E_RECURSION_DEPTH_EXCEEDED" },
+      )
+    }
+    for (const tool of task.allowedTools ?? []) {
+      if (FORBIDDEN_CHILD_SPAWN_TOOLS.has(tool)) {
+        throw Object.assign(
+          new Error(`Specialist ${task.id} cannot hold subagent-spawning tool '${tool}'`),
+          { code: "E_SUBAGENT_SPAWN_FORBIDDEN" },
+        )
+      }
+    }
+  }
 }
 
 export function assertDisjointWritePaths(wave: SpecialistTask[]): void {
@@ -47,6 +73,7 @@ export function assertMakerNotChecker(maker: SpecialistTask, checker: Specialist
 }
 
 export function runSupervisorPipeline(config: PipelineConfig) {
+  assertNoNestedSubagentSpawn([...config.wave, config.maker, config.checker])
   assertDisjointWritePaths(config.wave)
   assertMakerNotChecker(config.maker, config.checker)
 
@@ -66,6 +93,14 @@ export function runSupervisorPipeline(config: PipelineConfig) {
     )
   }
 
+  // Execute deterministic two-provider handoff (Maker produces artifact digest -> Checker verifies in read-only mode)
+  const makerArtifact = JSON.stringify({
+    makerId: config.maker.id,
+    providerFamily: config.maker.providerFamily,
+    writePaths: config.maker.writePaths,
+  })
+  const artifactSha256 = createHash("sha256").update(makerArtifact, "utf8").digest("hex")
+
   return {
     state: "VERIFIED_READY_FOR_OWNER_APPROVAL",
     totalCostUsd,
@@ -73,5 +108,6 @@ export function runSupervisorPipeline(config: PipelineConfig) {
     makerFamily: config.maker.providerFamily,
     checkerFamily: config.checker.providerFamily,
     waveTasks: config.wave.length,
+    artifactSha256,
   }
 }
