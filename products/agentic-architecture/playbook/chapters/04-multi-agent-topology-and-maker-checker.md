@@ -51,7 +51,7 @@ Replace conversational peer-to-peer swarms with a **Code-Led Supervisor State Ma
 
 ### Invariants enforced by code
 
-- **Disjoint write sets in every parallel wave:** For any two concurrent tasks `A` and `B`, `writePaths(A) intersect writePaths(B) = empty_set`.
+- **Prefix-aware disjoint write sets in every parallel wave:** For any two concurrent tasks `A` and `B`, `assertDisjointWritePaths` normalizes paths and rejects both exact matches and directory-prefix overlaps (for example, `playbook/` and `playbook/ch01.md`) with `E_WRITE_COLLISION`.
 - **Maker model family != Checker model family:** The supervisor rejects any gate configuration where `maker.providerFamily === checker.providerFamily` (`kit/workflows/supervisor-maker-checker.ts`).
 - **Subagents cannot spawn subagents:** Recursion depth is fixed at 1 (`supervisor -> specialist`). Specialists do not receive the dispatch tool.
 
@@ -83,7 +83,7 @@ Use a deterministic TypeScript supervisor state machine that dispatches speciali
 - **Negative / Cost:** Requires explicit schema definitions for handoff packets and a second model provider credential for the Checker lane.
 
 ## Verification Command
-`node products/agentic-architecture/scripts/verify-agentic-architecture.mjs`
+`node --experimental-strip-types products/agentic-architecture/scripts/verify-agentic-architecture.mjs`
 ```
 
 ## 4. Production failure mode: `FM-04`
@@ -105,7 +105,7 @@ Workers overwrite each other's commits or lockfiles; recursive subagent calls ex
 3. Strip the task-spawn tool from all child worker toolsets so recursion depth cannot exceed 1.
 
 ### Executable verification in this kit
-- Run `node products/agentic-architecture/scripts/verify-agentic-architecture.mjs`, which executes `kit/workflows/supervisor-maker-checker.ts` on both a valid cross-family pipeline and fault-injected collisions (overlapping `writePaths`, same-family checker, and budget overflow).
+- Run `node --experimental-strip-types products/agentic-architecture/scripts/verify-agentic-architecture.mjs`, which executes `kit/workflows/supervisor-maker-checker.ts` on both a valid cross-family pipeline and fault-injected collisions (overlapping `writePaths`, same-family checker, and budget overflow).
 
 ## 5. Worked implementation and red-team walkthrough
 
