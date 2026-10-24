@@ -58,8 +58,8 @@ export async function verifyAgenticArchitecture(baseDir = root) {
       throw new Error(`${chapterFiles[i]} missing registered CMO visual placeholder token`)
     }
     const wc = countWords(text)
-    if (wc < 950) {
-      throw new Error(`Chapter ${chapterFiles[i]} has ${wc} prose words; every chapter must be written in full (>= 950 prose words)`)
+    if (wc < 1000) {
+      throw new Error(`Chapter ${chapterFiles[i]} has ${wc} prose words; every chapter must be written in full (>= 1000 prose words)`)
     }
     chapterWordCounts.push({ chapter: num, file: chapterFiles[i], proseWords: wc })
   }

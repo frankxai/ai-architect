@@ -10,7 +10,13 @@ export function validateAdrs(dir = here) {
   if (files.length !== 11) {
     throw new Error(`Expected 11 ADR files (ADR-0000 template + ADR-0001..0010), found ${files.length}`)
   }
-  const requiredHeadings = ["## Context", "## Decision", "## Alternatives Considered and Rejected", "## Consequences", "## Verification Command"]
+  const requiredHeadings = [
+    "## Context",
+    "## Decision",
+    "## Alternatives Considered and Rejected",
+    "## Consequences",
+    "## Verification Command",
+  ]
   for (const file of files) {
     const text = readFileSync(join(dir, file), "utf8")
     for (const h of requiredHeadings) {
@@ -21,9 +27,17 @@ export function validateAdrs(dir = here) {
       if (!text.includes(`PAT-${patNum}`)) throw new Error(`${file} must reference PAT-${patNum}`)
       if (!text.includes(`FM-${patNum}`)) throw new Error(`${file} must reference FM-${patNum}`)
       if (!text.includes("- **Status:** Accepted")) throw new Error(`${file} must have Accepted status`)
+      if (/Rejected option \d/i.test(text)) {
+        throw new Error(`${file} contains placeholder 'Rejected option N' text; concrete reasons required`)
+      }
+      const altSection = text.split("## Alternatives Considered and Rejected")[1]?.split("## Consequences")[0] ?? ""
+      const numberedAlts = altSection.match(/^\d+\.\s+\*\*[^*]+\*\*/gm) ?? []
+      if (numberedAlts.length < 3) {
+        throw new Error(`${file} must document at least 3 concrete rejected alternatives with reasons (found ${numberedAlts.length})`)
+      }
     }
   }
-  return { ok: true, adrCount: files.length - 1, templatePresent: true }
+  return { ok: true, adrCount: files.length - 1, minRejectedAlternativesPerAdr: 3, templatePresent: true }
 }
 
 if (process.argv[1] && pathToFileURL(resolve(process.argv[1])).href === import.meta.url) {

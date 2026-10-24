@@ -83,10 +83,10 @@
       "spec": "PII-redacted OpenTelemetry GenAI span graph with deterministic fixture replay."
     },
     {
-      "token": "[[PLAYBOOK_FIG_CH10_GOVERNANCE_GATE]]",
+      "token": "[[PLAYBOOK_FIG_CH10_EXIT_DRILL]]",
       "surface": "chapter-10",
       "aspect_ratio": "16:9",
-      "spec": "Nine-stage release gate receipt and 48-hour provider exit drill checklist."
+      "spec": "Clean-room /tmp archive verification and 48-hour provider exit drill timeline."
     }
   ]
 }

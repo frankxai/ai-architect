@@ -1,4 +1,4 @@
-# Chapter 01: Trust Boundaries, Tool Authority, and Blast-Radius Containment
+# Chapter 01: Trust boundaries, tool authority, and blast-radius containment
 
 **Pattern ID:** `PAT-01` (Scoped Capability Proxy and Two-Phase Action Gate)
 **Decision Record:** [`ADR-0001`](../../kit/adrs/ADR-0001.md)
@@ -6,7 +6,7 @@
 
 [[PLAYBOOK_FIG_CH01_TRUST_BOUNDARY]]
 
-## 1. The Architect's Problem
+## 1. The architect's problem
 
 Every production agent system eventually crosses a line where probabilistic text becomes an external side effect. Below that line, the model summarizes documents, drafts code, ranks options, or proposes a database query. Above that line, the runtime mutates state: it charges a payment card, merges a pull request, sends a customer email, revokes an entitlement, or deletes a production record.
 
@@ -14,9 +14,9 @@ Most teams draw their architecture diagrams around model calls and vector databa
 
 An architecture boundary exists only when deterministic code outside the language model enforces what the model is allowed to read, propose, and execute. This chapter defines the foundational pattern for bounding tool authority in production agent systems.
 
-## 2. Architecture Pattern: `PAT-01` Scoped Capability Proxy and Two-Phase Action Gate
+## 2. Architecture pattern: `PAT-01` Scoped capability proxy and two-phase action gate
 
-### Context and Forces
+### Context and forces
 
 You are designing an agent that must read untrusted external inputs (emails, web pages, tickets, documents, or third-party MCP tool outputs) and also perform state-changing operations in internal or external systems. You face three competing forces:
 
@@ -24,7 +24,7 @@ You are designing an agent that must read untrusted external inputs (emails, web
 2. **Credential isolation:** Giving the agent container raw API keys allows a compromised prompt or dependency to exfiltrate secrets or call arbitrary endpoints.
 3. **Replay and auditability:** When an outward action fails mid-flight or is retried by a queue worker, the boundary must prevent duplicate side effects and record who authorized the call.
 
-### Structural Solution
+### Structural solution
 
 Split the tool plane into three distinct execution tiers enforced by a deterministic **Scoped Capability Proxy** outside the model runtime:
 
@@ -33,7 +33,7 @@ Split the tool plane into three distinct execution tiers enforced by a determini
 2. **Tier 1: Reversible Internal Staging (`allow-with-budget-and-idempotency`).**
    Tools that write only to isolated draft surfaces, local sandboxes, or staging tables. Every call requires a caller-supplied `idempotencyKey`, a tenant scope assertion, and a per-run write counter capped by policy.
 3. **Tier 2: Consequential Outward or Destructive Actions (`two-phase-confirm-required`).**
-   Tools that send external communications, move money, mutate production records, or alter access policies. A Tier 2 tool cannot be executed directly by a model tool call. Instead, calling the tool creates a **Proposed Action Record** hashed over `(tenantId, toolName, canonicalParams, expiresAt)` and returns a `pending_approval` status. Execution happens only when a distinct principal (a human operator or an independent deterministic policy gate) supplies a cryptographic approval token bound to that exact payload hash.
+   Tools that send external communications, move money, mutate production records, or alter access policies. A Tier 2 tool cannot be executed directly by a model tool call. Instead, calling the tool creates a **Proposed Action Record** signed with `createHmac("sha256", approvalSecret)` over `(tenantId, toolName, proposerSub, approverSub, expiresAt, canonicalParams)` using the caller identity from an OAuth 2.1 RFC 8707 audience-bound bearer token and returns a `pending_approval` status. Execution happens only when a distinct principal (a human operator or an independent deterministic policy gate) supplies a cryptographic approval token bound to that exact payload hash.
 
 ```
 [Untrusted Input] ---> (Tag & Sanitize Ingress) ---> [Agent Reasoning Loop]
@@ -45,13 +45,13 @@ Split the tool plane into three distinct execution tiers enforced by a determini
          (Tenant filter + tag output)           (Quota + idempotencyKey check)       (Hash payload -> Hold for approval)
 ```
 
-### Invariants Enforced by Code
+### Invariants enforced by code
 
 - **No raw credentials in the model environment:** The agent process holds only a short-lived session capability token. Upstream API keys live inside the proxy or credential injector (`kit/mcp/reference-mcp-server.mjs`).
 - **Actor cannot approve its own Tier 2 proposal:** The principal ID on the approval token must differ from the proposing agent ID, and the payload hash must match byte-for-byte.
 - **Unattended runs default to read-only:** Scheduled or webhook-triggered runs start with Tier 2 disabled unless an explicit schedule policy grants a narrow allowlist.
 
-## 3. Decision Record Template: `ADR-0001`
+## 3. Decision record template: `ADR-0001`
 
 Use this template (shipped as a completed record in `kit/adrs/ADR-0001.md`) whenever a system connects a language model to any tool that mutates state:
 
@@ -82,28 +82,28 @@ Route all tool invocations through a deterministic capability proxy that classif
 `node products/agentic-architecture/scripts/verify-agentic-architecture.mjs`
 ```
 
-## 4. Production Failure Mode: `FM-01`
+## 4. Production failure mode: `FM-01`
 
 ### Trigger
 An agent summarizing an inbound customer email or public GitHub issue encounters hidden instructions embedded in the text (for example, an HTML comment or markdown block instructing the assistant to export customer records or issue a refund to an attacker address).
 
-### Blast Radius When Unmitigated
+### Blast radius when unmitigated
 Without a deterministic Tier 2 gate and tenant-scoped proxy, the agent invokes the refund or email tool using the service account's standing credentials. External funds or private records leave the boundary before any human sees the trace.
 
-### Detection Telemetry
+### Detection telemetry
 - Span attribute `tool.tier == "tier_2"` combined with `context.contains_untrusted_ingress == true`.
 - Spike in `E_APPROVAL_REQUIRED` or `E_SCOPE_ESCALATION` rejections emitted by the capability proxy.
 - Mismatch between the inbound ticket's `tenant_id` and the target `tenant_id` in the proposed tool arguments.
 
-### Deterministic Mitigation
+### Deterministic mitigation
 1. Wrap every external text segment in `<untrusted-content>` tags at ingress and strip nested closing tags (`kit/mcp/reference-mcp-server.mjs`).
 2. Enforce tenant equality (`session.tenantId === args.tenantId`) in the proxy before any database or API call.
 3. Require a two-phase approval token (`approvalToken` bound to the SHA-256 hash of `toolName + canonicalJson(args)`) for all Tier 2 tools (`guide/labs/delegated-authority/policy.test.mjs` and `kit/mcp/reference-mcp-server.mjs`).
 
-### Executable Verification in This Kit
+### Executable verification in this kit
 - Run `node products/agentic-architecture/scripts/verify-agentic-architecture.mjs` to execute the reference MCP server against both an unapproved Tier 2 write (`E_APPROVAL_REQUIRED`) and a path-escape probe (`E_PATH_CONTAINMENT`).
 
-## 5. Worked Implementation and Red-Team Walkthrough
+## 5. Worked implementation and red-team walkthrough
 
 Consider a multi-tenant release assistant that reads customer bug reports from a public issue tracker, queries an internal order ledger, stages a remediation patch in a workspace directory, and issues a refund credit when a service-level objective is breached. Without a Scoped Capability Proxy, all four actions share one runtime credential. An attacker who files a bug report containing a disguised instruction block can steer the model into calling the refund endpoint for an arbitrary order ID or writing a script outside the workspace directory.
 
@@ -113,7 +113,7 @@ When you apply `PAT-01`, the proxy separates those four operations before the mo
 2. **Path-contained, idempotent staging (Tier 1):** When the agent proposes a configuration fix or an ADR draft via `stage_adr_draft`, the proxy requires a caller-supplied `idempotencyKey` and resolves the target path with POSIX normalization. Any path that starts with `/`, traverses `..`, or falls outside `docs/architecture/` is rejected immediately with `E_PATH_CONTAINMENT`. If a network retry sends the same `idempotencyKey` twice, the proxy returns `duplicate_replay` without overwriting the file.
 3. **Two-phase confirmation on outward mutations (Tier 2):** When the agent calls `approve_release_gate` or requests a customer refund, the proxy refuses to execute the mutation inline. It computes the SHA-256 digest of the canonical JSON payload `(proposerId, releaseId)` and returns `outcome: "pending_approval"` with `code: "E_APPROVAL_REQUIRED"`. If the agent attempts to pass its own identity as `approverId`, the proxy rejects the call with `E_SELF_APPROVAL_FORBIDDEN`. Execution proceeds only after a separate human principal or independent policy service signs that exact payload digest.
 
-### Red-Team Verification Checklist for Chapter 01
+### Red-team verification checklist for chapter 01
 - Pass a payload containing a closing `</untrusted-content>` tag into every Tier 0 tool and confirm the tag is neutralized before returning to the model.
 - Call every Tier 1 write tool with `../outside.md` and `/etc/passwd` and confirm the proxy returns `E_PATH_CONTAINMENT` with zero filesystem side effects.
 - Call every Tier 2 tool without an `approvalToken`, with a self-signed `proposerId === approverId`, and with a token signed for a different `releaseId`, confirming all three are blocked before reaching the downstream API.
