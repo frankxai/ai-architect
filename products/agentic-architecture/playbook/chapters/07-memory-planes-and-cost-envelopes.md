@@ -87,7 +87,7 @@ Store session invariants in a verbatim structured working document, isolate cros
 - **Negative / Cost:** Requires explicit working-doc updates and per-step telemetry hooks on every model and tool call.
 
 ## Verification Command
-`node products/agentic-architecture/scripts/verify-agentic-architecture.mjs`
+`node --experimental-strip-types products/agentic-architecture/scripts/verify-agentic-architecture.mjs`
 ```
 
 ## 4. Production failure mode: `FM-07`
