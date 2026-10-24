@@ -107,7 +107,7 @@
     {
       "id": "WL-01",
       "name": "Architecture discovery and C4 synthesis",
-      "capability_tier": "tier-b-balanced-builder (illustrative mid-tier reasoning model; check current vendor pricing)",
+      "capability_tier": "tier-b-balanced-builder (example only — check current pricing (mid-tier balanced model))",
       "monthly_accepted_runs": 400,
       "mean_attempts_per_accepted_run": 1.35,
       "p95_attempts_per_accepted_run": 2.2,
@@ -123,7 +123,7 @@
     {
       "id": "WL-02",
       "name": "Automated PR red-team and trust-boundary audit",
-      "capability_tier": "tier-a-fast-classifier (illustrative small fast model; check current vendor pricing)",
+      "capability_tier": "tier-a-fast-classifier (example only — check current pricing (small fast model))",
       "monthly_accepted_runs": 1500,
       "mean_attempts_per_accepted_run": 1.15,
       "p95_attempts_per_accepted_run": 1.8,
@@ -139,7 +139,7 @@
     {
       "id": "WL-03",
       "name": "Supervisor + Maker (Provider A) + Checker (Provider B) pipeline",
-      "capability_tier": "tier-c-frontier-reasoner (illustrative frontier reasoning model; check current vendor pricing)",
+      "capability_tier": "tier-c-frontier-reasoner (example only — check current pricing (frontier reasoning model))",
       "monthly_accepted_runs": 120,
       "mean_attempts_per_accepted_run": 1.5,
       "p95_attempts_per_accepted_run": 2.5,

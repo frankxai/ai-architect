@@ -6,9 +6,9 @@ import { pathToFileURL } from "node:url"
 // Model names and vendor list prices change frequently; pass your organization's live vendor pricing table
 // (checked against official vendor pricing docs) into ingestOtelTraceSpans(spans, customPricingTable).
 export const ILLUSTRATIVE_TIER_PRICING_USD_PER_M = {
-  "tier-a-fast-classifier": { input: 0.25, output: 1.25 },
-  "tier-b-balanced-builder": { input: 3.00, output: 15.00 },
-  "tier-c-frontier-reasoner": { input: 5.00, output: 25.00 },
+  "tier-a-fast-classifier": { input: 0.25, output: 1.25, note: "example only — check current pricing" },
+  "tier-b-balanced-builder": { input: 3.00, output: 15.00, note: "example only — check current pricing" },
+  "tier-c-frontier-reasoner": { input: 5.00, output: 25.00, note: "example only — check current pricing" },
 }
 
 export function ingestOtelTraceSpans(spans, pricingTable = ILLUSTRATIVE_TIER_PRICING_USD_PER_M) {

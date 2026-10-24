@@ -26,8 +26,8 @@ You need multiple specialized agents to collaborate on a complex engineering, re
 
 Replace conversational peer-to-peer swarms with a **Code-Led Supervisor State Machine** (`kit/workflows/supervisor-maker-checker.ts`) that enforces four rules:
 
-1. **Code-led routing over model-led handoffs:** A deterministic state machine owns the transition graph (`frame -> make -> check -> approve -> commit`), the maximum wave size (for example, at most 3 concurrent browser workers or 5 parallel research tasks), and the per-run USD ceiling.
-2. **Typed Handoff Packets (Zero Shared Transcript):** Specialists never inherit the supervisor's full chat history. Each specialist receives a self-contained JSON handoff packet (`HandoffPacket`) containing only the task objective, explicit `readPaths`, disjoint `writePaths`, a token/USD budget slice, and the acceptance rubric.
+1. **Code-led routing over model-led handoffs:** A deterministic state machine owns the transition graph (`frame -> make -> check -> approve -> commit`), the maximum wave size (for example, at most 3 concurrent browser workers or 5 parallel research tasks), and the per-run budget ceiling.
+2. **Typed Handoff Packets (Zero Shared Transcript):** Specialists never inherit the supervisor's full chat history. Each specialist receives a self-contained JSON handoff packet (`HandoffPacket`) containing only the task objective, explicit `readPaths`, disjoint `writePaths`, a token and compute budget slice, and the acceptance rubric.
 3. **Single-Writer Resource Partitioning:** The supervisor validates that no two concurrent specialists share any path in `writePaths` or any mutable branch ref before dispatching a parallel wave.
 4. **Clean-Room Cross-Model Checker Gate:** Once the Maker specialist produces a candidate artifact and receipt, the supervisor dispatches an independent **Checker** running on a different model provider family in a read-only sandbox (`writePaths: []`). The Checker inspects only the packaged output and the rubric, runs deterministic tests, and emits a `PASS`, `REVISE`, or `FAIL` verdict. A Maker can never post its own gate sign-off.
 
@@ -51,7 +51,7 @@ Replace conversational peer-to-peer swarms with a **Code-Led Supervisor State Ma
 
 ### Invariants enforced by code
 
-- **Disjoint write sets in every parallel wave:** For any two concurrent tasks $A$ and $B$, $writePaths(A) intersect writePaths(B) = empty_set$.
+- **Disjoint write sets in every parallel wave:** For any two concurrent tasks `A` and `B`, `writePaths(A) intersect writePaths(B) = empty_set`.
 - **Maker model family != Checker model family:** The supervisor rejects any gate configuration where `maker.providerFamily === checker.providerFamily` (`kit/workflows/supervisor-maker-checker.ts`).
 - **Subagents cannot spawn subagents:** Recursion depth is fixed at 1 (`supervisor -> specialist`). Specialists do not receive the dispatch tool.
 
@@ -96,7 +96,7 @@ Workers overwrite each other's commits or lockfiles; recursive subagent calls ex
 
 ### Detection telemetry
 - Git non-fast-forward push rejections or overlapping file paths across concurrent worker spans.
-- Run cost exceeding the single-run p95 envelope due to fanout depth $> 1$.
+- Run cost exceeding the single-run p95 envelope due to fanout depth `> 1`.
 - Gate receipt where `maker.model_family == checker.model_family` or `checker.write_paths.length > 0`.
 
 ### Deterministic mitigation
@@ -109,7 +109,7 @@ Workers overwrite each other's commits or lockfiles; recursive subagent calls ex
 
 ## 5. Worked implementation and red-team walkthrough
 
-Consider an engineering organization using coding agents to ship a release candidate across a web application repository, a shared package monorepo, and an evidence ledger. In a naive swarm setup, a lead agent spawns four subagents in parallel and tells them to fix lint warnings, update dependencies, write release notes, and push to the same pull request branch. Within five minutes, Worker 2 overwrites Worker 1's lockfile commit, Worker 3 spawns three nested subagents that burn $90 of frontier tokens, and Worker 4 runs a self-review prompt that declares the broken branch ready to merge.
+Consider an engineering organization using coding agents to ship a release candidate across a web application repository, a shared package monorepo, and an evidence ledger. In a naive swarm setup, a lead agent spawns four subagents in parallel and tells them to fix lint warnings, update dependencies, write release notes, and push to the same pull request branch. Within five minutes, Worker 2 overwrites Worker 1's lockfile commit, Worker 3 spawns three nested subagents that burn USD 90 of frontier tokens (example only — check current pricing), and Worker 4 runs a self-review prompt that declares the broken branch ready to merge.
 
 When you apply `PAT-04` using `kit/workflows/supervisor-maker-checker.ts`, the deterministic supervisor prevents all three failure classes before a single model token is spent:
 

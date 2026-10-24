@@ -57,7 +57,7 @@ Implement a three-part **Redacted Span and Replay Pipeline** (`kit/workbooks/eva
 
 - **No raw secrets or emails in error outputs:** Error responses and logs carry machine-readable error codes (`E_OAUTH_AUDIENCE_MISMATCH`, `E_TENANT_MISMATCH`, `E_PATH_CONTAINMENT`, `E_ORDER_CONFLICT`) rather than echoing raw secret values or buyer PII.
 - **Failed attempts are included in accepted-run cost:** `ingestOtelTraceSpans` sums token and tool spend across all spans (including `accepted: false` retries) and divides by `acceptedRuns` (`kit/workbooks/evaluate-workbook.mjs:46-57`).
-- **Zero accepted runs fails closed:** If a batch of trace spans has `acceptedRuns === 0`, `ingestOtelTraceSpans` throws an explicit error (`Zero accepted runs in OTel span batch; cost per accepted outcome is infinite`) rather than dividing by zero or reporting $0.
+- **Zero accepted runs fails closed:** If a batch of trace spans has `acceptedRuns === 0`, `ingestOtelTraceSpans` throws an explicit error (`Zero accepted runs in OTel span batch; cost per accepted outcome is infinite`) rather than dividing by zero or reporting zero cost.
 
 ## 3. Decision record template: `ADR-0009`
 
@@ -113,15 +113,15 @@ Every engineer or contractor with read access to application logs can read live 
 In `kit/workbooks/sample-otel-spans.json` and `kit/workbooks/evaluate-workbook.mjs`, we ship a working trace-to-cost pipeline:
 
 - `sample-otel-spans.json` contains three spans across two runs (`run_101` and `run_102`):
-  - `tr_01` (`run_101`, `attempt: 1`, `accepted: false`): `tier-b-balanced-builder`, `38,000` input tokens, `3,200` output tokens, `USD 0.01` tool cost -> `USD 0.1720` on a failed first attempt.
-  - `tr_02` (`run_101`, `attempt: 2`, `accepted: true`): `tier-b-balanced-builder`, `44,000` input tokens, `4,800` output tokens, `USD 0.02` tool cost -> `USD 0.2240` on the accepted retry.
-  - `tr_03` (`run_102`, `attempt: 1`, `accepted: true`): `tier-c-frontier-reasoner`, `60,000` input tokens, `6,000` output tokens, `USD 0.05` tool cost -> `USD 0.5000`.
-- When `evaluate-workbook.mjs` runs `ingestOtelTraceSpans(sampleSpans)`, it sums all three spans (`totalComputeCostUsd = USD 0.8960` across `142,000` input tokens and `14,000` output tokens) and divides by the `2` accepted runs, reporting `meanAttemptsPerRun: 1.5` and `costPerAcceptedRunUsd: 0.448`.
+  - `tr_01` (`run_101`, `attempt: 1`, `accepted: false`): `tier-b-balanced-builder`, `38,000` input tokens, `3,200` output tokens, `USD 0.01` tool cost -> `USD 0.1720` on a failed first attempt (example only — check current pricing: USD 3.00 / USD 15.00 per 1M tokens).
+  - `tr_02` (`run_101`, `attempt: 2`, `accepted: true`): `tier-b-balanced-builder`, `44,000` input tokens, `4,800` output tokens, `USD 0.02` tool cost -> `USD 0.2240` on the accepted retry (example only — check current pricing: USD 3.00 / USD 15.00 per 1M tokens).
+  - `tr_03` (`run_102`, `attempt: 1`, `accepted: true`): `tier-c-frontier-reasoner`, `60,000` input tokens, `6,000` output tokens, `USD 0.05` tool cost -> `USD 0.5000` (example only — check current pricing: USD 5.00 / USD 25.00 per 1M tokens).
+- When `evaluate-workbook.mjs` runs `ingestOtelTraceSpans(sampleSpans)`, it sums all three spans (`totalComputeCostUsd = USD 0.8960` across `142,000` input tokens and `14,000` output tokens, example only — check current pricing) and divides by the `2` accepted runs, reporting `meanAttemptsPerRun: 1.5` and `costPerAcceptedRunUsd: 0.448`.
 
 ### Red-team verification checklist for chapter 09
 
 - Pass a span batch where all spans have `accepted: false` into `ingestOtelTraceSpans` and confirm it throws an infinite-cost error rather than returning a finite number.
-- Pass a span naming an unknown model ID into `ingestOtelTraceSpans` and confirm it throws an unknown-model error rather than silently pricing tokens at $0.
+- Pass a span naming an unknown model ID into `ingestOtelTraceSpans` and confirm it throws an unknown-model error rather than silently pricing tokens at zero cost.
 - Run `node products/agentic-architecture/kit/workbooks/evaluate-workbook.mjs` and confirm the OTel trace summary matches `costPerAcceptedRunUsd: 0.448`.
 
 ## 6. Operational metrics and production rollout sequence

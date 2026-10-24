@@ -12,8 +12,8 @@ Long-running agent systems fail in two places that rarely appear in prototype de
 
 In a ten-minute demo, the entire conversation fits inside one context window and the first model call succeeds. In production over weeks of operation, two things happen:
 
-1. **Compaction erases operational invariants:** As the transcript grows, automatic context summarization compresses earlier messages. Hard numbers, negative constraints ("never touch repository X", "budget is $50"), and half-finished checklists get smoothed into vague prose. On the next turn, the agent violates a constraint it agreed to two hours earlier.
-2. **Happy-path pricing hides real cost per accepted outcome:** Teams calculate unit economics by multiplying one prompt's token count by the model's list price. In reality, a production workflow includes failed attempts, tool-error retries, context reloads, checker passes, and human review minutes. In an illustrative scenario (substitute current rates from your vendor's official pricing page), when a step budgeted at USD 0.15 (one 50k-input / 5k-output call on a mid-tier model at an illustrative rate of USD 2.00 input / USD 10.00 output per million tokens) hits a validation error, escalates to a frontier reasoning model (at an illustrative rate of USD 4.00 input / USD 20.00 output per million tokens), and retries five times while appending raw tool error dumps until each attempt averages 150k input tokens (`0.15 * 4.00 = USD 0.60`) and 7.5k output tokens (`0.0075 * 20.00 = USD 0.15`), six total attempts cost `6 * (USD 0.60 + USD 0.15) = USD 4.50`.
+1. **Compaction erases operational invariants:** As the transcript grows, automatic context summarization compresses earlier messages. Hard numbers, negative constraints ("never touch repository X", "run budget is USD 50 [example only — check current pricing]"), and half-finished checklists get smoothed into vague prose. On the next turn, the agent violates a constraint it agreed to two hours earlier.
+2. **Happy-path pricing hides real cost per accepted outcome:** Teams calculate unit economics by multiplying one prompt's token count by the model's list price. In reality, a production workflow includes failed attempts, tool-error retries, context reloads, checker passes, and human review minutes. In an illustrative scenario (example only — check current pricing), when a step budgeted at USD 0.15 (one 35k-input / 3k-output call on `tier-b-balanced-builder` at an example rate of USD 3.00 input / USD 15.00 output per million tokens, example only — check current pricing) hits a validation error, escalates to `tier-c-frontier-reasoner` (at an example rate of USD 5.00 input / USD 25.00 output per million tokens, example only — check current pricing), and retries five times while appending raw tool error dumps until the 6 total attempts consume 630k input tokens (`USD 3.15`), 48k output tokens (`USD 1.20`), and `USD 0.15` in tool calls, the single failed run costs `USD 4.50` (example only — check current pricing).
 
 This chapter defines the architecture pattern that keeps long-running agent state accurate across compactions while bounding the **all-attempts cost per accepted result**.
 
@@ -75,7 +75,7 @@ Use this template (shipped in `kit/adrs/ADR-0007.md`) when designing memory rete
 Long-running agent sessions lose exact constraints during rolling transcript summarization, and naive single-call token estimates understate real production spend by ignoring retries, rejected drafts, and human review time.
 
 ## Decision
-Store session invariants in a verbatim structured working document, isolate cross-session memories by tenantId with version snapshots, and enforce an all-attempts cost circuit breaker that counts every retry and human review minute against a hard per-run USD ceiling.
+Store session invariants in a verbatim structured working document, isolate cross-session memories by tenantId with version snapshots, and enforce an all-attempts cost circuit breaker that counts every retry and human review minute against a hard per-run budget ceiling.
 
 ## Alternatives Considered and Rejected
 1. **Relying on rolling chat summarization alone:** Rejected because lossy summarization drops negative constraints, exact file paths, and commit SHAs.
@@ -96,7 +96,7 @@ Store session invariants in a verbatim structured working document, isolate cros
 A long-running agent hits context compaction three times during a multi-repo build while simultaneously encountering a flaky upstream API that triggers repeated full-context retries.
 
 ### Blast radius when unmitigated
-Compaction drops the "parked repo — do not touch" constraint, causing the agent to push commits to a frozen repository, while the retry loop burns through $180 of frontier model tokens on a task budgeted for $15.
+Compaction drops the "parked repo — do not touch" constraint, causing the agent to push commits to a frozen repository, while the retry loop burns through USD 180 of frontier model tokens on a task budgeted for USD 15 (example only — check current pricing).
 
 ### Detection telemetry
 - `run.attempt_count > 2` on the same `(step_id, tool_name)` pair.
@@ -113,7 +113,7 @@ Compaction drops the "parked repo — do not touch" constraint, causing the agen
 
 ## 5. Worked implementation and red-team walkthrough
 
-Consider an autonomous research and release lane given a $250 budget envelope to prepare a multi-repository launch over a 24-hour sprint. After four hours and 60 tool calls, the conversation history reaches the context limit and compacts. In a standard chat harness, the compaction summary retains the high-level goal ("ship the release") but drops two critical facts from turn 3: that repository A is parked due to a permission block, and that checkout must stay disabled (`price.state: "decision_required"`). Meanwhile, a flaky external link-check step fails three times, and the agent retries the entire 120k-token turn four times in a row.
+Consider an autonomous research and release lane given a USD 250 budget envelope (example only — check current pricing) to prepare a multi-repository launch over a 24-hour sprint. After four hours and 60 tool calls, the conversation history reaches the context limit and compacts. In a standard chat harness, the compaction summary retains the high-level goal ("ship the release") but drops two critical facts from turn 3: that repository A is parked due to a permission block, and that checkout must stay disabled (`price.state: "decision_required"`). Meanwhile, a flaky external link-check step fails three times, and the agent retries the entire 120k-token turn four times in a row.
 
 When you apply `PAT-07` and `kit/workbooks/evaluate-workbook.mjs`, both failure paths are closed by construction:
 

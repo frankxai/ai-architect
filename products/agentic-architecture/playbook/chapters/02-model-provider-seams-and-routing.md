@@ -21,7 +21,7 @@ An architecture that survives model churn treats every model call as a replaceab
 
 ### Context and forces
 
-Your application executes diverse cognitive tasks (fast intent routing, structured document synthesis, multi-step code generation, and independent gate verification). You need to control unit cost across a 100x price spread, guarantee that every response satisfies a strict JSON schema before downstream code touches it, and fail over to a second provider family in minutes when a vendor suffers an regional outage or deprecates a snapshot.
+Your application executes diverse cognitive tasks (fast intent routing, structured document synthesis, multi-step code generation, and independent gate verification). You need to control unit cost across small fast models and deep-reasoning models, guarantee that every response satisfies a strict JSON schema before downstream code touches it, and fail over to a second provider family in minutes when a vendor suffers a regional outage or deprecates a snapshot.
 
 ### Structural solution
 
@@ -48,6 +48,14 @@ Isolate all provider SDKs and HTTP calls behind one internal **Capability Router
    [Provider A pinned snapshot]                       [Provider B pinned snapshot]
 ```
 
+
+| Capability tier | Typical workload | Timeout ceiling | Example rate per 1M in/out tokens (example only — check current pricing) |
+| :--- | :--- | :--- | :--- |
+| `tier-a-fast-classifier` | Intent routing, tag extraction, format pre-checks | 2s | USD 0.25 / USD 1.25 (example only — check current pricing) |
+| `tier-b-balanced-builder` | Structured drafting, ADR authoring, standard tool use | 15s | USD 3.00 / USD 15.00 (example only — check current pricing) |
+| `tier-c-frontier-reasoner` | Cross-repository architecture synthesis, deep escalation | 45s | USD 5.00 / USD 25.00 (example only — check current pricing) |
+| `tier-d-independent-checker` | Cross-family clean-room verification (`PAT-04`) | 30s | USD 5.00 / USD 25.00 (example only — check current pricing) |
+
 ### Seam invariants enforced by code
 
 - **Zero vendor imports outside the gateway:** Application routes and workflow files import only the internal capability client; a lint rule blocks direct `@anthropic-ai/sdk`, `openai`, or `@google/genai` imports outside `lib/model-seam/`.
@@ -70,7 +78,7 @@ Full worked record: [`kit/adrs/ADR-0002.md`](../../kit/adrs/ADR-0002.md).
 Model vendors update weights, deprecate floating aliases, and price small fast models and frontier reasoning models across more than an order-of-magnitude spread (`S01` through `S04`; check current vendor pricing pages).
 
 ## Decision
-Call language models exclusively through a four-tier internal capability router (`fast-classifier`, `balanced-builder`, `frontier-reasoner`, `independent-checker`) that binds each tier to a pinned snapshot ID, validates every response against a closed JSON schema, and maintains a tested fallback on a second provider family.
+Call language models exclusively through a four-tier internal capability router (`tier-a-fast-classifier`, `tier-b-balanced-builder`, `tier-c-frontier-reasoner`, `tier-d-independent-checker`) that binds each tier to a pinned provider snapshot, validates every response against a closed JSON schema, and maintains a tested fallback on a second provider family.
 
 ## Alternatives Considered and Rejected
 1. **Import vendor SDK clients directly inside route handlers:** Rejected because swapping a deprecated model or failing over during a vendor outage requires editing dozens of files.
@@ -85,11 +93,11 @@ Call language models exclusively through a four-tier internal capability router 
 
 ### Failure story and trigger
 
-A team builds an architecture-review pipeline that calls a floating `-latest` model alias across twelve workflow steps to emit JSON decision cards (`modelSeam`, `loopShape`, `trustBoundary`, `longRunHome`, `killCriteria`). On a Tuesday morning, the provider updates the target of the `-latest` alias to a new checkpoint that wraps JSON output inside a conversational preamble and renames `killCriteria` to `stopConditions` in 8% of completions.
+A team builds an architecture-review pipeline that calls a floating `-latest` model alias across twelve workflow steps to emit JSON decision cards (`modelSeam`, `loopShape`, `trustBoundary`, `longRunHome`, `killCriteria`). On a Tuesday morning, the provider updates the target of the `-latest` alias to a new checkpoint that wraps JSON output inside a conversational preamble and renames `killCriteria` to `stopConditions` whenever the prompt includes long architectural context.
 
 ### Blast radius when unmitigated
 
-Because the application called `JSON.parse` without a schema gate at the model seam, 8% of customer runs either crash with an unhandled syntax error or persist incomplete decision records with `killCriteria: undefined`, silently disabling downstream safety checks.
+Because the application called `JSON.parse` without a schema gate at the model seam, affected customer runs either crash with an unhandled syntax error or persist incomplete decision records with `killCriteria: undefined`, silently disabling downstream safety checks.
 
 ### Detection telemetry
 
