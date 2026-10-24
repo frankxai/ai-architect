@@ -17,8 +17,8 @@ governing_reader:
   - AI platform lead
 reader_action: Adopt the four-decision and seven-plane method in a production architecture review.
 verified_on: 2026-09-04
-next_source_review_on: 2026-10-15
-last_partial_source_review_on: 2026-10-11
+next_source_review_on: 2026-11-11
+last_partial_source_review_on: 2026-10-24
 source_review_receipt: releases/2026-10-11-multi-cloud-catalog.md
 source_policy: primary-first
 publication_contract:

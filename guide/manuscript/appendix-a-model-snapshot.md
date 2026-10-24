@@ -1,8 +1,8 @@
-# Appendix A. Model market snapshot, 2026-10-05
+# Appendix A. Model market snapshot, 2026-10-24
 
 This appendix is procurement evidence with a short half-life. It is not a model recommendation.
 
-Prices are public list prices observed in vendor documentation on 2026-10-05. They exclude caching, batches, priority service, regional terms, tool charges, negotiated discounts, taxes, infrastructure, evaluation, and human work. Confirm every number before a buying or release decision. The [source-review receipt](../releases/2026-10-05-source-review.md) records what changed. September values remain in Git history rather than being presented as current.
+Prices are public list prices observed in vendor documentation on 2026-10-24. They exclude caching, batches, priority service, regional terms, tool charges, negotiated discounts, taxes, infrastructure, evaluation, and human work. Confirm every number before a buying or release decision. The [source-review receipt](../releases/2026-10-24-source-review.md) records what changed. September values remain in Git history rather than being presented as current.
 
 ## OpenAI
 
@@ -25,13 +25,13 @@ The current family spans four models: [S02](../research/sources.yaml)
 | Claude Fable 5.1 | `claude-fable-5-1` | $10.00 | $50.00 | 1M | 128K | C049 |
 | Claude Opus 5.5 | `claude-opus-5-5` | $4.00 | $20.00 | 1M | 128K | C050 |
 | Claude Sonnet 5.5 | `claude-sonnet-5-5` | $2.00 | $10.00 | 1M | 128K | C051 |
-| Claude Haiku 4.5 | `claude-haiku-4-5-20251001` | $1.00 | $5.00 | 200K | 64K | C052 |
+| Claude Haiku 5.5 | `claude-haiku-5-5` | From $0.10 | From $0.50 | 1M | 128K | C052 |
 
 Capability labels remain vendor claims until the task bank measures them. A model identifier in a table must be copied into an actual route configuration before a compatibility test has any meaning. An environment variable alone cannot establish that the adapter uses it.
 
 ## Google
 
-Google's catalog separates stable and preview releases. Gemini 3.8 Flash and its Live and speech variants appear as stable; Gemini 3.1 Pro remains under preview on the checked page. [S03](../research/sources.yaml)
+Google's catalog separates stable and preview releases. Gemini 4 Argon (`gemini-4-argon`), Gemini 3.8 Flash (`gemini-3.8-flash`), and its Live and speech variants appear on the catalog page, while Gemini 3.1 Pro remains under preview on the checked page. [S03](../research/sources.yaml)
 
 The procurement lesson is that “model” may mean a general reasoning endpoint, live speech system, transcription endpoint, image generator, or video generator. A route registry should state the task and modality contract rather than group all of them under one generic provider setting.
 
