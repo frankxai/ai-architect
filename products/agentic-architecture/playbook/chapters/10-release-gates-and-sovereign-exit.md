@@ -78,12 +78,12 @@ Teams often validate builds only inside their development git checkout and hardc
 ## Decision
 Verify every release package by running `verify-agentic-architecture.mjs` across all 10 chapters, C4 models, ADRs, workbooks, MCP servers, and workflows, and keep all architecture artifacts in open, script-validated formats (Structurizr DSL, Mermaid, Markdown ADRs, MCP JSON-RPC, TypeScript, and OpenTelemetry JSON).
 
-## Alternatives Considered and Rejected
+## Alternatives considered and rejected
 1. **Run test suites only inside the authoring monorepo checkout:** Rejected because tests that read unshipped internal files pass in git but fail with `ENOENT` when a buyer extracts the archive.
 2. **Store C4 diagrams and ADRs in a proprietary SaaS whiteboard or wiki:** Rejected because diagrams cannot be code-reviewed in pull requests or validated by CI scripts.
 3. **Open live checkout before running a clean-room package verification and test-mode rehearsal:** Rejected because broken archives or untested fulfillment loops erode buyer trust immediately.
 
-## Verification Command
+## Verification command
 `node --experimental-strip-types products/agentic-architecture/scripts/verify-agentic-architecture.mjs`
 ```
 

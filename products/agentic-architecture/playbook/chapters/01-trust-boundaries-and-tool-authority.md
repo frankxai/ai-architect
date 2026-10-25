@@ -69,7 +69,7 @@ The agent ingests untrusted external text (customer tickets, web search results,
 ## Decision
 Route all tool invocations through a deterministic capability proxy that classifies every action into Tier 0 (read-only), Tier 1 (reversible draft with idempotency key), or Tier 2 (outward or destructive write requiring a two-phase approval token bound to the canonical payload hash).
 
-## Alternatives Considered and Rejected
+## Alternatives considered and rejected
 1. **System-prompt instruction only ("Never run destructive tools without asking"):** Rejected because indirect prompt injection inside retrieved data routinely overrides system-prompt prose.
 2. **Single shared API key inside the agent container:** Rejected because any shell or code-execution tool can read environment variables and bypass tool-schema restrictions.
 3. **Human approval on every read and search call:** Rejected because alert fatigue trains operators to rubber-stamp requests without reading the payload.
@@ -78,7 +78,7 @@ Route all tool invocations through a deterministic capability proxy that classif
 - **Positive:** Untrusted text cannot trigger an outward write without a separate principal signing the exact parameter hash.
 - **Negative / Cost:** Tier 2 actions add one asynchronous pause-and-resume round trip and require persistent storage for pending proposals.
 
-## Verification Command
+## Verification command
 `node --experimental-strip-types products/agentic-architecture/scripts/verify-agentic-architecture.mjs`
 ```
 

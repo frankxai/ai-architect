@@ -77,12 +77,12 @@ Debugging multi-step agent failures and measuring real unit economics require sp
 ## Decision
 Emit OpenTelemetry GenAI spans (`gen_ai.request.model`, `gen_ai.usage.input_tokens`, `gen_ai.usage.output_tokens`, `tool.cost_usd`, `accepted`) through a deterministic secret/PII redaction filter, and compute measured cost per accepted run directly from span exports via `ingestOtelTraceSpans`.
 
-## Alternatives Considered and Rejected
+## Alternatives considered and rejected
 1. **Log full HTTP request headers and bodies on errors:** Rejected because raw payloads leak `Authorization` tokens, webhook secrets, and customer email addresses.
 2. **Disable structured tracing in production to avoid privacy risk:** Rejected because operators cannot diagnose retry loops or compute real cost per accepted run without span attributes.
 3. **Route all model traffic through an external closed-source logging proxy:** Rejected because it adds a third-party availability dependency and data-residency risk.
 
-## Verification Command
+## Verification command
 `node products/agentic-architecture/kit/workbooks/evaluate-workbook.mjs`
 ```
 

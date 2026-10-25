@@ -77,7 +77,7 @@ Long-running agent sessions lose exact constraints during rolling transcript sum
 ## Decision
 Store session invariants in a verbatim structured working document, isolate cross-session memories by tenantId with version snapshots, and enforce an all-attempts cost circuit breaker that counts every retry and human review minute against a hard per-run budget ceiling.
 
-## Alternatives Considered and Rejected
+## Alternatives considered and rejected
 1. **Relying on rolling chat summarization alone:** Rejected because lossy summarization drops negative constraints, exact file paths, and commit SHAs.
 2. **Global unpartitioned vector memory store:** Rejected because shared namespaces leak facts across tenants and lack reversible version history.
 3. **Pricing models on first-pass token counts only:** Rejected because a 25% retry rate adds 25% (1.25x) to token spend at constant prompt size and 1.5x to 2.0x when failed tool outputs are appended to retry prompts.
@@ -86,7 +86,7 @@ Store session invariants in a verbatim structured working document, isolate cros
 - **Positive:** Constraints survive arbitrarily long sessions, memories are reversible and tenant-isolated, and runaway retry loops trip a hard stop before exhausting budget.
 - **Negative / Cost:** Requires explicit working-doc updates and per-step telemetry hooks on every model and tool call.
 
-## Verification Command
+## Verification command
 `node --experimental-strip-types products/agentic-architecture/scripts/verify-agentic-architecture.mjs`
 ```
 

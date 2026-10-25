@@ -72,12 +72,12 @@ Shared retrieval indexes and ungrounded synthesis risk leaking another customer'
 ## Decision
 Bind every retrieval query to the `tenantId` in the verified OAuth 2.1 token (`E_TENANT_MISMATCH` on mismatch), wrap retrieved chunks in `<untrusted-content>` with closing-tag stripping, and run a deterministic post-generation grounding filter that drops any sentence lacking a valid retrieved source marker.
 
-## Alternatives Considered and Rejected
+## Alternatives considered and rejected
 1. **Filter retrieval results by tenant inside the prompt after a global search:** Rejected because cross-tenant chunks still enter the model context window.
 2. **Trust `tenantId` passed as an LLM tool argument:** Rejected because prompt injection can supply another tenant's ID.
 3. **Rely on an LLM judge alone to score faithfulness:** Rejected because a probabilistic judge adds latency and still passes plausible-sounding fabrications.
 
-## Verification Command
+## Verification command
 `npm run templates:answer`
 ```
 

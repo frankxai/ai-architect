@@ -80,12 +80,12 @@ Model vendors update weights, deprecate floating aliases, and price small fast m
 ## Decision
 Call language models exclusively through a four-tier internal capability router (`tier-a-fast-classifier`, `tier-b-balanced-builder`, `tier-c-frontier-reasoner`, `tier-d-independent-checker`) that binds each tier to a pinned provider snapshot, validates every response against a closed JSON schema, and maintains a tested fallback on a second provider family.
 
-## Alternatives Considered and Rejected
+## Alternatives considered and rejected
 1. **Import vendor SDK clients directly inside route handlers:** Rejected because swapping a deprecated model or failing over during a vendor outage requires editing dozens of files.
 2. **Bind production workloads to floating `-latest` aliases:** Rejected because silent upstream weight swaps alter structured JSON output formatting without triggering CI.
 3. **Use unvalidated plain-text completions for workflow steps:** Rejected because downstream code requires typed fields and deterministic `E_SCHEMA_DRIFT` errors.
 
-## Verification Command
+## Verification command
 `node --experimental-strip-types products/agentic-architecture/scripts/verify-agentic-architecture.mjs`
 ```
 

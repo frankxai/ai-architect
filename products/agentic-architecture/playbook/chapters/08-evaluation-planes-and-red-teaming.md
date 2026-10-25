@@ -77,12 +77,12 @@ Edits to system prompts, skills, or model snapshots can silently break output sc
 ## Decision
 Require every prompt in `kit/prompts/prompt-set.json` and every suite in `evals/cases/` to define and pass a deterministic triad of `golden`, `refusal`, and `injection` cases on every commit.
 
-## Alternatives Considered and Rejected
+## Alternatives considered and rejected
 1. **Manual interactive spot-checking in a chat UI:** Rejected because manual testing is unrepeatable and skips adversarial edge cases.
 2. **Evaluating only happy-path `golden` cases:** Rejected because a prompt edit that deletes refusal rules can score 100% on golden cases while failing safety boundaries.
 3. **Relying solely on slow, non-deterministic LLM-as-a-judge runs in PR CI:** Rejected because grader variance causes flaky builds and delays feedback.
 
-## Verification Command
+## Verification command
 `npm run evals`
 ```
 

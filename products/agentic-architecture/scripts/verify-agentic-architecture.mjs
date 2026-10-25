@@ -3,8 +3,8 @@ import { readdirSync, readFileSync } from "node:fs"
 import { dirname, join, resolve } from "node:path"
 import { fileURLToPath, pathToFileURL } from "node:url"
 
-import { validateC4Workspace } from "../kit/c4/validate-c4.mjs"
-import { validateAdrDirectory } from "../kit/adrs/validate-adrs.mjs"
+import { validateC4 } from "../kit/c4/validate-c4.mjs"
+import { validateAdrs } from "../kit/adrs/validate-adrs.mjs"
 import { evaluateWorkbook } from "../kit/workbooks/evaluate-workbook.mjs"
 import {
   createReferenceMcpServer,
@@ -35,7 +35,7 @@ export async function verifyAgenticArchitecture(baseDir = defaultRoot) {
     throw new Error(`Expected 10 chapters, found ${chapterFiles.length}`)
   }
 
-  const placeholdersDoc = readFileSync(join(baseDir, "playbook/VISUAL-PLACEHOLDERS.md"), "utf8")
+  const placeholdersDoc = readFileSync(join(baseDir, "playbook/VISUAL-PLACEHOLDERS.json"), "utf8")
   const chapterWordCounts = []
 
   for (let i = 0; i < chapterFiles.length; i++) {
@@ -65,10 +65,10 @@ export async function verifyAgenticArchitecture(baseDir = defaultRoot) {
   }
 
   // 2. Verify C4 DSL + 4 Mermaid views
-  const c4 = validateC4Workspace(join(baseDir, "kit/c4"))
+  const c4 = validateC4(join(baseDir, "kit/c4"))
 
   // 3. Verify 10 ADRs + ADR-0000 template
-  const adrs = validateAdrDirectory(join(baseDir, "kit/adrs"))
+  const adrs = validateAdrs(join(baseDir, "kit/adrs"))
 
   // 4. Verify Threat & Cost Workbook + OTel Span Ingester
   const workbook = evaluateWorkbook(join(baseDir, "kit/workbooks/threat-and-cost-workbook.json"))
@@ -356,6 +356,7 @@ export async function verifyAgenticArchitecture(baseDir = defaultRoot) {
     "agentkitco.com",
     "USD 99",
     "USD 79",
+    "USD 14",
   ]) {
     if (!compBar.includes(requiredRef)) throw new Error(`COMPETITIVE-BAR.md missing reference: ${requiredRef}`)
   }

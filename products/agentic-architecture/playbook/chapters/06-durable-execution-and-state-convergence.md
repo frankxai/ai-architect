@@ -74,12 +74,12 @@ Asynchronous agent workers and webhook handlers experience mid-transaction crash
 ## Decision
 Execute idempotent state upserts before marking an event ID processed (`write-before-mark`), record a refunded tombstone (`paidAt: null, status: 'refunded'`) when cancellation arrives first, and raise `409 E_ORDER_CONFLICT` when an order ID is reused with conflicting buyer facts.
 
-## Alternatives Considered and Rejected
+## Alternatives considered and rejected
 1. **Mark `event.id` processed at the start of the handler:** Rejected because a database failure after marking causes retries to return `duplicate` and drop the entitlement.
 2. **Return HTTP 422 when a refund arrives for an unknown order ID:** Rejected because the delayed payment webhook arriving next will grant access to a refunded order.
 3. **Silently overwrite existing records on duplicate order ID:** Rejected because conflicting buyer parameters corrupt financial reconciliation.
 
-## Verification Command
+## Verification command
 `node --experimental-strip-types products/agentic-architecture/scripts/verify-agentic-architecture.mjs`
 ```
 

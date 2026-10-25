@@ -74,12 +74,12 @@ MCP servers expose tools whose descriptions and outputs enter the host model con
 ## Decision
 Require fail-closed secret configuration (`E_SERVER_UNCONFIGURED`), validate OAuth 2.1 `aud` (`E_OAUTH_AUDIENCE_MISMATCH`) and per-tier scopes (`E_OAUTH_INSUFFICIENT_SCOPE`) on every tool call, normalize file paths under `docs/architecture/` (`E_PATH_CONTAINMENT`), and wrap outputs in `<untrusted-content>`.
 
-## Alternatives Considered and Rejected
+## Alternatives considered and rejected
 1. **Accept any valid bearer token without checking the `aud` claim:** Rejected because tokens minted for low-privilege services can be replayed against the MCP server.
 2. **Check paths with naive string prefix matching before normalization:** Rejected because `docs/architecture/../../etc/passwd` bypasses prefix checks.
 3. **Provide a hardcoded default secret for local convenience:** Rejected because unconfigured servers would accept tokens forged with a public key.
 
-## Verification Command
+## Verification command
 `node --experimental-strip-types products/agentic-architecture/kit/mcp/reference-mcp-server.mjs --self-test`
 ```
 

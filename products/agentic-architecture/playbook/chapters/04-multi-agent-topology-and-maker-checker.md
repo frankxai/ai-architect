@@ -73,7 +73,7 @@ Complex deliverables require specialist execution and independent quality verifi
 ## Decision
 Use a deterministic TypeScript supervisor state machine that dispatches specialists with typed HandoffPackets, enforces disjoint writePaths per wave, caps recursion depth at 1, and requires a read-only Checker from a different model family before advancing past the verification gate.
 
-## Alternatives Considered and Rejected
+## Alternatives considered and rejected
 1. **Autonomous peer-to-peer chat group (agents talking freely until consensus):** Rejected because token cost scales superlinearly with peer count and turn depth and agents converge on polite agreement rather than catching defects.
 2. **Same-model self-critique in the same context window:** Rejected because shared context primes the reviewer to repeat the author's assumptions.
 3. **Shared mutable workspace without write-path locking:** Rejected because concurrent file edits or git pushes clobber sibling work.
@@ -82,7 +82,7 @@ Use a deterministic TypeScript supervisor state machine that dispatches speciali
 - **Positive:** Predictable cost ceiling, zero concurrent write collisions, and genuine adversarial defect detection across model families.
 - **Negative / Cost:** Requires explicit schema definitions for handoff packets and a second model provider credential for the Checker lane.
 
-## Verification Command
+## Verification command
 `node --experimental-strip-types products/agentic-architecture/scripts/verify-agentic-architecture.mjs`
 ```
 

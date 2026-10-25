@@ -18,7 +18,7 @@ Commercial state: `building` / waitlist-first (`price.state: "decision_required"
    - Workflow templates (`kit/workflows/`): `supervisor-maker-checker.ts` (two-provider TypeScript supervisor enforcing disjoint `writePaths`, cross-family Maker/Checker separation, subagent recursion/spawn ban, and 80% budget ceiling) + `n8n-agentic-triage-and-approval.json` (6-node n8n workflow).
    - Prompt set (`kit/prompts/`): `prompt-set.json` (6 role system prompts with JSON output schemas and golden, refusal, and injection eval cases).
 3. Competitive bar (`docs/COMPETITIVE-BAR.md`):
-   - Benchmarks *AI Engineering* (O'Reilly), the Anthropic/OpenAI/OWASP agent guides, ClaudeKit (USD 99), BuiltByZac Bundle (USD 99), GetAutopilotKit (USD 79), and AgentKitCo (USD 39), checked on `2026-10-24`.
+   - Benchmarks *AI Engineering* (O'Reilly), the Anthropic/OpenAI/OWASP agent guides, ClaudeKit (USD 99), BuiltByZac Bundle (USD 99), GetAutopilotKit (USD 79), and AgentKitCo (USD 14, 12 stack templates), checked on `2026-10-24`.
 4. Buyer page draft (`buyer-page/`):
    - [`buyer-page/BUYER-PAGE-DRAFT.md`](buyer-page/BUYER-PAGE-DRAFT.md) and [`buyer-page/offer.facts.json`](buyer-page/offer.facts.json).
 
