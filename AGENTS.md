@@ -86,7 +86,7 @@ A harness without `/architect*` commands can still run the lifecycle by hand:
    say so.
 
 Machine-readable equivalents of the same checks live in `scripts/` (`check-artifacts.mjs`,
-`check-roi.mjs`) and can be run directly: `node scripts/check-artifacts.mjs path/to/docs/architecture`.
+`check-roi.mjs`) and can be run directly: `npm run artifacts -- path/to/docs/architecture`.
 
 ## Everything else about this repository
 
@@ -99,6 +99,6 @@ references.
 `schemas/` — the JSON Schemas for `architecture.json`, `prices.json`, and the eval cases file.
 `templates/` — the blank artifact templates written into a customer's `docs/architecture/`.
 `data/team.json` — the machine-readable team roster, generated from `agents/*.md` by
-`node scripts/build-team-json.mjs`; do not hand-edit it.
+`npm run team`; do not hand-edit it.
 `scripts/` — the gate checks and install tooling; `npm test` runs the full set.
 `examples/` — dogfooded, worked artifact sets for reference.
