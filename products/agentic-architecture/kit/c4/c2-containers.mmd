@@ -1,0 +1,16 @@
+flowchart TB
+  subgraph runtime["Agentic Architecture Runtime"]
+    web["Container: Web Surface & Decision Desk"]
+    sup["Container: Deterministic Supervisor (TypeScript)"]
+    proxy["Container: Scoped Capability Proxy (MCP)"]
+    maker["Container: Maker Sandbox (rw disjoint)"]
+    checker["Container: Checker Sandbox (ro clean-room)"]
+    store["Container: Convergent State & Memory Store"]
+  end
+
+  web --> sup
+  sup -->|"HandoffPacket"| maker
+  sup -->|"CleanRoomPacket"| checker
+  maker -->|"JSON-RPC tool calls"| proxy
+  checker -->|"Read-only verification"| proxy
+  proxy -->|"Write-before-mark upsert"| store
