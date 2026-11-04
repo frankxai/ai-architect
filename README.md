@@ -71,10 +71,10 @@ mechanical router for every other harness: it parses `WORKFLOW.md`, finds the
 next incomplete gate, and prints a dispatch card. It does not call a model.
 
 ```bash
-node scripts/architect-conductor.mjs --root /path/to/your/repo init
-node scripts/architect-conductor.mjs --root /path/to/your/repo next
-node scripts/architect-conductor.mjs --root /path/to/your/repo card
-node scripts/architect-conductor.mjs --root /path/to/your/repo check
+npm run conductor -- --root /path/to/your/repo init
+npm run conductor -- --root /path/to/your/repo next
+npm run conductor -- --root /path/to/your/repo card
+npm run conductor -- --root /path/to/your/repo check
 ```
 
 `card` names the stage, agent, model (`opus` or `sonnet`), reasoning effort, and
@@ -158,7 +158,7 @@ and says so. Every generated markdown file ends with the line
 
 No agent writes application source code. Each agent's full purpose, inputs, stop conditions and
 handoff target are in its own `agents/<id>.md`. The same roster, generated from those files, is
-`data/team.json` (`node scripts/build-team-json.mjs` rebuilds it — never hand-edit the JSON).
+`data/team.json` (`npm run team` rebuilds it — never hand-edit the JSON).
 
 ## The gates
 
