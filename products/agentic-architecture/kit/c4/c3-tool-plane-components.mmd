@@ -1,0 +1,15 @@
+flowchart TB
+  subgraph proxy["Scoped Capability Proxy (MCP Host)"]
+    tagger["Component: Untrusted Ingress Tagger"]
+    router["Component: Tier 0/1/2 Policy Router"]
+    guard["Component: Idempotency & Realpath Guard"]
+    approver["Component: Two-Phase Approval Verifier"]
+    otel["Component: PII-Redacted Span Emitter"]
+  end
+
+  router -->|"Tier 0 Read"| tagger
+  router -->|"Tier 1 Draft"| guard
+  router -->|"Tier 2 Write"| approver
+  tagger --> otel
+  guard --> otel
+  approver --> otel

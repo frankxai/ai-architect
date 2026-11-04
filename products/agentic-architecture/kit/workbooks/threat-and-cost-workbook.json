@@ -1,0 +1,157 @@
+{
+  "schema": "agentic-architecture-threat-and-cost-workbook/v2",
+  "verified_on": "2026-10-24",
+  "threats": [
+    {
+      "id": "T-01",
+      "failure_mode": "FM-01",
+      "stride": "Elevation of Privilege",
+      "owasp_agentic": "ASI01-Excessive-Agency",
+      "title": "Indirect prompt injection triggers unattended Tier-2 write",
+      "control_id": "PAT-01",
+      "control_module": "kit/mcp/reference-mcp-server.mjs",
+      "verification_error_code": "E_APPROVAL_REQUIRED"
+    },
+    {
+      "id": "T-02",
+      "failure_mode": "FM-02",
+      "stride": "Tampering",
+      "owasp_agentic": "ASI02-Model-Drift",
+      "title": "Floating model alias changes structured JSON output shape",
+      "control_id": "PAT-02",
+      "control_module": "kit/prompts/prompt-set.json",
+      "verification_error_code": "E_SCHEMA_DRIFT"
+    },
+    {
+      "id": "T-03",
+      "failure_mode": "FM-03",
+      "stride": "Information Disclosure",
+      "owasp_agentic": "ASI03-Cross-Tenant-Bleed",
+      "title": "Cross-tenant read or approval against another tenant's resource",
+      "control_id": "PAT-03",
+      "control_module": "kit/mcp/reference-mcp-server.mjs",
+      "verification_error_code": "E_TENANT_MISMATCH"
+    },
+    {
+      "id": "T-04",
+      "failure_mode": "FM-04",
+      "stride": "Tampering",
+      "owasp_agentic": "ASI04-Multi-Agent-Collision",
+      "title": "Parallel specialists clobber shared files, spawn nested subagents, or self-approve gate",
+      "control_id": "PAT-04",
+      "control_module": "kit/workflows/supervisor-maker-checker.ts",
+      "verification_error_code": "E_WRITE_COLLISION"
+    },
+    {
+      "id": "T-05",
+      "failure_mode": "FM-05",
+      "stride": "Spoofing",
+      "owasp_agentic": "ASI05-Tool-Poisoning",
+      "title": "Foreign OAuth 2.1 audience token or ../ path traversal on MCP server",
+      "control_id": "PAT-05",
+      "control_module": "kit/mcp/reference-mcp-server.mjs",
+      "verification_error_code": "E_OAUTH_AUDIENCE_MISMATCH"
+    },
+    {
+      "id": "T-06",
+      "failure_mode": "FM-06",
+      "stride": "Repudiation",
+      "owasp_agentic": "ASI06-State-Desync",
+      "title": "Duplicate Tier-1 write replay or out-of-order state transition",
+      "control_id": "PAT-06",
+      "control_module": "kit/mcp/reference-mcp-server.mjs",
+      "verification_error_code": "duplicate_replay"
+    },
+    {
+      "id": "T-07",
+      "failure_mode": "FM-07",
+      "stride": "Denial of Service",
+      "owasp_agentic": "ASI07-Runaway-Spend",
+      "title": "Retry loop or multi-agent wave exceeds 80% hard budget ceiling",
+      "control_id": "PAT-07",
+      "control_module": "kit/workflows/supervisor-maker-checker.ts",
+      "verification_error_code": "E_BUDGET_EXCEEDED"
+    },
+    {
+      "id": "T-08",
+      "failure_mode": "FM-08",
+      "stride": "Tampering",
+      "owasp_agentic": "ASI08-Eval-Blindness",
+      "title": "Prompt edit removes golden, refusal, or injection evaluation case",
+      "control_id": "PAT-08",
+      "control_module": "kit/prompts/prompt-set.json",
+      "verification_error_code": "E_EVAL_TRIAD_MISSING"
+    },
+    {
+      "id": "T-09",
+      "failure_mode": "FM-09",
+      "stride": "Information Disclosure",
+      "owasp_agentic": "ASI09-Secret-Leakage",
+      "title": "MCP server started without required 32-char secrets or audience",
+      "control_id": "PAT-09",
+      "control_module": "kit/mcp/reference-mcp-server.mjs",
+      "verification_error_code": "E_SERVER_UNCONFIGURED"
+    },
+    {
+      "id": "T-10",
+      "failure_mode": "FM-10",
+      "stride": "Elevation of Privilege",
+      "owasp_agentic": "ASI10-Self-Or-Expired-Approval",
+      "title": "Proposer attempts self-approval or replays an expired approval token",
+      "control_id": "PAT-10",
+      "control_module": "kit/mcp/reference-mcp-server.mjs",
+      "verification_error_code": "E_SELF_APPROVAL_FORBIDDEN"
+    }
+  ],
+  "workloads": [
+    {
+      "id": "WL-01",
+      "name": "Architecture discovery and C4 synthesis",
+      "capability_tier": "tier-b-balanced-builder (example only — check current pricing (mid-tier balanced model))",
+      "monthly_accepted_runs": 400,
+      "mean_attempts_per_accepted_run": 1.35,
+      "p95_attempts_per_accepted_run": 2.2,
+      "input_tokens_per_attempt": 42000,
+      "output_tokens_per_attempt": 4800,
+      "illustrative_input_price_per_million_usd": 3.0,
+      "illustrative_output_price_per_million_usd": 15.0,
+      "tool_cost_per_attempt_usd": 0.02,
+      "human_review_minutes_per_accepted_run": 6,
+      "human_hourly_rate_usd": 90.0,
+      "max_run_budget_usd": 2.5
+    },
+    {
+      "id": "WL-02",
+      "name": "Automated PR red-team and trust-boundary audit",
+      "capability_tier": "tier-a-fast-classifier (example only — check current pricing (small fast model))",
+      "monthly_accepted_runs": 1500,
+      "mean_attempts_per_accepted_run": 1.15,
+      "p95_attempts_per_accepted_run": 1.8,
+      "input_tokens_per_attempt": 28000,
+      "output_tokens_per_attempt": 2400,
+      "illustrative_input_price_per_million_usd": 0.25,
+      "illustrative_output_price_per_million_usd": 1.25,
+      "tool_cost_per_attempt_usd": 0.005,
+      "human_review_minutes_per_accepted_run": 1.5,
+      "human_hourly_rate_usd": 60.0,
+      "max_run_budget_usd": 0.5
+    },
+    {
+      "id": "WL-03",
+      "name": "Supervisor + Maker (Provider A) + Checker (Provider B) pipeline",
+      "capability_tier": "tier-c-frontier-reasoner (example only — check current pricing (frontier reasoning model))",
+      "monthly_accepted_runs": 120,
+      "mean_attempts_per_accepted_run": 1.5,
+      "p95_attempts_per_accepted_run": 2.5,
+      "input_tokens_per_attempt": 110000,
+      "output_tokens_per_attempt": 12000,
+      "illustrative_input_price_per_million_usd": 5.0,
+      "illustrative_output_price_per_million_usd": 25.0,
+      "tool_cost_per_attempt_usd": 0.12,
+      "human_review_minutes_per_accepted_run": 12,
+      "human_hourly_rate_usd": 120.0,
+      "max_run_budget_usd": 12.0
+    }
+  ],
+  "pricing_note": "Model names and vendor token rates change frequently. Workloads below use model-agnostic capability tiers (tier-a-fast-classifier, tier-b-balanced-builder, tier-c-frontier-reasoner) and explicitly labeled illustrative token rates for deterministic offline verification; substitute current rates from your vendor's official pricing page before production forecasting."
+}

@@ -1,0 +1,5 @@
+Docs: sync documented commands with package.json scripts
+
+- Changes `node scripts/architect-conductor.mjs` to `npm run conductor --`
+- Changes `node scripts/build-team-json.mjs` to `npm run team`
+- Changes `node scripts/check-artifacts.mjs` to `npm run artifacts --`

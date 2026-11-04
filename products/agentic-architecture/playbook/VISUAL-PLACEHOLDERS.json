@@ -1,0 +1,92 @@
+{
+  "schema": "starlight-cmo-playbook-visual-placeholders/v1",
+  "product_id": "product_agentic_architecture_playbook",
+  "brand_id": "brand_ai_architect_studio",
+  "design_tokens_ref": "solution-kit/design.tokens.json",
+  "placeholders": [
+    {
+      "token": "[[PLAYBOOK_HERO_DIAGRAM]]",
+      "surface": "buyer-page",
+      "aspect_ratio": "16:9",
+      "spec": "Four-decision and seven-plane architectural blueprint on warm paper (#f6f3ec) with ink (#16171d) and cobalt (#1f3bd6) callouts."
+    },
+    {
+      "token": "[[PLAYBOOK_KIT_TOPOLOGY]]",
+      "surface": "buyer-page",
+      "aspect_ratio": "16:9",
+      "spec": "Exploded view of the 6 runnable kit modules: C4 DSL, 10 ADRs, Threat/Cost Workbook, Reference MCP Server, TypeScript/n8n Workflows, and Prompt Set."
+    },
+    {
+      "token": "[[PLAYBOOK_DECISION_DESK_PREVIEW]]",
+      "surface": "buyer-page",
+      "aspect_ratio": "16:9",
+      "spec": "Interactive nine-stage evidence gate readout showing a red gate blocking deployment until ADR and threat mitigations pass."
+    },
+    {
+      "token": "[[PLAYBOOK_BUYER_FUNNEL_FLOW]]",
+      "surface": "buyer-page",
+      "aspect_ratio": "21:9",
+      "spec": "Escalation ladder from free Apache-2.0 /architect plugin to the Agentic Architecture Playbook + Kit and managed team reviews."
+    },
+    {
+      "token": "[[PLAYBOOK_FIG_CH01_TRUST_BOUNDARY]]",
+      "surface": "chapter-01",
+      "aspect_ratio": "16:9",
+      "spec": "Scoped Capability Proxy separating untrusted retrieval ingress from confirm-gated write tools."
+    },
+    {
+      "token": "[[PLAYBOOK_FIG_CH02_MODEL_SEAM]]",
+      "surface": "chapter-02",
+      "aspect_ratio": "16:9",
+      "spec": "Task-tiered model gateway isolating application logic from vendor SDK churn."
+    },
+    {
+      "token": "[[PLAYBOOK_FIG_CH03_CONTEXT_ENVELOPE]]",
+      "surface": "chapter-03",
+      "aspect_ratio": "16:9",
+      "spec": "Tagged untrusted context envelope with tenant scope and claim-to-source citations."
+    },
+    {
+      "token": "[[PLAYBOOK_FIG_CH04_MAKER_CHECKER]]",
+      "surface": "chapter-04",
+      "aspect_ratio": "16:9",
+      "spec": "Code-led supervisor routing work to a Maker agent and an isolated different-model Checker."
+    },
+    {
+      "token": "[[PLAYBOOK_FIG_CH05_MCP_GATEWAY]]",
+      "surface": "chapter-05",
+      "aspect_ratio": "16:9",
+      "spec": "OAuth 2.1 audience-bound MCP server with schema validation and idempotency keys."
+    },
+    {
+      "token": "[[PLAYBOOK_FIG_CH06_CONVERGENT_SAGA]]",
+      "surface": "chapter-06",
+      "aspect_ratio": "16:9",
+      "spec": "Write-before-mark state machine and early-refund tombstone ledger."
+    },
+    {
+      "token": "[[PLAYBOOK_FIG_CH07_COST_ENVELOPE]]",
+      "surface": "chapter-07",
+      "aspect_ratio": "16:9",
+      "spec": "Episodic working memory, versioned semantic ledger, and all-attempts cost circuit breaker."
+    },
+    {
+      "token": "[[PLAYBOOK_FIG_CH08_EVAL_TRIAD]]",
+      "surface": "chapter-08",
+      "aspect_ratio": "16:9",
+      "spec": "CI gate running golden cases, refusal probes, and prompt-injection regressions."
+    },
+    {
+      "token": "[[PLAYBOOK_FIG_CH09_OTEL_REPLAY]]",
+      "surface": "chapter-09",
+      "aspect_ratio": "16:9",
+      "spec": "PII-redacted OpenTelemetry GenAI span graph with deterministic fixture replay."
+    },
+    {
+      "token": "[[PLAYBOOK_FIG_CH10_EXIT_DRILL]]",
+      "surface": "chapter-10",
+      "aspect_ratio": "16:9",
+      "spec": "Clean-room /tmp archive verification and 48-hour provider exit drill timeline."
+    }
+  ]
+}
