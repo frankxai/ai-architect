@@ -55,7 +55,7 @@ claims:
       plus resources, prompts, tools, and negotiated extensions.
     sources: [ S08 ]
     status: source-supported
-    review_by: 2026-11-04
+    review_by: 2027-02-09
   - id: C008
     class: fact
     statement: MCP tells hosts to treat tool descriptions as untrusted unless they
@@ -63,7 +63,7 @@ claims:
       tools.
     sources: [ S08 ]
     status: source-supported
-    review_by: 2026-11-04
+    review_by: 2027-02-09
   - id: C009
     class: fact
     statement: MCP HTTP authorization uses an OAuth 2.1 profile with protected
@@ -71,21 +71,21 @@ claims:
       audience validation.
     sources: [ S09 ]
     status: source-supported
-    review_by: 2026-11-04
+    review_by: 2027-02-09
   - id: C010
     class: fact
     statement: A2A 1.0.0 supports discovery, opaque agent collaboration, synchronous
       and asynchronous tasks, streaming, artifacts, and in-task authorization.
     sources: [ S10 ]
     status: source-supported
-    review_by: 2026-11-04
+    review_by: 2027-02-09
   - id: C011
     class: inference
     statement: MCP fits the agent-to-capability boundary while A2A fits a boundary
       between independently operated agents.
     sources: [ S08, S10 ]
     status: reasoned
-    review_by: 2026-11-04
+    review_by: 2027-02-09
   - id: C012
     class: prescription
     statement: Retrieved text remains untrusted data until a policy layer turns a
@@ -120,14 +120,14 @@ claims:
       repository for spans, metrics, events, MCP, and provider-specific signals.
     sources: [ S16 ]
     status: source-supported
-    review_by: 2026-11-04
+    review_by: 2027-02-09
   - id: C017
     class: prescription
     statement: A trace must explain the selected model, supplied context, tool call,
       policy decision, state change, outcome, latency, and cost.
     sources: [ S14, S15, S16 ]
     status: proposed
-    review_by: 2026-11-04
+    review_by: 2027-02-09
   - id: C018
     class: fact
     statement: The NIST GenAI Profile is a cross-sector companion to AI RMF 1.0 for
@@ -308,7 +308,7 @@ claims:
       through assertions, signed claims, manifests, trust, and validation.
     sources: [ S37 ]
     status: source-supported
-    review_by: 2026-11-04
+    review_by: 2027-02-09
   - id: C040
     class: fact
     statement: The EU General-Purpose AI Code of Practice has transparency,
@@ -454,7 +454,7 @@ claims:
     sources: [ S09, S11 ]
     location: labs/delegated-authority/README.md
     status: proposed
-    review_by: 2026-11-04
+    review_by: 2027-02-09
   - id: C055
     class: prescription
     statement: A knowledge source enters production only with a data contract naming
@@ -472,7 +472,7 @@ claims:
     sources: [ S37 ]
     location: manuscript/14-data-knowledge-provenance.md
     status: proposed
-    review_by: 2026-11-04
+    review_by: 2027-02-09
   - id: C057
     class: prescription
     statement: Agent code execution, browser automation, and file manipulation
