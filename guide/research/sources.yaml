@@ -79,7 +79,7 @@ sources:
     supports: Host-client-server roles, resources, prompts, tools, negotiated
       extensions, tasks, consent, privacy, and tool safety.
     volatility: high
-    review_by: 2026-11-04
+    review_by: 2027-02-09
   - id: S09
     title: MCP authorization specification 2026-07-28
     publisher: Model Context Protocol
@@ -88,7 +88,7 @@ sources:
     supports: OAuth 2.1 profile, protected resource metadata, least privilege,
       resource indicators, issuer checks, and audience binding.
     volatility: high
-    review_by: 2026-11-04
+    review_by: 2027-02-09
   - id: S10
     title: Agent2Agent protocol specification 1.0.0
     publisher: A2A Project
@@ -97,7 +97,7 @@ sources:
     supports: Agent discovery, tasks, artifacts, streaming, asynchronous work,
       in-task authorization, scoped access, and MCP relationship.
     volatility: high
-    review_by: 2026-11-04
+    review_by: 2027-02-09
   - id: S11
     title: Temporal design patterns
     publisher: Temporal
@@ -155,7 +155,7 @@ sources:
     supports: GenAI spans, metrics, events, MCP signals, and provider-specific
       conventions.
     volatility: high
-    review_by: 2026-11-04
+    review_by: 2027-02-09
   - id: S17
     title: NIST AI 600-1 Generative AI Profile
     publisher: National Institute of Standards and Technology
@@ -364,7 +364,7 @@ sources:
       signed claims, manifests, validation, trust, privacy controls, and
       whole-workflow history.
     volatility: high
-    review_by: 2026-11-04
+    review_by: 2027-02-09
   - id: S38
     title: General-Purpose AI Code of Practice
     publisher: European Commission
